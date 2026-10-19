@@ -1,0 +1,100 @@
+Sancho Panza Non-Commercial Share-Alike Fair-Play License
+Version 1.0 — October 2026
+
+Copyright (c) 2026 M (GitHub: Mdatas) — https://github.com/Mdatas/sancho-panza
+
+This project was made out of curiosity about what can be built with AI, purely for joy and
+intellectual curiosity. This license keeps it open for everyone to learn from, use and improve,
+while keeping it out of commercial, dishonest, illegal or unfair use.
+
+0. Definitions
+   "Software" means the source code, documentation, knowledge notes, translations, images created
+   for this project and any other material in this repository that is not listed as third-party
+   material in section 7.
+   "You" means any person or organisation exercising rights under this license.
+   "Modification" means any change, addition, translation, port, derivative work or work based on
+   the Software, in whole or in part.
+   "Non-Commercial" means not intended for or directed toward commercial advantage or monetary
+   compensation of any kind, including (without limitation): selling the Software or access to it;
+   charging fees, subscriptions or donations as a condition of use; advertising, sponsorship,
+   affiliate or tracking revenue; bundling it with a paid product or service; using it inside a
+   business to obtain an advantage; and using it to train, fine-tune or evaluate AI models that are
+   sold or offered as a paid service.
+
+1. Permission
+   Subject to the conditions below, You are granted a free, worldwide, non-exclusive, royalty-free
+   license to use, copy, study, modify, translate, publish and share the Software, for
+   Non-Commercial purposes only.
+
+2. No commercial use
+   Any commercial use of the Software or of any Modification is prohibited without prior written
+   permission from the copyright holder.
+
+3. Attribution
+   Every copy, Modification, publication or service that uses the Software must:
+   a) keep this license file and all copyright, credit and source notices;
+   b) credit the original clearly and visibly, at least as:
+      "Based on Sancho Panza - AOE2 Squier by M (Mdatas) — https://github.com/Mdatas/sancho-panza";
+   c) keep the credits to the third-party sources listed in section 7 and in the README;
+   d) not present the Software, or a Modification, as Your own original work.
+
+4. Share-alike and public changes
+   a) Any Modification must be made public: its complete source code must be published in a
+      freely and publicly accessible place (for example a public repository), at no charge, no later
+      than the moment the Modification is used, distributed, published or made available to anyone,
+      including as a website, app or network service.
+   b) Modifications must be released under this same license (or a later version of it published by
+      the copyright holder), must state clearly what was changed and when, and must link to the
+      original repository.
+   c) You may not add terms that restrict the rights this license gives to others.
+
+5. Fair play and lawful, good-faith use
+   You may not use the Software or any Modification:
+   a) for anything illegal in Your jurisdiction or in the jurisdiction of those affected;
+   b) in bad faith: to deceive or defraud, to impersonate the author or others, to misrepresent the
+      origin of the Software, or to remove or hide the credits;
+   c) for unethical use in gaming, including (without limitation): cheating; bots or automation
+      that play, act or give inputs in a game on a player's behalf; reading or altering game memory,
+      network traffic or files to gain an advantage; exploiting bugs to break the rules of a match;
+      rank manipulation (boosting, smurfing services, win-trading, account selling); and any use
+      that breaks the terms of service, code of conduct or tournament rules of the game, its
+      publisher or the platform where it is played;
+   d) to harass, threaten, stalk or expose other players, or to collect or publish their personal
+      data;
+   e) in violation of Microsoft's Game Content Usage Rules or the rights of any third party.
+   The Software is meant to help people learn and enjoy the game: advice a human reads or hears
+   and decides on by themselves.
+
+6. Termination
+   Any breach of this license ends Your rights under it automatically. Rights may be restored only
+   with the written consent of the copyright holder.
+
+7. Third-party material (keeps its own license; this license does not change it)
+   - Game data and icons from SiegeEngineers/aoe2techtree — code under the MIT License
+     (data/img/LICENSE_aoe2techtree.txt). Game names, data and icons belong to their owners
+     (Microsoft / World's Edge, Forgotten Empires, Ensemble Studios, SkyBox Labs, Hidden Path
+     Entertainment) and are used as non-commercial fan content under Microsoft's Game Content
+     Usage Rules.
+   - Build orders in data/build_orders/rtsbuilds from CraftySalamander/rtsbuilds — GNU GPL v3
+     (data/build_orders/rtsbuilds/LICENSE). Authors are credited inside each file. They are
+     distributed unmodified, alongside (not as part of) the Software.
+   - The strategy notes in data/knowledge are original summaries, in Spanish, of public videos,
+     guides and patch notes. The ideas and strategies belong to their creators, who are credited
+     in the notes and in the README; no video, transcript or article is reproduced. Creators who
+     want their material removed can open an issue and it will be removed.
+   - Software dependencies (Electron, msedge-tts, esbuild, path-browserify, electron-builder and
+     others) keep their own licenses (mostly MIT).
+   Age of Empires is a trademark of Microsoft. This project is not affiliated with, endorsed or
+   sponsored by Microsoft, World's Edge, Forgotten Empires, Anthropic or any creator named here.
+
+8. No warranty, no liability
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+   BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+   NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+   DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+   AI answers can be wrong. API costs charged by AI providers are the user's responsibility.
+
+Note: because it forbids commercial use, this is a "source-available" license, not an
+OSI-approved "open source" license. It was written for this project and has not been reviewed by
+a lawyer.

@@ -1,0 +1,15 @@
+{
+  "name": "Sancho Panza - AOE2 Squier",
+  "short_name": "Sancho Panza",
+  "description": "AI coach for Age of Empires II DE: counters, build orders, civ and map guide, team counters.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#16130f",
+  "theme_color": "#16130f",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

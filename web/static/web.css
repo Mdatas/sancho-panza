@@ -1,0 +1,11 @@
+/* Web / phone layout on top of the desktop styles */
+body.web { height: 100dvh; max-width: 760px; margin: 0 auto; padding-bottom: env(safe-area-inset-bottom); }
+body.web #btnMode, body.web #btnHide, body.web #btnOpenDir, body.web #btnOpenLogs, body.web #btnQuit, body.web #btnSync { display: none !important; }
+body.web #setOnTop, body.web #setOpacity { display: none; }
+body.web .desktopOnly { display: none !important; }
+body.web #tabs button { padding: 9px 4px; font-size: 13px; }
+body.web .teamBar .slot { flex-basis: 34px; height: 30px; }
+body.web input, body.web select, body.web textarea { font-size: 16px; } /* avoids iOS zoom on focus */
+body.web #inputRow input { font-size: 16px; padding: 10px 8px; }
+body.web .replayIn { font-size: 16px; padding: 3px 9px; }
+body.web .tcPanel { max-height: 24vh; }

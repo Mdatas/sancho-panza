@@ -1,0 +1,736 @@
+# Historial de parches de AoE2 DE (2019-2026): qué cambió y cuándo
+
+Uso: si un consejo viene de un video fechado X, revisá los cambios posteriores a X para su civ o unidad; cualquiera de ellos puede dejarlo desactualizado. Las cifras salen de las notas oficiales, leídas con WebFetch (texto resumido por un modelo). Antes de citar una cifra exacta, confirmala en la fuente. El detalle de 2025-12 a 2026-09 está en parches_recientes.md.
+
+## 2019: lanzamiento y primer parche
+- 2019-11-14 — Update 33315 (lanzamiento de DE + The Last Khans): civs nuevas Bulgarians, Cumans, Lithuanians, Tatars. Fuente: https://ageofempires.fandom.com/wiki/Age_of_Empires_II:_Definitive_Edition (el build sale del navbox de https://ageofempires.fandom.com/wiki/Hotfix_34397)
+- 2019-12-17 — Update 34055 (Last Khans):
+  - Steppe Lancer: ataque 10→8, coste 30→45 oro.
+  - Bulgarians: Konnik con HP 110→100 y recarga más lenta; el Krepost ya no se puede convertir.
+  - Cumans: el TC en Feudal tarda 225→270 s; pierden Husbandry; nuevo bonus de velocidad de caballería +5/10/15%; Kipchak con menos HP.
+  - Lithuanians: el bonus de reliquias llega a +4 como máximo (antes +5) y ya no afecta a la Light Cav.
+  - Tatars: Keshik cuesta 80→40 oro y su ataque baja 12→9.
+  - Mayans: Plumed Archer +5 oro y +5 madera en Castillos e Imperial.
+  - Fuente: https://www.ageofempires.com/news/aoe2de-update-34055/
+
+## 2020 (1/4): enero-marzo
+- 2020-01-21 — Update 34699:
+  - Battle Elephant: entrenamiento 28→24 s.
+  - Arambai: madera 80→75.
+  - Mayans/Chinese: los aldeanos extra solo aparecen después de construir el TC.
+  - Fuente: https://ageofempires.fandom.com/wiki/Update_34699
+- 2020-02-27 — Update 35584:
+  - Goths: infantería -35% desde la Edad Oscura.
+  - Mongols: cazadores +50%→+40%; ganan Steppe Lancer.
+  - Teutons: granjas -40% (antes -33%) y +1 armadura cuerpo a cuerpo en unidades de cuartel desde Castillos.
+  - Vietnamese: las mejoras económicas no cuestan madera.
+  - Tatars: ganan Halberdier.
+  - Persians: Kamandaran cuesta 400F/300G.
+  - Berbers: Genitour +1 armadura perforante.
+  - Portuguese: la Feitoria produce más.
+  - Los aldeanos conservan la carga al reasignarlos.
+  - Fuente: https://www.ageofempires.com/news/aoe2de-update-35584/
+- 2020-03-30 — Update 36202:
+  - Chinese y Cumans pierden Redemption.
+  - Goths: pierden Arson; su descuento de infantería pasa a 20/25/30/35% según la edad.
+  - Tatars: Thumb Ring gratis; Keshik 23→16 s; nuevo Flaming Camel.
+  - Steppe Lancer +1 ataque; Kipchak +1 flecha.
+  - Fuente: https://www.ageofempires.com/news/aoe2de-update-36202/
+
+## 2020 (2/4): abril-julio
+- 2020-04-29 — Update 36906:
+  - Los pescadores pueden descargar en el Muelle.
+  - Bulgarians: pierden Paladín; Stirrups afecta a toda la caballería.
+  - Goths: Loom gratis.
+  - Indians: pescadores +10% (antes +15% y +15 de carga).
+  - Khmer: granjeros -3% y pierden Bombard Cannon.
+  - Persians: pierden el bonus de TC en Oscura; ahora +10/15/20%.
+  - Teutons: +1 armadura cuerpo a cuerpo para cuartel y establo en Castillos/Imperial.
+  - Leitis cuesta 70F/50G; Boyar velocidad 1.4→1.3; Teutonic Knight velocidad 0.7→0.8.
+  - Fuente: https://www.ageofempires.com/news/aoe2de-update-36906/
+- 2020-05-27 — Update 37650:
+  - Supplies eliminado para Chinese, Cumans, Huns, Khmer, Lithuanians, Mayans, Mongols y Tatars.
+  - Hussar: animación de ataque 1.89→1.35 s.
+  - Aztecs: bonus de entrenamiento militar 15→10%.
+  - Elephant Archer: recarga 2.5→2.0 s, oro 80→70.
+  - Zealotry cuesta 700 oro.
+  - Fuente: https://www.ageofempires.com/news/aoe2de-update-37650/
+- 2020-07-20 — Update 39284:
+  - Koreans: militares -20% madera.
+  - Portuguese: unidades -20% oro.
+  - Battle Elephant: trample 50→25%.
+  - Condottiero: ataque 9→10.
+  - Karambit: 25 de comida.
+  - Elite Cataphract: upgrade 1200F.
+  - Fuente: https://www.ageofempires.com/news/aoe2de-update-39284/
+
+## 2020 (3/4): agosto-octubre
+- 2020-08-24 — Update 40220: sin balance de civs; Wolf Hill gana oro y piedra. Fuente: https://www.ageofempires.com/news/aoe2de-update-40220/
+- 2020-09-22 — Update 40874:
+  - Arabia: 3 bosques por jugador, más lejos del TC; bases elevadas.
+  - Las bayas pasan de 8 a 10 casillas del TC.
+  - Fuente: https://www.ageofempires.com/news/aoe2de-update-40874/
+- 2020-10-20 — Update 41855:
+  - Solo bugfixes: Wheelbarrow y Hand Cart se aplican al instante a los aldeanos que ya trabajan; las minas se vacían por completo.
+  - Fuente: https://www.ageofempires.com/news/aoe2de-update-41855/
+
+## 2020 (4/4): noviembre
+- 2020-11-17 — Update 42848:
+  - Battle Elephant vs edificios +7/+10→+4/+7; cimientos de muralla con 0 de armadura cuerpo a cuerpo.
+  - Aztecs: carga extra de los aldeanos +5→+3.
+  - Bulgarians: Herrería 80% más rápida y -50% comida.
+  - Celts: el bonus de velocidad de infantería empieza en Feudal.
+  - Indians: todas las unidades de establo +1/+1 armadura perforante (antes solo camellos); pierden Plate Barding.
+  - Khmer: granjeros -5%.
+  - Koreans: armaduras de arquero gratis; las torres pierden alcance; Panokseon→Eupseong.
+  - Portuguese: tecnologías 30% más rápidas.
+  - Tatars: 2 ovejas al llegar a Feudal.
+  - Turks: línea Scout +1 armadura perforante.
+  - Jaguar 20→12 s; Genoese 22→18 s; Chieftains 700F/500G; Tusk Swords más cara.
+  - Fuente: https://www.ageofempires.com/news/aoe2de-update-42848/
+
+## 2021 (1/3): enero-mayo
+- 2021-01-25 — Update 44725 (Lords of the West: civs nuevas Burgundians y Sicilians):
+  - Franks: forrajeo +25→+15%; pierden Treadmill Crane (también Khmer y Slavs).
+  - Italians: descuento de Muelle 50→33%; Universidad -33%; Genoese 40 oro.
+  - Saracens: los arqueros pierden el bonus vs edificios; camellos +10 HP; Zealotry 500F/450G.
+  - Mayans: Obsidian Arrows→Hul'che Javelineers.
+  - Tatars: Keshik 60F.
+  - Burmese: Arambai ataque 17→12.
+  - Koreans: Elite Cannon Galleon.
+  - Cavalry Archer: animación 1.3→1.15 s.
+  - Empalizadas: -40% HP en Oscura.
+  - Fuente: https://www.ageofempires.com/news/aoeiide-update-44725/
+- 2021-03-24 — Update 46295: sin balance. Fuente: https://ageofempires.fandom.com/wiki/Update_46295
+- 2021-05-03 — Update 47820:
+  - Steppe Lancer 40 oro; el Cannon Galleon se desbloquea con Chemistry.
+  - Burgundians: reliquias 30 comida/min; eco -50% comida y una edad antes; Flemish Militia vs caballería 12→8.
+  - Franks: Bearded Axe pasa a Castillos (300/300); Chivalry pasa a Imperial (600W/500G).
+  - Malay: Fish Trap +300% (ya no infinita); elefantes -30/-40%.
+  - Mangudai: velocidad 1.4.
+  - Sicilians: Siege Onager y Serjeant mejorado.
+  - Fuente: https://www.ageofempires.com/news/aoe2de-update-47820/
+
+## 2021 (2/3): julio-octubre
+- 2021-07-06 — Update 50292:
+  - Hand Cannoneer: precisión 65→75%.
+  - Burgundians: Flemish Militia pierde +2 vs edificios; Flemish Revolution 1200F/650G.
+  - Persians: Elite War Elephant 25 s, 170F/85G.
+  - Slavs: Elite Boyar +2 armadura cuerpo a cuerpo.
+  - Turks: Artillery 500G/450W.
+  - Nuevo inicio de Empire Wars.
+  - Fuente: https://www.ageofempires.com/news/aoe2de-update-50292/
+- 2021-08-10 — Update 51737 (Dawn of the Dukes: civs nuevas Poles y Bohemians):
+  - Herbal Medicine 200 oro.
+  - Steppe Lancer: recarga 2.3→2.0.
+  - Hand Cannoneer: HP 35→40; bala más rápida.
+  - Chinese: bonus de equipo +10% comida de granja.
+  - Cumans: Archery Range y Stable -100 madera.
+  - Lithuanians: Winged Hussar en lugar de Hussar; sin Blast Furnace; Leitis 13/16.
+  - Malians: minas de oro +30% (reemplaza Gold Mining gratis).
+  - Sicilians: +100 de piedra; Scutage→Hauberk.
+  - Byzantines: Town Patrol gratis.
+  - Fuente: https://ageofempires.com/news/aoeiide-update-51737/
+- 2021-10-05 — Update 54480:
+  - Long Swordsman y Two-Handed +1 armadura cuerpo a cuerpo; upgrade de Long Swordsman 150F.
+  - Supplies 75F/75G (antes 150F/100G).
+  - Cannon Galleon: proyectil 1.95→3.
+  - Burgundians: Vineyards ya no convierte comida (queda un goteo de oro).
+  - Portuguese: Feitoria HP 5200→2700.
+  - Vietnamese: Chatras +100 HP.
+  - Bulgarians: ajustes del Krepost.
+  - Fuente: https://www.ageofempires.com/news/aoeii-de-update-54480/
+
+## 2021 (3/3): noviembre
+- 2021-11-17 — Update 56005:
+  - Empalizada 3 de madera; casas con armadura -2/-1/1; Scout y Eagle con conversión mínima 8 s.
+  - Buffs de unidades únicas:
+    - Jaguar: 65 HP.
+    - Shotel: 45 HP.
+    - Kamayuk: 70 HP y +1 armadura.
+    - Samurai: 70 HP y 10 de ataque.
+    - Teutonic Knight: 14 de ataque y 7 de armadura.
+    - Woad: 10 de ataque.
+    - Gbeto: 35 HP.
+  - Upgrades élite más baratos de Samurai, TK, Shotel y Berserk.
+  - Vikings: pierden Thumb Ring; infantería +20% HP solo desde Feudal; Berserk 12 de ataque.
+  - Cumans: descuento 100→75 de madera.
+  - Poles: Siege Engineers; Obuch 12 s.
+  - Byzantines: curación de equipo +100%.
+  - Burmese: Manipur +5 vs arqueros.
+  - Fuente: https://www.ageofempires.com/news/aoeii_de_update_56005/
+
+## 2022 (1/3): enero-mayo
+- 2022-01-31 — Update 58259: sin balance; en Arabia las ovejas quedan a 18-24 casillas. Fuente: https://www.ageofempires.com/news/aoe-ii-de-update-58259/
+- 2022-02-22 — Update 59165: sin balance. Fuente: https://www.ageofempires.com/news/age-of-empires-ii-de-update-59165/
+- 2022-04-27 — Update 61321 (Dynasties of India: civs nuevas Bengalis, Dravidians y Gurjaras; los Indians pasan a llamarse Hindustanis, gratis, con Ghulam, Imperial Camel y Caravanserai):
+  - Elephant Archer: solo en Archery Range; HP 230; 34 s.
+  - Camel Rider: LOS 5.
+  - Saracens: Zealotry pasa a Castillos; Madrasah eliminada; nueva Counterweights.
+  - Slavs: Orthodoxy→Detinets.
+  - Vietnamese: los leñadores generan oro.
+  - Cumans: Kipchak 12 s.
+  - Burmese: elefantes +1/+1.
+  - Torre de vigilancia en Feudal: 850 HP.
+  - Fuentes: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-61321/ y https://www.ageofempires.com/news/dynasties_of_india_is_here/
+- 2022-05-31 — Update 62085: sin balance. Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-62085/
+
+## 2022 (2/3): junio-octubre
+- 2022-06-28 — Update 63482: solo fixes (exploit del mercado de Saracens; Wootz Steel). Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-63482/
+- 2022-08-29 — Update 66692:
+  - Crossbowman: upgrade 125F/75G→175F/125G.
+  - Arbalester: upgrade 350F/300G→450F/400G.
+  - Murallas de piedra 1080 HP en Oscura/Feudal; Elephant Archer 80F; precio mínimo del mercado 23.
+  - Britons, Byzantines y Malay ganan Treadmill Crane; Sicilians y Teutons lo pierden.
+  - Sicilians: resistencia a daño bonus 50→33%.
+  - Burgundians: Coustillier carga 25→20; eco -40%.
+  - Hindustanis: Ghulam 55 HP; pierden Halberdier.
+  - Gurjaras: Shrivamsha nerf.
+  - Bengalis: monjes +3/+3.
+  - Dravidians: Bombard Cannon.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-66692/
+- 2022-10-17 — Hotfix 71094: sin balance. Fuente: igual que 66692
+
+## 2022 (3/3): diciembre
+- 2022-12-07 — Update 73855:
+  - Heavy Cav Archer +4 vs lanceros (antes 2).
+  - Battle Elephant 110F.
+  - Gurjaras: bonus de montados 20/30/40% según edad; Chakram 5→3 con perforación del 100%.
+  - Hindustanis: velocidad de ataque de camellos 25→20%.
+  - Poles: oro por minar piedra 50→33%.
+  - Portuguese: los forrajeadores generan madera (nuevo bonus); el bonus de tecnologías +25% pasa a ser de equipo.
+  - Vikings: el descuento naval no aplica al Transporte.
+  - Burmese: Arambai con Parthian Tactics.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-73855/
+
+## 2023 (1/5): enero-marzo
+- 2023-01-31 — Update 75350: sin notas de balance (orientado a Xbox). Fuente: https://ageofempires.fandom.com/wiki/Update_75350
+- 2023-03-07 — Update 78174:
+  - Bohemians: upgrade de Houfnice 1100F/800G; radio 0.7.
+  - Burgundians: eco -40→-33%.
+  - Hindustanis: descuento de aldeanos 10/15/20/25→5/10/15/20%.
+  - Poles: Folwark 10→8%.
+  - Siege Elephant: ajustes de HP y armadura.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-78174/
+
+## 2023 (2/5): abril, Update 81058 general
+- 2023-04-11 — Update 81058 (parche grande previo a Return of Rome):
+  - Nueva tecnología Gambesons: Castillos, después de Supplies; milicia +1 armadura perforante; 100F/100G. 19 civs la tienen.
+  - Supplies 20 s; Murder Holes 35 s.
+  - Upgrade de Pikeman 160F/90G y 35 s; upgrades de milicia más rápidos (Champion 85 s).
+  - Eagle 25F/50G.
+  - Heavy Scorpion 800F/900W.
+  - Sappers en madera.
+  - Cannon Galleon rehecho: 50 de daño, 100% de precisión, área pequeña.
+  - Elite Steppe Lancer: 2 de armadura perforante.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-81058/
+
+## 2023 (3/5): Update 81058 civs
+- 2023-04-11 — Update 81058 (civs, parte 1):
+  - Incas: nuevo bonus de comida militar -15/20/25/30%; pierden Supplies y la llama inicial.
+  - Malians: aldeanos +15% de oro (reemplaza minas +30%); Tigui con 8 flechas.
+  - Malay: armaduras de infantería gratis.
+  - Burgundians: Flemish Militia 50F/15G y 60 HP; Flemish Revolution cuesta según los aldeanos.
+  - Dravidians: asedio -33% madera; Medical Corps 30 HP/min.
+  - Goths: la caza dura +20%.
+  - Spanish: +20 de oro por tecnología.
+  - Vikings: Chieftains da oro al matar aldeanos/monjes/comercio; Berserkergang→Bogsveigar.
+  - Sicilians: castillos +50% (antes +100%); granjas +125%; el Donjon entrena lanceros.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-81058/
+- 2023-04-11 — Update 81058 (civs, parte 2):
+  - Bonus de oro y comida tras el primer TC: Aztecs +50 oro; Persians +50F/+50W.
+  - Britons: bonus de equipo 20→10%.
+  - Celts: Woad 70 HP.
+  - Gurjaras: Kshatriya 500F/450G.
+  - Huns: Atheism 500F/300W.
+  - Japanese: Hoardings y Kataparuto más barato.
+  - Lithuanians: +100 de comida por TC.
+  - Poles: regeneración desde Feudal.
+  - Portuguese: Organ Gun rehecho.
+  - Saracens: Zealotry 400/400.
+  - Slavs: Boyar 60F/70G; Druzhina 900F.
+  - Teutons: Elite TK 30 oro.
+  - Turks: Artillery 600F/650G.
+  - Vietnamese: Paper Money 550F/200W.
+  - Bengalis: caballería +2 vs skirms.
+  - Fuente: igual que 81058
+
+## 2023 (4/5): mayo-septiembre
+- 2023-05-16 — Update 83607 (Return of Rome; civ nueva de AoE2: Romans, sin ranked al principio; Lac Viet es del modo RoR):
+  - Nuevo Dromon para Byzantines, Goths, Huns y Romans.
+  - Byzantines pierden Elite Cannon Galleon; Goths pierden Cannon Galleon.
+  - Romans: Centurion y Legionary; infantería con doble bonus de armadura de Herrería; Scorpion -60% oro.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-83607/
+- 2023-06-27 — Update 87863:
+  - Romans entran al Ranked.
+  - Ram más rápido; Gillnets 20%; Shaft Mining 175F/75W.
+  - Chinese: descuento de tecnologías 5/10/15%.
+  - Koreans: arqueros e infantería -50% madera.
+  - Hindustanis: pierden Guilds.
+  - Britons ganan Gambesons; Malay los pierden.
+  - Slavs: pierden Fervor.
+  - Burmese: Manipur pasa a Castillos.
+  - Janissary: alcance 7.
+  - Magyars: nuevo bonus de equipo.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-87863/
+- 2023-07-26 — Update 90260: sin balance. Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-90260/
+- 2023-09-06 — Update 93001:
+  - Heavy Cav Archer: precisión 50→80%.
+  - Bohemians: Hussite Wagon rehecho (11 de ataque y 5 proyectiles secundarios).
+  - Franks: descuento de castillo 15/25%.
+  - Romans: Centurion 110 HP.
+  - Sicilians: Elite Serjeant 50F.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-93001/
+
+## 2023 (5/5): octubre-diciembre
+- 2023-10-31 — Update 95810 (The Mountain Royals: civs nuevas Armenians y Georgians; rework gratis de Persians):
+  - Persians: Savar reemplaza al Paladín; TC y Muelle con 2x HP; +50F/+50W.
+  - Saracens: camellos +25% HP; Zealotry→Bimaristan.
+  - Magyars: Huszar 35F/45G.
+  - Japanese: CA +2 vs arqueros.
+  - Slavs: granjeros +15%.
+  - Poles: sin Guilds.
+  - Celts: Ring Archer Armor.
+  - Elite Skirm +4 vs lanceros.
+  - Fuentes: https://www.ageofempires.com/news/preview-age-of-empires-ii-definitive-edition-update-95810/ y https://www.ageofempires.com/news/pre-order-aoe-ii-de-the-mountain-royals/
+- 2023-12-11 — Update 99311:
+  - Monje: probabilidad de conversión 25→40%, ventana 5-9 s.
+  - Nueva Devotion; Faith 550F/750G; Cavalier upgrade 80 s.
+  - Chinese: TC +15 pob y +7 LOS.
+  - Hindustanis: aldeanos -8/13/18/23%.
+  - Incas: comida -10/15/20/25%.
+  - Persians: Savar vs arqueros 2.
+  - Armenians: pierden Two-Man Saw.
+  - Georgians: reparación 25%.
+  - Huns: Tarkan 1.4 de velocidad.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-99311/
+
+## 2024 (1/2): febrero-abril
+- 2024-02-22 — Update 104954: sin balance. Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-104954/
+- 2024-03-14 — Update 107882 (Victors and Vanquished: escenarios, sin civs):
+  - Georgians: sin -50 de comida; regeneración 15%/min; Monaspa 14 s.
+  - Italians: Genoese 14 s.
+  - Tatars: Flaming Camel en el Taller de Asedio en Imperial, 30 s.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-107882/
+- 2024-03-26 — Update 108769: sin balance. Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-108769/
+- 2024-04-30 — Update 111772 (+11 mapas de Red Bull Wololo El Reinado):
+  - Watch Tower 35 de madera.
+  - Elite Battle Elephant 100F.
+  - Heavy Scorpion 60 HP.
+  - Devotion 200 oro.
+  - Mongols: +20/30% HP para la línea Scout y Steppe Lancer en Castillos/Imperial.
+  - Bengalis: pierden Parthian Tactics.
+  - Armenians pierden Shipwright; Berbers lo ganan.
+  - Malay: elefantes -25/-35%.
+  - Sicilians: Donjon 125 s.
+  - Georgians: regeneración 5/10/15 HP.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-111772/
+
+## 2024 (2/2): julio-diciembre
+- 2024-07-02 — Update 117204: sin balance. Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-117204/
+- 2024-10-15 — Update 125283:
+  - Crossbowman 175F/100G; Arbalester 450F/350G.
+  - Mercado: comprar 100F cuesta 150 oro (antes 130) y vender 100F da 81 (antes 70).
+  - Ram vs edificios 150.
+  - Poles: Bloodlines y upgrades de Scout -50% comida.
+  - Aztecs: militares 15% más rápidos.
+  - Byzantines: Fire Ship 20%.
+  - Koreans: Turtle Ship más barato y rápido.
+  - Portuguese: Organ Gun 25 s.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-preview-125283/
+- 2024-11-14 — Update 128442 (Chronicles: Battle for Greece: Achaemenids, Athenians y Spartans, fuera del ranked): sin balance numérico; Antiquity Mode. Fuentes: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-128442/ y https://ageofempires.com/news/new-dlc-available-now-chronicles-battle-for-greece
+- 2024-12-10 — Update 130746: sin balance. Fuente: https://ageofempires.com/news/age-of-empires-ii-definitive-edition-minor-update-130746
+
+## 2025 (1/2): enero-junio
+- 2025-01-30 — Update 133431: sin balance. Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-minor-update-133431/
+- 2025-04-10 — Update 141935:
+  - Scorpion: ataque 12→11 (Heavy 16→14); +1/+2 vs infantería; +7/+10 vs elefantes.
+  - Línea de milicia (parche de abril de 2025; Spirit Of The Law lo atribuye a este update, la página oficial resumida no lo lista — SIN VERIFICAR el número de build): se ELIMINA Supplies y parte de su descuento queda integrado; en los datos actuales la línea cuesta 50F/20G de base y Hombres de armas/Espadachín/Campeón van a 0.96 de velocidad (milicia 0.9). Gambesons sigue existiendo (50F/100G).
+  - Mayans pasan a llamarse Maya e Incas pasan a llamarse Inca.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-141935/
+- 2025-05-06 — Update 143421 (The Three Kingdoms: civs nuevas Shu, Wei, Wu, Jurchens y Khitans): sin balance. Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-143421/
+- 2025-05-12 — Update 144358: fixes (Scorpion vs Condottiero). Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-144358/
+- 2025-05-28 — Update 145651: sin balance. Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-145651/
+- 2025-06-25 — Update 147949:
+  - Fire Lancer: 9 de ataque.
+  - Jurchens: Grenadier 40 HP, 12 de ataque, 35F/65G.
+  - Khitans: pastores nerfeados.
+  - Shu: War Chariot más rápido.
+  - Wei: Gold Shaft Mining; Tuntian 1.8 F/min.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-147949/
+
+## 2025 (2/2): agosto-diciembre
+- 2025-08-12 — Update 153015 (pathfinding + balance):
+  - Skirmisher 22→26 s.
+  - Pike/Halberdier vs Mameluke 11→7.
+  - Siege Tower 100W/120G; Treadmill Crane 200W/50S.
+  - Los animales que matan los militares ya no se pudren.
+  - Franks: Bearded Axe +2 de alcance.
+  - Goths: pierden +5 vs jabalí.
+  - Gurjaras: bayas 175.
+  - Sicilians: 40%.
+  - Magyars: Huszar con más ataque y HP.
+  - Spanish: Elite Conquistador 70F/60G.
+  - Saracens: Elite Mameluke 80 HP.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-153015/
+- 2025-08-20 — Update 153638: sin balance. Fuente: https://devtrackers.gg/aoe/p/cc4bf7b0-age-of-empires-ii-definitive-edition-minor-update-153638
+- 2025-09-16 — Update 155976: sin balance. Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-minor-update-155976/
+- 2025-10-14 — Update 158041 (Chronicles: Alexander the Great: Macedonians, Thracians y Puru, fuera del ranked): solo civs Chronicles. Fuentes: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-158041/ y https://www.ageofempires.com/news/new-dlc-available-now-chronicles-alexander-the-great/
+- 2025-11-06 — Update 160062: solo fixes. Fuente: https://ageofempires.fandom.com/wiki/Update_160062
+- 2025-12-02 — Update 162286:
+  - Pollo 75 de comida; Eagle 20F; Gambesons 50F; 9 mapas nuevos.
+  - Ajustes a 12 civs.
+  - Detalle en parches_recientes.md.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-162286/
+
+## 2026: enero-septiembre (detalle en parches_recientes.md)
+- 2026-02-17 — Update 169123 (The Last Chieftains: civs nuevas Mapuche, Muisca y Tupi):
+  - Inca rehechos: Champi y Settlements; pierden Eagles, campamentos y molino.
+  - Slinger rehecho; nueva línea Hulk.
+  - Siege Tower más débil.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-169123/
+- 2026-03-12 — Update 170934: nerf a Champi; Mapuche y Tupi. Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-170934/
+- 2026-06-02 — Update 177723:
+  - Slinger 50F/25W.
+  - Muelle con flechas por edad.
+  - Inca: comida -15/20/25/30%.
+  - Muisca buff; Wei nerf.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-177723/
+- 2026-09-22 — Update 185872 (The Viking Sagas: civs nuevas Danes, Saxons y Varangians; Vikings rehechos):
+  - Mounted Crossbowman reemplaza al Cavalry Archer en 12 civs europeas.
+  - Teutons: el bonus de armadura pasa a infantería y montados.
+  - Franks: Bearded Axe eliminado; nueva Ordonnance Companies.
+  - Onager 55 de ataque.
+  - Fuente: https://www.ageofempires.com/news/age-of-empires-ii-definitive-edition-update-185872/
+
+## Cambios por civ (2020-2026): Armenians, Aztecs, Bengalis, Berbers, Bohemians, Britons / Armenios, Aztecas, Bengalíes, Bereberes, Bohemios, Britanos — qué cambió y cuándo (parches, nerfs, buffs, cambiaron)
+- Armenians:
+  - 2023-10-31: civ nueva.
+  - 2023-12: galeras con proyectil extra; pierden Two-Man Saw.
+  - 2024-04: pierden Shipwright.
+  - 2026-02: Warrior Priest 40F.
+  - 2026-06: Elite Composite 50 HP.
+  - 2026-09: Treadmill Crane.
+- Aztecs:
+  - 2020-05: entrenamiento militar 15→10%.
+  - 2020-11: carga de aldeanos +5→+3; Jaguar 12 s.
+  - 2021-11: Jaguar 65 HP.
+  - 2023-04: +50 oro tras el TC; Gambesons.
+  - 2024-10: militares 15% más rápidos.
+- Bengalis:
+  - 2022-04: civ nueva.
+  - 2022-08: monjes +3/+3.
+  - 2023-04: caballería +2 vs skirms.
+  - 2023-12: buff a Ratha.
+  - 2024-04: pierden Parthian Tactics.
+  - 2026: Ratha más débil; pierden Treadmill Crane.
+- Berbers:
+  - 2020-02: Genitour +1 armadura perforante.
+  - 2022-04: Elite Genitour 40F.
+  - 2023-04: aldeanos +5/10% de velocidad.
+  - 2024-04: ganan Shipwright.
+- Bohemians:
+  - 2021-08: civ nueva.
+  - 2022-04: Houfnice 50 de ataque.
+  - 2023-03: Houfnice más cara.
+  - 2023-04: Hussite Reforms 500F.
+  - 2023-09: Hussite Wagon rehecho.
+  - 2023-12: Wagon 160 HP.
+  - 2024-10: Wagon 30 s.
+  - 2026-09: Wagenburg 10%.
+- Britons:
+  - 2022-08: ganan Treadmill Crane.
+  - 2023-04: bonus de equipo 20→10%.
+  - 2023-06: ganan Gambesons.
+  - 2026-09: Mounted Crossbowman en lugar de CA.
+
+## Cambios por civ (2020-2026): Bulgarians, Burgundians, Burmese, Byzantines, Celts / Búlgaros, Borgoñeses, Birmanos, Bizantinos, Celtas — qué cambió y cuándo (parches, nerfs, buffs, cambiaron)
+- Bulgarians:
+  - 2020-04: pierden Paladín; Stirrups para toda la caballería.
+  - 2020-11: Herrería +80% de velocidad y -50% comida.
+  - 2021-10: ajustes del Krepost.
+  - 2023-06: Konnik desmontado con armadura 2/1.
+  - 2024-04: Elite Konnik 16 s.
+  - 2025-08: el Krepost investiga Elite Konnik.
+- Burgundians:
+  - 2021-01: civ nueva.
+  - 2021-05: reliquias 30F/min; Flemish nerf.
+  - 2021-07: Flemish Revolution más cara.
+  - 2021-10: Vineyards solo goteo.
+  - 2022-08: Coustillier 20; eco -40%.
+  - 2023-03: eco -33%.
+  - 2023-04: Flemish Militia rehecha.
+  - 2025-08: Flemish 30F/25G.
+  - 2026: eco -40%; Flemish 35F.
+- Burmese:
+  - 2020-05: fix de Manipur vs Masonry.
+  - 2021-01: Arambai 12/15.
+  - 2021-08: Howdah +1/+2.
+  - 2021-11: Manipur +5 vs arqueros.
+  - 2022-04: elefantes +1/+1.
+  - 2022-12: Arambai con Parthian Tactics.
+  - 2023-06: Manipur en Castillos; Howdah en Imperial.
+- Byzantines:
+  - 2020-07: Elite Cataphract 1200F; Logistica 800F.
+  - 2021-08: Town Patrol gratis.
+  - 2021-11: curación de equipo +100%.
+  - 2022-08: Treadmill Crane.
+  - 2023-05: Dromon; sin Elite Cannon Galleon.
+  - 2024-10: Fire Ship 20%.
+  - 2026-09: Cataphract +13 vs infantería; Varangian Guard.
+- Celts:
+  - 2020-11: velocidad de infantería desde Feudal.
+  - 2021-11: Woad 10 de ataque.
+  - 2023-04: Stronghold 33%; Woad 70 HP.
+  - 2023-10: Ring Archer Armor.
+  - 2026-09: Mounted Crossbowman; pierden Treadmill Crane.
+
+## Cambios por civ (2020-2026): Chinese, Cumans, Dravidians, Ethiopians, Franks, Georgians / Chinos, Cumanos, Dravídicos, Etíopes, Francos, Georgianos — qué cambió y cuándo (parches, nerfs, buffs, cambiaron)
+- Chinese:
+  - 2020-03: pierden Redemption.
+  - 2020-05: pierden Supplies.
+  - 2021-08: bonus de equipo +10% de comida de granja.
+  - 2023-06: descuento de tecnologías 5/10/15%.
+  - 2023-12: TC +15 pob y +7 LOS.
+  - 2026-09: pierden Heavy CA.
+- Cumans:
+  - 2019-12: TC en Feudal 270 s; pierden Husbandry.
+  - 2020-03: pierden Redemption; Capped Ram en Castillos.
+  - 2020-05: pierden Supplies.
+  - 2021-05: empalizada +33%.
+  - 2021-08: Archery Range y Stable -100 de madera.
+  - 2021-11: -75 de madera.
+  - 2022-04: Kipchak 12 s.
+- Dravidians:
+  - 2022-04: civ nueva.
+  - 2022-08: Bombard Cannon.
+  - 2023-04: asedio -33% madera; Medical Corps.
+  - 2024-04: Wootz 650F/550G.
+  - 2024-10: Thirisadai alcance 7.
+- Ethiopians:
+  - 2020-11: Shotel 30 de oro.
+  - 2021-11: Shotel 45 HP.
+  - 2023-04: Royal Heirs rehecha; el bonus de equipo afecta solo a los puestos.
+- Franks:
+  - 2021-01: forrajeo +15%; pierden Treadmill Crane.
+  - 2021-05: Bearded Axe en Castillos; Chivalry en Imperial.
+  - 2023-09: descuento de castillo 15/25%.
+  - 2025-08: Bearded Axe +2.
+  - 2026-09: Throwing Axeman alcance 5; Bearded Axe eliminado; Ordonnance Companies; Mounted Crossbowman.
+- Georgians:
+  - 2023-10: civ nueva.
+  - 2023-12: reparación 25%.
+  - 2024-03: sin -50F; regeneración 15%/min.
+  - 2024-04: regeneración 5/10/15 HP.
+  - 2024-10: Monaspa 70 HP.
+
+## Cambios por civ (2020-2026): Goths, Gurjaras, Hindustanis, Huns, Inca, Italians / Godos, Gurjara, Indostanos, Hunos, Incas, Italianos — qué cambió y cuándo (parches, nerfs, buffs, cambiaron)
+- Goths:
+  - 2020-02: infantería -35% desde Oscura.
+  - 2020-03: escalonado 20/25/30/35%; pierden Arson.
+  - 2020-04: Loom gratis.
+  - 2020-11: Loom instantáneo.
+  - 2023-04: caza +20%.
+  - 2023-05: Dromon; sin Cannon Galleon.
+  - 2025-08: pierden +5 vs jabalí.
+  - 2026-09: Treadmill Crane.
+- Gurjaras:
+  - 2022-04: civ nueva.
+  - 2022-08: nerf a Shrivamsha y a los rebaños garrisoneados.
+  - 2022-12: montados 20/30/40%; Chakram 3.
+  - 2023-04: Kshatriya 500F/450G.
+  - 2025-08: bayas 175; Camel Scout 22 s.
+  - 2026-09: sin +5 de garrison en muelles.
+- Hindustanis (antes Indians):
+  - 2020-04: pescadores +10%.
+  - 2020-11: establo +1/+1 perforante; sin Plate Barding.
+  - 2022-04: renombrados.
+  - 2022-08: Ghulam 55 HP; sin Halberdier.
+  - 2022-12: camellos 20%.
+  - 2023-03: aldeanos 5/10/15/20%.
+  - 2023-06: sin Guilds.
+  - 2023-12: aldeanos 8/13/18/23%.
+  - 2025-08: Shatagni 500F/650G.
+- Huns:
+  - 2020-05: pierden Supplies.
+  - 2021-01: Atheism -50% de oro de reliquias enemigo.
+  - 2023-04: Atheism 500F/300W.
+  - 2023-05: Dromon.
+  - 2023-12: Tarkan 1.4.
+- Inca:
+  - 2021-05: aldeanos con Herrería desde Castillos.
+  - 2021-11: Kamayuk 70 HP.
+  - 2023-04: militares con comida -15/20/25/30%; pierden Supplies.
+  - 2023-12: 10/15/20/25%.
+  - 2025-04: renombre a "Inca".
+  - 2026-02: rework (Champi, Settlements, sin Eagles ni molinos).
+  - 2026-06: comida -15/20/25/30%.
+- Italians:
+  - 2021-01: Muelle 33%; Universidad -33%; Genoese 40 oro.
+  - 2024-03: Genoese 14 s.
+  - 2026-02: Muelle y Universidad 25%.
+
+## Cambios por civ (2020-2026): Japanese, Khmer, Koreans, Lithuanians, Magyars, Malay / Japoneses, Jemeres, Coreanos, Lituanos, Magiares, Malayos — qué cambió y cuándo (parches, nerfs, buffs, cambiaron)
+- Japanese:
+  - 2021-11: Samurai 70 HP y 10 de ataque.
+  - 2023-04: Hoardings; Kataparuto 550W/300G.
+  - 2023-10: CA +2 vs arqueros.
+- Khmer:
+  - 2020-04: granjeros -3%; sin Bombard Cannon.
+  - 2020-11: granjeros -5%; Battle Elephant +10% de velocidad.
+  - 2021-01: pierden Treadmill Crane.
+  - 2022-04: Ballista Elephant 10 de ataque.
+  - 2025-08: Elite Ballista Elephant 280 HP.
+- Koreans:
+  - 2020-07: militares -20% madera.
+  - 2020-11: armaduras de arquero gratis; torres sin alcance extra; Eupseong.
+  - 2021-01: Elite Cannon Galleon.
+  - 2023-06: arqueros e infantería -50% madera; barcos -20%.
+  - 2024-10: Turtle Ship 650F/500G.
+  - 2026: Turtle Ship rehecho; pierden Gambesons.
+- Lithuanians:
+  - 2019-12: reliquias +4 como máximo.
+  - 2020-04: Leitis 70F/50G.
+  - 2020-05: pierden Supplies.
+  - 2020-11: Leitis 1 de armadura perforante.
+  - 2021-08: Winged Hussar; sin Blast Furnace.
+  - 2023-04: +100F por TC.
+- Magyars:
+  - 2023-06: bonus de equipo CA +25% de velocidad.
+  - 2023-10: Huszar 35F/45G.
+  - 2025-08: Huszar 80 HP y 10 de ataque.
+  - 2026-09: Huszar 18 s.
+- Malay:
+  - 2020-05: avanzan de edad un 66% más rápido.
+  - 2021-05: Fish Trap +300%; elefantes -30/-40%.
+  - 2022-08: Treadmill Crane.
+  - 2023-04: armaduras de infantería gratis.
+  - 2023-06: pierden Gambesons.
+  - 2024-04: elefantes -25/-35%.
+
+## Cambios por civ (2020-2026): Malians, Maya, Mongols, Persians, Poles, Portuguese / Malíes, Mayas, Mongoles, Persas, Polacos, Portugueses — qué cambió y cuándo (parches, nerfs, buffs, cambiaron)
+- Malians:
+  - 2021-08: minas +30%.
+  - 2023-04: aldeanos +15% oro; Tigui con 8 flechas.
+  - 2023-06: oro +10%.
+- Maya (antes Mayans):
+  - 2019-12: Plumed Archer más caro.
+  - 2020-05: pierden Supplies; El Dorado 70 s.
+  - 2021-01: Hul'che Javelineers.
+  - 2025-04: renombre a "Maya".
+- Mongols:
+  - 2020-02: cazadores +40%; ganan Steppe Lancer.
+  - 2020-05: pierden Supplies.
+  - 2021-05: Mangudai 1.4.
+  - 2024-04: +20/30% HP para la línea Scout y Steppe Lancer en Castillos/Imperial.
+- Persians:
+  - 2020-02: Kamandaran 400F/300G.
+  - 2020-04: TC y Muelle +10/15/20%.
+  - 2021-07: Elite War Elephant 170F/85G.
+  - 2023-04: +50F/+50W.
+  - 2023-10: rework (Savar, TC 2x HP).
+  - 2023-12: pierden el oro por kill.
+  - 2025-08: Savar 1200F.
+- Poles:
+  - 2021-08: civ nueva.
+  - 2021-11: Siege Engineers; Obuch 12 s.
+  - 2022-12: oro de piedra 33%.
+  - 2023-03: Folwark 8%.
+  - 2023-10: sin Guilds.
+  - 2023-12: Folwark 100W.
+  - 2024-10: Bloodlines y Scout -50% comida.
+  - 2025-08: Folwark 10%.
+- Portuguese:
+  - 2020-02: Feitoria +producción.
+  - 2020-07: -20% oro.
+  - 2020-11: tecnologías +30%.
+  - 2021-10: Feitoria 2700 HP.
+  - 2022-12: forrajeadores dan madera.
+  - 2023-04: Organ Gun rehecho.
+  - 2024-10: Organ Gun 25 s.
+  - 2025-08: se revierten los cambios al Organ Gun.
+  - 2026-02: Circumnavigation; sin Demolition Ships.
+  - 2026-09: sin Redemption.
+
+## Cambios por civ (2020-2026): Romans, Saracens, Sicilians, Slavs, Spanish / Romanos, Sarracenos, Sicilianos, Eslavos, Españoles — qué cambió y cuándo (parches, nerfs, buffs, cambiaron)
+- Romans:
+  - 2023-05: civ nueva.
+  - 2023-06: entran al Ranked; cambios navales.
+  - 2023-09: Centurion 110 HP.
+  - 2023-10: aura 20%.
+  - 2025-08: Scorpion -50% oro.
+- Saracens:
+  - 2020-05: Zealotry 700 oro.
+  - 2021-01: arqueros sin bonus vs edificios; camellos +10 HP.
+  - 2022-04: Zealotry en Castillos; Counterweights.
+  - 2022-08: mercado 21.
+  - 2023-04: Zealotry 400/400.
+  - 2023-10: camellos +25% HP; Bimaristan.
+  - 2025-08: Elite Mameluke 80 HP.
+  - 2026-09: pierden Treadmill Crane.
+- Sicilians:
+  - 2021-01: civ nueva.
+  - 2021-05: Siege Onager.
+  - 2021-08: +100 de piedra; Hauberk.
+  - 2022-08: resistencia 33%; sin Treadmill Crane.
+  - 2023-04: castillos 50%; granjas +125%.
+  - 2024-04: Donjon 125 s.
+  - 2025-08: resistencia 40%.
+  - 2026-09: Mounted Crossbowman y Cranequins.
+- Slavs:
+  - 2020-04: Boyar 1.3.
+  - 2021-01: pierden Treadmill Crane.
+  - 2021-07: Elite Boyar +2 de armadura.
+  - 2022-04: Detinets.
+  - 2023-04: Boyar 60F/70G.
+  - 2023-06: sin Fervor; monjes +20%.
+  - 2023-10: granjeros +15%.
+- Spanish:
+  - 2023-04: +20 de oro por tecnología; Conquistador -1 de armadura perforante.
+  - 2025-08: Elite Conquistador 70F/60G.
+  - 2026-02: Missionary carga reliquias.
+  - 2026-09: Conquistador más caro; Mounted Crossbowman.
+
+## Cambios por civ (2020-2026): Tatars, Teutons, Turks, Vietnamese, Vikings / Tártaros, Teutones, Turcos, Vietnamitas, Vikingos — qué cambió y cuándo (parches, nerfs, buffs, cambiaron)
+- Tatars:
+  - 2019-12: Keshik 40 oro.
+  - 2020-03: Thumb Ring gratis; Flaming Camel.
+  - 2020-11: ovejas en Feudal.
+  - 2021-01: Keshik 60F; ovejas solo de los TC nuevos.
+  - 2022-04: Flaming Camel +200 vs edificios.
+  - 2024-03: Flaming Camel en el Taller de Asedio.
+- Teutons:
+  - 2020-02: granjas -40%.
+  - 2020-04: +1 armadura cuerpo a cuerpo para cuartel y establo en Castillos/Imperial.
+  - 2020-04: TK más rápido.
+  - 2021-11: TK 14 de ataque y 7 de armadura.
+  - 2022-08: pierden Treadmill Crane.
+  - 2023-04: Elite TK 30 oro.
+  - 2026-09: la armadura pasa a infantería y montados; Elite TK con 8 de armadura cuerpo a cuerpo.
+- Turks:
+  - 2020-11: línea Scout +1 de armadura perforante.
+  - 2021-07: Artillery 500G/450W.
+  - 2023-04: Artillery 600F/650G.
+  - 2023-06: Janissary alcance 7.
+- Vietnamese:
+  - 2020-02: mejoras eco sin madera.
+  - 2021-10: Chatras +100 HP.
+  - 2022-04: leñadores generan oro.
+  - 2023-06: tecnologías eco +100% de velocidad.
+  - 2026-09: +20% HP solo para arqueros a pie y skirms; Masonry.
+- Vikings:
+  - 2021-11: pierden Thumb Ring; infantería +20% HP desde Feudal.
+  - 2022-12: el descuento naval no aplica al Transporte.
+  - 2023-04: Chieftains con oro; Bogsveigar.
+  - 2026-02: sin Demolition Ships.
+  - 2026-09: rework (Varangian Guard; pierden CA y Gambesons; Chieftains sin oro).
+
+## Civs con historial corto o fuera de 2020-2024
+- Achaemenids, Athenians y Spartans: 2024-11-14 (Chronicles, sin ranked); ajustes 2025-08 y 2025-10.
+- Macedonians, Thracians y Puru: 2025-10-14 (Chronicles, sin ranked).
+- Shu, Wei, Wu, Jurchens y Khitans:
+  - 2025-05-06: civs nuevas.
+  - 2025-06 y 2025-08: ajustes (Grenadier, Tuntian, War Chariot, Wu Jian).
+  - 2025-12 y 2026: ajustes en parches_recientes.md.
+- Mapuche, Muisca y Tupi: 2026-02-17. Danes, Saxons y Varangians: 2026-09-22.
+- Builds que no se pudieron leer: 77209 (~feb 2023) y 118476 (~2024). Sus cambios no figuran acá.

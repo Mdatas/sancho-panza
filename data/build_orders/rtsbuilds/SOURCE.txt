@@ -1,0 +1,2 @@
+Build orders from https://github.com/CraftySalamander/rtsbuilds (docs/api/builds/aoe2), snapshot 2026-09-23.
+Authors are credited in each file ("author", "source"). The app re-syncs this folder from the repository.

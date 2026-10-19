@@ -1,0 +1,19 @@
+Sancho Panza - AOE2 Squier v0.16 - Mac
+======================================
+
+Cual bajar: Mac con chip Apple (M1, M2, M3, M4...) -> "mac-arm64". Mac con Intel -> "mac-x64".
+(Menu Apple > Acerca de esta Mac: si dice "Chip Apple M..." es arm64; si dice "Procesador Intel" es x64.)
+
+1. Descomprimi el zip y arrastra "Sancho Panza - AOE2 Squier" a la carpeta Aplicaciones.
+2. Abrila. La primera vez macOS la bloquea porque no esta firmada por Apple:
+   Ajustes del Sistema > Privacidad y seguridad > abajo: "Se bloqueo Sancho Panza..." > "Abrir de todos modos" > confirmar.
+   (Alternativa en Terminal:  xattr -dr com.apple.quarantine "/Applications/Sancho Panza - AOE2 Squier.app" )
+3. Al abrir aparece la ventana de la API key (igual que en Windows).
+4. En el juego conviene modo ventana o ventana sin bordes; la app se mantiene arriba tambien en pantalla completa.
+5. Atajos: F10 escribir, F9 mostrar/ocultar, F7/F8 pasos del build. En Mac las teclas F suelen ser de brillo/volumen:
+   apreta fn + F10, o activa "Usar F1, F2, etc. como teclas de funcion estandar" en Ajustes > Teclado.
+6. Voz: Elena (Argentina) por internet; sin internet usa la voz en espanol del Mac (comando "say").
+
+Tus datos: ~/Library/Application Support/AoE2 Coach (ajustes, logs, builds importados, notas propias).
+La app NO trae ninguna API key: cada usuario pone la suya.
+Codigo, novedades y version web: https://github.com/Mdatas/sancho-panza

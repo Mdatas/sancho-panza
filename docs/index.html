@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' data: blob:; script-src 'self'; connect-src 'self' https: http://localhost:* http://127.0.0.1:*">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#16130f">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="web.css">
+<title>Sancho Panza - AOE2 Squier</title>
+<link href="styles.css" rel="stylesheet"/>
+</head>
+<body class=" web full">
+<!-- ===== bar: state line (drag) + buttons ===== -->
+<header id="bar">
+<img alt="" class="logo" src="assets/icon.png"/>
+<span class="stateLine" id="stateLine"></span>
+<span class="stateEmpty" data-i18n="state.empty" id="stateEmpty">Contame tu ELO, civ, rival y mapa</span>
+<span class="busy hidden" id="busy"><span class="spinner"></span><span id="busyText"></span></span>
+<div class="btns">
+<button class="ico on" data-i18n-title="t.btnVoice.88" id="btnVoice" title="Voz (/voz)">🔊</button>
+<button class="ico hidden warnbadge" id="patchBadge" title="">⚠</button>
+<button class="ico" data-i18n-title="t.btnMode.89" id="btnMode" title="Expandir / compactar (/full)">⤢</button>
+<button class="ico" data-i18n-title="t.btnHide.90" id="btnHide" title="Ocultar (F9)">×</button>
+</div>
+</header>
+<!-- ===== team bar: up to 4 v 4 civs (click a slot to set it; /aliados, /rivales or just say it in the chat) ===== -->
+<div class="teamBar" id="teamBar">
+<div class="side mine" id="tbMine"></div>
+<span class="vs" data-i18n="h.tbVs.1" data-i18n-title="t.tbVs.91" id="tbVs" title="Ver tus counters contra sus civs (/counters)">VS</span>
+<div class="side theirs" id="tbTheirs"></div>
+<span class="tbAge" data-i18n-title="t.tbAge.92" id="tbAge" title="Edad usada para los counters (/edad)"></span>
+</div>
+<div class="tcPanel fullOnly" id="tcPanel"></div>
+<div class="civPick hidden" id="civPick"><input autocomplete="off" data-i18n-ph="p.cpSearch" id="cpSearch" placeholder="Buscar civ…"/><div class="cpList" id="cpList"></div><div class="cpFoot"><button class="ghost small" data-i18n="h.cpClear.2" id="cpClear">Quitar</button><button class="ghost small" data-i18n="h.cpClose.3" id="cpClose">Cerrar</button></div></div>
+<!-- ===== build-order line (compact) ===== -->
+<div class="boLine hidden" id="boLine"></div>
+<!-- ===== compact answer area ===== -->
+<div class="answer" id="answer"></div>
+<!-- ===== full view: tabs ===== -->
+<nav id="tabs">
+<button class="active" data-i18n="tab.chat" data-tab="chat">Chat</button>
+<button data-i18n="tab.bo" data-tab="bo">Build orders</button>
+<button data-i18n="tab.settings" data-tab="settings">Ajustes</button>
+<button class="guideBtn" data-i18n="h.btnGuide.4" data-i18n-title="t.btnGuide.93" id="btnGuide" title="Guía visual: civs, mapas, unidades y counters, meta, notas (F6 / /guia)">📖 Guía</button>
+</nav>
+<section class="tab active fullOnly" id="tab-chat">
+<div class="banner hidden" id="setupBanner">
+<b data-i18n="setup.title">Falta la API key de Claude.</b>
+<span data-i18n="setup.body">Pegala en Ajustes → Cerebro. Es lo único que hay que configurar.</span>
+</div>
+<div class="messages" id="messages"></div>
+</section>
+<section class="tab fullOnly" id="tab-bo">
+<div class="bofilters">
+<div class="frow"><input class="grow" data-i18n-ph="p.boSearch" id="boSearch" placeholder="Buscar build: scouts, arqueros, fast castle, francos, Hera…"/><button class="ghost small" data-i18n-title="t.boReload.94" id="boReload" title="Recargar">↻</button></div>
+<div class="frow">
+<select class="mini" id="boCiv"><option data-i18n="h.option.5" value="">Todas las civs</option><option data-i18n="h.option.6" value="__mine">Mi civ</option></select>
+<select class="mini" id="boSrc"><option data-i18n="h.option.7" value="">Todo</option><option data-i18n="h.option.8" value="steps">Paso a paso (panel)</option><option data-i18n="h.option.9" value="note">Guías y videos</option></select>
+<select class="mini" id="boTier"><option data-i18n="h.option.10" value="">Meta + anti-meta + meme</option><option data-i18n="h.option.11" value="meta">Sólo META</option><option data-i18n="h.option.12" value="anti-meta">Anti-meta</option><option data-i18n="h.option.13" value="meme">Memes</option></select>
+</div>
+<div class="chips" id="boTypes"></div>
+</div>
+<div class="muted small" id="boCount"></div>
+<div class="bolist" id="boList"></div>
+<div class="boreader hidden" id="boReader"></div>
+<select class="hidden" id="boSelect"></select>
+<div class="hidden" id="boLoaded">
+<div class="muted small" id="boMeta"></div>
+<div class="bostep" id="boStep">
+<div class="bohead">
+<button class="nav" data-i18n-title="t.boPrev.95" id="boPrev" title="Anterior (F7)">‹</button>
+<div class="bopos"><b id="boPos">—</b><span class="agetag" id="boAge"></span><span class="muted" id="boTime"></span></div>
+<button class="nav" data-i18n-title="t.boNext.96" id="boNext" title="Siguiente (F8)">›</button>
+</div>
+<div class="bores" id="boRes"></div>
+<ul class="bonotes" id="boNotes"></ul>
+</div>
+<div class="row wrap">
+<label class="check"><input id="boSpeak" type="checkbox"/> <span data-i18n="bo.speak">Leer cada paso en voz alta</span></label>
+<button class="ghost small" data-i18n="bo.off" id="boOff">Quitar build</button>
+</div>
+</div>
+<details class="import">
+<summary data-i18n="bo.import">Importar build order (JSON de buildorderguide.com / RTS Overlay)</summary>
+<p class="muted small" data-i18n="bo.importHelp">En buildorderguide.com abrí un build → exportá/copiá el JSON (formato RTS Overlay) y pegalo acá, o importá archivos .json.</p>
+<textarea id="boImportText" placeholder='{"name": "...", "civilization": "Any", "build_order": [ ... ]}' rows="5"></textarea>
+<div class="row end"><button class="ghost" data-i18n="bo.importFile" id="boImportFile">Archivo…</button><button data-i18n="bo.importBtn" id="boImportBtn">Importar</button></div>
+<div class="small" id="boImportMsg"></div>
+</details>
+</section>
+<section class="tab fullOnly" id="tab-settings">
+<h3 data-i18n="set.brain">Cerebro</h3>
+<label class="field"><span data-i18n="set.provider">Proveedor</span>
+<select id="setProvider">
+<option data-i18n="h.option.14" value="claude">Claude (Anthropic) — recomendado, por defecto</option>
+<option data-i18n="h.option.15" value="openai">OpenAI (ChatGPT)</option>
+<option data-i18n="h.option.16" value="gemini">Google Gemini — tiene plan gratis</option>
+<option data-i18n="h.option.17" value="groq">Groq — plan gratis</option>
+<option data-i18n="h.option.18" value="openrouter">OpenRouter — modelos gratis</option>
+<option data-i18n="h.option.19" value="nvidia">NVIDIA NIM — plan gratis</option>
+<option data-i18n="h.option.20" value="ollama">Local: Ollama / LM Studio / Llama / Hermes</option>
+<option data-i18n="h.option.21" value="custom">Otro compatible con OpenAI (URL propia)</option>
+</select></label>
+<div class="banner" id="provInfo" style="margin-top:6px"></div>
+<div id="provAnthropic">
+<label class="field"><span data-i18n="h.span.22">API key</span><span class="keyrow"><input autocomplete="off" data-i18n-ph="p.setAnthropicKey" id="setAnthropicKey" placeholder="sk-ant-…" type="password"/><button class="ghost small" id="toggleKey">👁</button></span></label>
+<label class="field"><span data-i18n="set.model">Modelo</span>
+<select id="setAnthropicModel">
+<option data-i18n="h.option.23" value="claude-sonnet-5-5">claude-sonnet-5-5 — recomendado</option>
+<option data-i18n="h.option.24" value="claude-opus-5-5">claude-opus-5-5 — el mejor, más caro y lento</option>
+<option data-i18n="h.option.25" value="claude-haiku-5-5">claude-haiku-5-5 — rápido y barato, se equivoca más</option>
+</select></label>
+<p class="muted small" data-i18n="set.keyHelp">Creá la key en console.anthropic.com (API Keys). Se guarda cifrada en esta PC.</p>
+</div>
+<div class="hidden" id="provOpenai">
+<label class="field"><span data-i18n="h.span.26">Base URL</span><input data-i18n-ph="p.setOpenaiUrl" id="setOpenaiUrl" placeholder="http://localhost:11434/v1"/></label>
+<p class="small warn hidden" id="urlWarn"></p>
+<label class="field"><span data-i18n="set.model">Modelo</span><input data-i18n-ph="p.setOpenaiModel" id="setOpenaiModel" placeholder="qwen2.5:14b"/></label>
+<label class="field"><span data-i18n="h.span.27">API key (opcional)</span><input autocomplete="off" id="setOpenaiKey" type="password"/></label>
+<p class="muted small" data-i18n="set.ollamaHelp">Para Ollama: el modelo tiene que soportar tools (qwen2.5, llama3.1, mistral-nemo…). Máquina remota por Tailscale: http://IP:11434/v1</p>
+</div>
+<details class="import" id="freeTable"><summary data-i18n="h.summary.28">Comparativa de APIs gratis (octubre 2026 — cambia seguido)</summary>
+<table class="ftab">
+<tr><th data-i18n="h.th.29">Servicio</th><th data-i18n="h.th.30">Límite gratis</th><th data-i18n="h.th.31">Ojo</th></tr>
+<tr><td data-i18n="h.td.32">Groq</td><td data-i18n="h.td.33">30 pedidos/min · 1.000/día por modelo</td><td data-i18n="h.td.34">límite por organización</td></tr>
+<tr><td data-i18n="h.td.35">OpenRouter</td><td data-i18n="h.td.36">20/min · 50/día (1.000/día con 10 USD cargados)</td><td data-i18n="h.td.37">pueden registrar prompts</td></tr>
+<tr><td data-i18n="h.td.38">NVIDIA NIM</td><td data-i18n="h.td.39">40/min · 10.000/día por modelo</td><td data-i18n="h.td.40">pide programa de desarrolladores</td></tr>
+<tr><td data-i18n="h.td.41">Google Gemini</td><td data-i18n="h.td.42">según AI Studio</td><td data-i18n="h.td.43">el plan gratis puede usar tus prompts</td></tr>
+<tr><td data-i18n="h.td.44">Mistral</td><td data-i18n="h.td.45">10 USD/mes en créditos</td><td data-i18n="h.td.46">pueden entrenar con tus prompts (se puede desactivar)</td></tr>
+</table>
+<p class="muted small" data-i18n="h.p.47">Cada pregunta al coach hace ~4-6 llamadas a la API (extracción + herramientas + respuesta): 50 pedidos/día ≈ 10 preguntas. Los modelos chicos usan peor las herramientas y se equivocan más que Claude. Fuente: dev.to/tariqnasser (oct-2026). Verificá nombres de modelos y límites en el panel de cada servicio.</p>
+</details>
+<label class="field"><span data-i18n="set.lang">Idioma de las respuestas</span>
+<select id="setLanguage"><option data-i18n="h.option.48" value="auto">Automático (según la pregunta)</option><option data-i18n="h.option.49" value="es">Español</option><option data-i18n="h.option.50" value="en">English</option><option value="de">Deutsch</option><option value="pt">Português</option><option value="zh">中文</option><option value="vi">Tiếng Việt</option><option value="ko">한국어</option></select></label>
+<div class="row"><button class="ghost" data-i18n="set.test" id="btnTestBrain">Probar conexión</button><span class="small" id="testBrainMsg"></span></div>
+<h3 data-i18n="h.h3.51">Partida automática (opcional)</h3>
+<p class="muted small" data-i18n="h.p.52">Lee tu partida en curso desde el perfil público de AoE2 (servicio comunitario aoe2companion) y completa civs y mapa. Si no hay partida o está apagado, la app funciona igual: lo que escribas vos siempre manda.</p>
+<label class="check"><input id="setMatchDetect" type="checkbox"/> <span data-i18n="h.span.53">Detectar mi partida (consulta cada ~90 s mientras la app está visible)</span></label>
+<div class="keyrow"><input data-i18n-ph="p.profileQuery" id="profileQuery" placeholder="Tu nombre en AoE2 (como aparece en ranked)"/><button class="ghost small" data-i18n="h.profileSearch.54" id="profileSearch">Buscar</button></div>
+<div class="small" id="profileResults"></div>
+<div class="row wrap"><span class="small muted" id="profileCur"></span><button class="ghost small" data-i18n="h.btnMatchNow.55" id="btnMatchNow">Leer partida ahora (/partida)</button></div>
+<h3 data-i18n="h.h3.56">Parches</h3>
+<label class="check"><input id="setPatchWatch" type="checkbox"/> <span data-i18n="h.span.57">Buscar parches nuevos al abrir (noticias oficiales de ageofempires.com, 1 vez por día)</span></label>
+<div class="row wrap"><span class="small muted" id="patchInfo"></span><button class="ghost small" data-i18n="h.btnPatchCheck.58" id="btnPatchCheck">Buscar ahora</button></div>
+<h3 data-i18n="h.h3.59">Privacidad</h3>
+<label class="field"><span data-i18n="h.span.60">Historial de conversaciones (logs)</span>
+<select id="setLogDays"><option data-i18n="h.option.61" value="0">Guardar siempre</option><option data-i18n="h.option.62" value="7">Borrar después de 7 días</option><option data-i18n="h.option.63" value="30">Borrar después de 30 días</option><option data-i18n="h.option.64" value="90">Borrar después de 90 días</option></select></label>
+<div class="row wrap"><button class="ghost small danger" data-i18n="h.btnClearLogs.65" id="btnClearLogs">Borrar logs ahora</button></div>
+<p class="muted small" data-i18n="h.p.66">Qué sale de tu PC: tus preguntas y notas relevantes van al proveedor de IA que elegiste; el texto de las respuestas va a Microsoft si usás la voz Edge (SAPI es local); tu id de perfil va a aoe2companion sólo si activás la partida automática.</p>
+<h3 data-i18n="h.h3.67">Experimental (apagado por defecto)</h3>
+<p class="muted small" data-i18n="h.p.68">Funciones nuevas que todavía no probamos en partidas reales. Apagadas, la app funciona igual que la v0.11.</p>
+<label class="check"><input id="setExpPrivacy" type="checkbox"/> <span data-i18n="h.span.69">Privacidad reforzada: la key no se vuelve a mostrar, no se envía por http:// a servidores públicos, y permite el modo amnésico</span></label>
+<div class="hidden" id="expPrivacyBox"><label class="check"><input id="setAmnesiac" type="checkbox"/> <span data-i18n="h.span.70">Modo amnésico: no guardar las API keys en disco (hay que pegarlas en cada sesión)</span></label></div>
+<label class="check"><input id="setExpCache" type="checkbox"/> <span data-i18n="h.span.71">Ahorro de tokens: separar el prompt fijo del variable para reutilizar caché (Claude)</span></label>
+<h3 data-i18n="set.voice">Voz</h3>
+<label class="field"><span data-i18n="set.ttsEngine">Voz de salida</span>
+<select id="setTtsEngine"><option data-i18n="h.option.72" value="edge">Microsoft Edge neural (gratis, online)</option><option data-i18n="h.option.73" value="sapi">Windows SAPI (offline, robótica)</option><option data-i18n="h.option.74" value="off">Apagada</option></select></label>
+<label class="field"><span data-i18n="set.ttsVoice">Voz</span><select id="setTtsVoice"></select></label>
+<label class="field"><span data-i18n="set.ttsRate">Velocidad</span><span class="keyrow"><input id="setTtsRate" max="1.6" min="0.8" step="0.05" type="range"/><b id="ttsRateVal"></b></span></label>
+<div class="row"><button class="ghost small" data-i18n="set.testVoice" id="btnTestTts">Probar voz</button></div>
+<h3 data-i18n="set.hotkeys">Atajos (globales, funcionan con el juego en foco)</h3>
+<div class="grid2">
+<label class="field"><span data-i18n="set.hkAsk">Escribir al coach</span><input data-i18n-ph="p.hkAsk" id="hkAsk" placeholder="F10"/></label>
+<label class="field"><span data-i18n="set.hkToggle">Mostrar / ocultar</span><input data-i18n-ph="p.hkToggle" id="hkToggle" placeholder="F9"/></label>
+<label class="field"><span data-i18n="set.hkPrev">Paso anterior</span><input data-i18n-ph="p.hkPrev" id="hkPrev" placeholder="F7"/></label>
+<label class="field"><span data-i18n="set.hkNext">Paso siguiente</span><input data-i18n-ph="p.hkNext" id="hkNext" placeholder="F8"/></label>
+</div>
+<label class="field"><span data-i18n="set.focusReturn">Al enviar (Enter) o con Esc</span>
+<select id="setFocusReturn"><option data-i18n="h.option.75" value="blur">Devolver el foco al juego</option><option data-i18n="h.option.76" value="minimize">Minimizar y volver a mostrar (si lo anterior no funciona)</option><option data-i18n="h.option.77" value="none">No hacer nada</option></select></label>
+<p class="muted small" data-i18n="set.hkHelp">Formato Electron: F9, Alt+Q, Ctrl+Shift+C, num5… Si el juego ya usa la tecla, elegí otra.</p>
+<h3 data-i18n="set.window">Ventana</h3>
+<label class="field"><span data-i18n="set.opacity">Opacidad</span><span class="keyrow"><input id="setOpacity" max="1" min="0.4" step="0.02" type="range"/><b id="opacityVal"></b></span></label>
+<label class="check"><input id="setOnTop" type="checkbox"/> <span data-i18n="set.onTop">Siempre encima (ventana sin bordes en el juego)</span></label>
+<label class="field"><span data-i18n="set.uiLang">Idioma de la interfaz</span><select id="setUiLang"><option data-i18n="h.option.78" value="es">Español</option><option data-i18n="h.option.79" value="en">English</option><option value="de">Deutsch</option><option value="pt">Português</option><option value="zh">中文</option><option value="vi">Tiếng Việt</option><option value="ko">한국어</option></select></label>
+<h3 data-i18n="set.data">Datos</h3>
+<div class="small muted" id="dataInfo"></div>
+<div class="row wrap">
+<button class="ghost small" data-i18n="set.sync" id="btnSync">Sincronizar ahora</button>
+<button class="ghost small" data-i18n="set.openDir" id="btnOpenDir">Carpeta de datos</button>
+<button class="ghost small" data-i18n="set.openLogs" id="btnOpenLogs">Carpeta de logs</button>
+<button class="ghost small danger" data-i18n="set.quit" id="btnQuit">Salir de la app</button>
+</div>
+<p class="muted small" data-i18n="set.dataHelp">Stats y árboles: SiegeEngineers/aoe2techtree. Builds: CraftySalamander/rtsbuilds (Hera, Morley Games, DauT…) + tus imports. Se sincronizan al abrir la app. En la carpeta de datos podés agregar builds (.json) y notas (.md).</p>
+</section>
+<!-- ===== welcome / API key (shown at every start until a key works or "no mostrar más") ===== -->
+<div aria-modal="true" class="modal hidden" id="welcome" role="dialog">
+<div class="mbox">
+<h2 data-i18n-html="h.h2.80">Sancho Panza <span class="muted">· AOE2 Squier</span></h2>
+<p data-i18n-html="h.p.81">Para usar el <b>chat</b> sólo hace falta una cosa: una <b>API key</b> de una IA. Recomendado: Claude (Anthropic), pago por uso, unos centavos de dólar por pregunta.</p>
+<ol class="small">
+<li data-i18n-html="h.li.82">Entrá a <a data-url="https://console.anthropic.com/settings/keys">console.anthropic.com → API Keys</a> (creá la cuenta y cargá saldo en Billing; sin saldo la key no funciona).</li>
+<li data-i18n-html="h.li.83">Tocá <b>Create Key</b>, copiala (empieza con <code>sk-ant-</code>) y pegala acá:</li>
+</ol>
+<div class="keyrow"><input autocomplete="off" data-i18n-ph="p.wKey" id="wKey" placeholder="sk-ant-…" type="password"/><button data-i18n="h.wTest.84" id="wTest">Guardar y probar</button></div>
+<div class="small" id="wMsg"></div>
+<p class="muted small" data-i18n-html="h.p.85">Sin key igual podés usar: <b>Build orders</b>, la <b>Guía</b> (civs, mapas, counters), los comandos <code>/civ</code> <code>/vs</code> <code>/bo</code>. Otras IAs (algunas gratis) en Ajustes → Cerebro.</p>
+<div class="row end"><label class="check small"><input id="wNoMore" type="checkbox"/> <span data-i18n="h.span.86">No mostrar más</span></label><button class="ghost" data-i18n="h.wSkip.87" id="wSkip">Saltar</button></div>
+</div>
+</div>
+<!-- ===== input line (always visible) ===== -->
+<footer id="inputRow">
+<span class="prompt">›</span>
+<input autocomplete="off" data-i18n-ph="chat.placeholder" id="cmd" placeholder="Preguntá o /ayuda — Enter envía, Esc vuelve al juego" spellcheck="false"/>
+</footer>
+<div class="toast hidden" id="toast"></div>
+<audio id="player"></audio>
+<script src="coach-web.js"></script>
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

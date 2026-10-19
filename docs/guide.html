@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' data: blob:; script-src 'self'; connect-src 'self' https: http://localhost:* http://127.0.0.1:*">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#16130f">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="web.css">
+<title>AoE2 Coach — Guía</title>
+<link rel="stylesheet" href="guide.css">
+</head>
+<body class="web">
+  <header id="top">
+    <nav id="tabs">
+      <button data-tab="civs" class="active">Civs</button>
+      <button data-tab="maps">Mapas</button>
+      <button data-tab="units">Unidades y counters</button>
+      <button data-tab="meta">Meta</button>
+      <button data-tab="notes">Notas</button>
+    </nav>
+    <div id="ctx" class="ctx"></div>
+  </header>
+
+  <!-- CIVS -->
+  <main id="tab-civs" class="tab active split">
+    <aside class="list">
+      <input id="civSearch" type="text" placeholder="Buscar civ…" autocomplete="off">
+      <div id="civChips" class="chips"></div>
+      <div id="civList" class="items"></div>
+    </aside>
+    <section id="civView" class="view"><p class="muted pad">Elegí una civ de la lista.</p></section>
+  </main>
+
+  <!-- MAPS -->
+  <main id="tab-maps" class="tab split">
+    <aside class="list">
+      <input id="mapSearch" type="text" placeholder="Buscar mapa…" autocomplete="off">
+      <div id="mapChips" class="chips"></div>
+      <div id="mapList" class="items"></div>
+    </aside>
+    <section id="mapView" class="view"><p class="muted pad">Elegí un mapa de la lista.</p></section>
+  </main>
+
+  <!-- UNITS -->
+  <main id="tab-units" class="tab">
+    <div class="view pad">
+      <h2>¿Qué le gana a…?</h2>
+      <div class="form">
+        <label>Unidad rival<input id="uTarget" list="unitList" type="text" placeholder="ej. Caballero, Knight, Arquero…" autocomplete="off"></label>
+        <label>Civ rival (opcional)<select id="uOpp"></select></label>
+        <label>Mi civ<select id="uMy"></select></label>
+        <label>Mi edad<select id="uAge"><option value="2">Feudal</option><option value="3">Castillos</option><option value="4" selected>Imperial</option></select></label>
+        <button id="uGo">Buscar counters</button>
+      </div>
+      <datalist id="unitList"></datalist>
+      <div id="uOut"></div>
+      <p class="muted small">Cálculo de duelo con los stats reales del parche (ataque, armadura, bonus); es una lista corta, no una ley: el micro, el terreno y las mejoras cambian el resultado.</p>
+    </div>
+  </main>
+
+  <!-- META -->
+  <main id="tab-meta" class="tab">
+    <div class="view pad">
+      <h2>Win rate por civ <span id="metaSrc" class="muted small"></span></h2>
+      <div class="form"><label>Buscar<input id="metaSearch" type="text" autocomplete="off" placeholder="civ…"></label>
+        <label>Orden<select id="metaSort"><option value="wr">Win rate</option><option value="pick">Popularidad</option><option value="name">Nombre</option></select></label></div>
+      <div id="metaTable"></div>
+      <p class="muted small">Muestra chica (el parche es de fines de septiembre): ±1-3 pts de error. Un win rate alto no te hace ganar si jugás mal la civ; usalo como pista de qué esperar del rival.</p>
+    </div>
+  </main>
+
+  <!-- NOTES -->
+  <main id="tab-notes" class="tab split">
+    <aside class="list">
+      <input id="noteSearch" type="text" placeholder="Buscar en todas las notas…" autocomplete="off">
+      <div id="noteList" class="items"></div>
+    </aside>
+    <section id="noteView" class="view"><p class="muted pad">Buscá un tema (ej.: "men-at-arms", "fast castle", "monjes") o elegí una sección.</p></section>
+  </main>
+
+  <script src="coach-web.js"></script>
+<script src="guide.js"></script>
+</body>
+</html>
