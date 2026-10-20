@@ -2,13 +2,19 @@
 body.web { height: 100dvh; padding-bottom: env(safe-area-inset-bottom); }
 /* main app: a readable column on desktop browsers, full width on phones; the guide (split layout) always uses the full width */
 body.web.full { max-width: 1100px; margin: 0 auto; border-left: 1px solid #000; border-right: 1px solid #000; }
-@media (min-width: 900px) { body.web.full .teamBar .slot { flex-basis: 38px; height: 34px; } body.web.full .teamBar .cico { width: 22px; height: 22px; } }
 body.web #btnMode, body.web #btnHide, body.web #btnOpenDir, body.web #btnOpenLogs, body.web #btnQuit, body.web #btnSync { display: none !important; }
 body.web #setOnTop, body.web #setOpacity { display: none; }
 body.web .desktopOnly { display: none !important; }
 body.web #tabs button { padding: 9px 4px; font-size: 13px; }
-body.web .teamBar .slot { flex-basis: 34px; height: 30px; }
 body.web input, body.web select, body.web textarea { font-size: 16px; } /* avoids iOS zoom on focus */
 body.web #inputRow input { font-size: 16px; padding: 10px 8px; }
 body.web .replayIn { font-size: 16px; padding: 3px 9px; }
 body.web .tcPanel { max-height: 24vh; }
+/* phones: 8 shields must fit in ~360px */
+@media (max-width: 520px) {
+  body.web.full .teamBar { gap: 6px; padding: 4px 4px 5px; } body.web.full .teamBar .slots { gap: 3px; }
+  body.web.full .teamBar .slot { width: 34px; } body.web.full .teamBar .slot .sh { width: 30px; height: 34px; } body.web.full .teamBar .slot .sh .cico { width: 18px; height: 18px; margin-bottom: 7px; }
+  body.web.full .teamBar .slot .nm { display: none; } body.web.full .teamBar .vs { padding: 2px 5px; font-size: 12px; margin-top: 8px; }
+  body.web #tabs button { font-size: 11.5px; padding: 8px 2px; gap: 4px; } body.web #tabs button svg { display: none; }
+  body.web .tcPanel { max-height: 26vh; }
+}

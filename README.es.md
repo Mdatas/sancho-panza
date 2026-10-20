@@ -65,9 +65,9 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 
 **Guía visual** (📖)
 * 56 civs con íconos: unidades por edificio, qué les falta, edades fuertes, porcentaje de victorias.
-* 129 mapas con perfiles.
+* 129 mapas con perfiles y la imagen del minimapa del juego para casi todos (de las wikis Liquipedia y Fandom; los pocos que no la tienen muestran un emblema según su tipo).
 * Calculadora de counters "¿Qué le gana a…?" con stats de unidades.
-* Íconos de civs, unidades y tecnologías (tecnologías únicas y todo lo que le falta a cada civ), y un emblema por tipo de mapa.
+* Íconos de civs, unidades y tecnologías (tecnologías únicas y todo lo que le falta a cada civ).
 * Tabla del meta (porcentaje de victorias y de elección por civ, parche actual).
 * Búsqueda de texto completo en todas las notas.
 * La interfaz está traducida a los 7 idiomas. Los perfiles de civs y mapas y las notas están escritos en castellano: en cualquier otro idioma, un botón 🌐 *Traducir* en cada sección la traduce con tu propia API key (una fracción de centavo por sección; queda guardada en tu dispositivo).
@@ -108,6 +108,7 @@ Cada fuente está acreditada dentro de las notas, video por video, con su link y
 * [SiegeEngineers/aoe2techtree](https://github.com/SiegeEngineers/aoe2techtree) — civs, unidades, tecnologías, stats e íconos de los archivos del juego (MIT).
 * [CraftySalamander/rtsbuilds](https://github.com/CraftySalamander/rtsbuilds) — build orders paso a paso de Hera, Morley Games, DauT, TaToH y otros (GPL-3.0, autores acreditados en cada archivo).
 * Notas de parche y noticias oficiales — [ageofempires.com](https://www.ageofempires.com/) y [forums.ageofempires.com](https://forums.ageofempires.com/); historial completo de parches 2019–2026 contrastado con [ageofempires.fandom.com](https://ageofempires.fandom.com/).
+* Imágenes de mapas — los íconos de mapa del juego publicados en la [wiki Liquipedia Age of Empires](https://liquipedia.net/ageofempires/) y, para unos pocos mapas, los minimapas de la [Age of Empires Series Wiki](https://ageofempires.fandom.com/) (Fandom). Imágenes © Microsoft, usadas según sus Game Content Usage Rules; la página de origen de cada imagen está en `data/img/Maps/SOURCES.json`. Las baja `tools/fetch_map_images.py` por las APIs públicas de las wikis (un pedido cada 2 segundos), sin scraping.
 
 **Videos (YouTube), resumidos a partir de sus subtítulos**
 * **Hera** — "So You Want To Play" (34 guías de civs), "AoE2 Coaching" (69 análisis de partidas), "New Player Friendly" (16), "Build Orders" (10), "Ultimate Guide To 2k" (2021, 9 episodios), "Hera's Guide To 2k" (2025).

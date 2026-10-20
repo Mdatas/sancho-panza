@@ -26,7 +26,7 @@ try { app.setPath('userData', path.join(app.getPath('appData'), 'AoE2 Coach')); 
 // Resource roots: packaged (resources/data next to app.asar) or development checkout.
 const RES = (process.resourcesPath && fs.existsSync(path.join(process.resourcesPath, 'data'))) ? process.resourcesPath : path.join(__dirname, '..', '..');
 const BUNDLED_DATA = path.join(RES, 'data');
-const COMPACT_SIZE = { width: 470, height: 238 };
+const COMPACT_SIZE = { width: 470, height: 262 };
 const FULL_SIZE = { width: 470, height: 680 };
 
 let win = null, tray = null, guideWin = null, matchPoller = null;
@@ -380,7 +380,8 @@ function registerIpc() {
   let imgIdx = null;
   ipcMain.handle('app:imgIndex', () => {
     if (imgIdx) return imgIdx;
-    const base = path.join(BUNDLED_DATA, 'img'); const idx = { base: pathToFileURL(base).href + '/', civs: {}, units: {}, techs: {}, buildings: {} };
+    const base = path.join(BUNDLED_DATA, 'img'); const idx = { base: pathToFileURL(base).href + '/', civs: {}, units: {}, techs: {}, buildings: {}, maps: {} };
+    try { for (const f of fs.readdirSync(path.join(base, 'Maps'))) if (/\.(webp|png)$/.test(f)) idx.maps[f.replace(/\.(webp|png)$/, '')] = 'Maps/' + f; } catch { /* no map icons yet */ }
     try {
       for (const c of Object.values(gd.civs)) idx.civs[c.key] = 'Civs/' + c.key.toLowerCase() + '.png';
       const tdir = path.join(dataInfo.dir || path.join(BUNDLED_DATA, 'game'), 'trees');

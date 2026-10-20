@@ -69,6 +69,8 @@ function pickFile(accept) { return new Promise(resolve => { const i = document.c
 
 window.coach = {
   web: true,
+  /** iframe guide: take the match state from the parent page (same browser storage, but each page has its own brain) */
+  setStateFromParent: (st) => { if (brain && st) brain.state = { ...brain.state, ...st }; },
   settings: {
     get: R(() => publicSettings()),
     set: R((patch) => { const cur = LS.get('sp.settings', {}); const next = { ...cur, ...(patch || {}) }; if ('ttsVoice' in (patch || {})) next.voiceChosen = true; LS.set('sp.settings', next); if (patch && patch.provider && patch.provider !== cur.provider) brain.reset(); return publicSettings(); }),
@@ -113,7 +115,7 @@ window.coach = {
     noteText: R(({ file, title }) => guideData.noteText({ knowledge, file, title })),
     translate: R(async ({ text, lang }) => { try { return { ok: true, text: await brain.translate(text, lang) }; } catch (e) { return { ok: false, error: e.message }; } }),
     tool: R((name, input) => { if (!['lookup_unit', 'find_counters', 'civ_matchup', 'compare_units'].includes(name)) return { error: 'not allowed' }; try { return makeDispatcher({ gd, buildOrders, knowledge, strategy, lang: 'es', state: { ...brain.state }, onState: () => {} })(name, input || {}); } catch (e) { return { error: e.message }; } }),
-    onGoto: (cb) => { const p = new URLSearchParams(location.search); const arg = {}; for (const k of ['civ', 'tab', 'map']) if (p.get(k)) arg[k] = p.get(k); if (Object.keys(arg).length) setTimeout(() => cb(arg), 300); return () => {}; },
+    onGoto: (cb) => { const off = on('guide:goto')(cb); const p = new URLSearchParams(location.search); const arg = {}; for (const k of ['civ', 'tab', 'map']) if (p.get(k)) arg[k] = p.get(k); if (Object.keys(arg).length) setTimeout(() => cb(arg), 300); return off; },
   },
   patch: {
     status: async () => ({ reviewed: REVIEWED_PATCH, latest: null, lastCheck: null, line: REVIEWED_PATCH ? 'Notas revisadas contra el parche ' + REVIEWED_PATCH : '' }),

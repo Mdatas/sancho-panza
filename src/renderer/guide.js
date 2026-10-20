@@ -87,10 +87,10 @@ function renderCivList() {
 }
 async function openCiv(key) {
   const v = await window.coach.guide.civ(key); if (!v) return;
-  curCiv = v.key; renderCivList(); showTab('civs');
+  curCiv = v.key; renderCivList(); showTab('civs'); try { const el = document.querySelector('#civList .item.sel'); if (el) el.scrollIntoView({ block: 'nearest' }); } catch {}
   const st = v.stats;
   const ages = [1, 2, 3, 4].map(a => `<span class="age ${v.bestAges.includes(a) ? 'on' : ''}">${esc(ageName(a))}</span>`).join('');
-  const lineup = Object.entries(v.lineup).map(([b, us]) => `<div class="lu"><b>${esc(bName(b))}</b>${us.map(u => `<span class="u" title="${esc(u.en)}">${ico('units', u.en, 'ico sm')}${esc(unitLabel(u.name, u.en))}<i>${u.age ? esc(ageName(u.age)).slice(0, 1) : ''}</i></span>`).join('')}</div>`).join('');
+  const lineup = Object.entries(v.lineup).map(([b, us]) => `<div class="lu"><b>${ico('buildings', b, 'ico sm')}${esc(bName(b))}</b>${us.map(u => `<span class="u" title="${esc(u.en)}">${ico('units', u.en, 'ico sm')}${esc(unitLabel(u.name, u.en))}<i>${u.age ? esc(ageName(u.age)).slice(0, 1) : ''}</i></span>`).join('')}</div>`).join('');
   const enOf = (x) => String(x).replace(/\s*\([^)]*\)\s*$/, '');
   const miss = [...v.missingUnits.map(x => `<span class="tech bad">${ico('units', enOf(x), 'ico sm')}${esc(G('g.without', { x: missLabel(x) }))}</span>`), ...v.missingTechs.map(x => `<span class="tech bad">${ico('techs', x, 'ico sm')}${esc(G('g.without', { x }))}</span>`)].join('');
   const uts = (v.uniqueTechs || []).map(t => `<span class="tech">${ico('techs', t.en, 'ico sm')}${esc(ES() ? t.es : t.en)}${t.age ? `<i class="muted small">${esc(ageName(t.age))}</i>` : ''}</span>`).join('');
@@ -122,6 +122,14 @@ const EMB = {
   aleatorio: '<rect x="9" y="9" width="22" height="22" rx="3" /><circle cx="15" cy="15" r="1.6" /><circle cx="25" cy="25" r="1.6" /><circle cx="20" cy="20" r="1.6" />',
   nomad: '<path d="M6 32L20 10l14 22z" /><path d="M20 10v22" /><path d="M16 32l4-8 4 8" />',
 };
+const mkey = (n) => String(n || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
+/** In-game map icon when we have it (data/img/Maps, from Liquipedia), else the drawn emblem of the map type. */
+function mapPic(m, cls = 'mapEmblem') {
+  const maps = (IMG && IMG.maps) || {};
+  const k = [m.name, ...(m.aliases || [])].map(mkey).find(x => x && maps[x]);
+  if (k) return `<img class="${cls} mapThumb" src="${esc(IMG.base + maps[k])}" alt="" loading="lazy">`;
+  return mapEmblem(m.type);
+}
 function mapEmblem(type) { const p = EMB[type] || EMB.abierto; return `<svg class="mapEmblem" viewBox="0 0 40 40" fill="none" stroke="#caa24c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`; }
 /* ------------------------------------------------------------ maps */
 function renderMapList() {
@@ -130,13 +138,13 @@ function renderMapList() {
   $('#mapChips').innerHTML = ['', ...types].map(s => `<button class="chip ${mapType === s ? 'on' : ''}" data-s="${esc(s)}">${esc(s ? G('g.mtype.' + s, {}, s) : G('g.allM'))}</button>`).join('');
   $$('#mapChips .chip').forEach(b => b.addEventListener('click', () => { mapType = b.dataset.s; renderMapList(); }));
   const list = IDX.maps.filter(m => (!mapType || m.type === mapType) && (!q || norm(m.name + ' ' + m.aliases.join(' ')).includes(q)));
-  $('#mapList').innerHTML = list.map(m => `<div class="item ${curMap === m.name ? 'sel' : ''} ${norm(STATE.map) === norm(m.name) ? 'mine' : ''}" data-k="${esc(m.name)}">${mapEmblem(m.type)}<span>${esc(m.name)}</span><span class="sub">${esc(m.type ? G('g.mtype.' + m.type, {}, m.type) : '')}</span></div>`).join('');
+  $('#mapList').innerHTML = list.map(m => `<div class="item ${curMap === m.name ? 'sel' : ''} ${norm(STATE.map) === norm(m.name) ? 'mine' : ''}" data-k="${esc(m.name)}">${mapPic(m)}<span>${esc(m.name)}</span><span class="sub">${esc(m.type ? G('g.mtype.' + m.type, {}, m.type) : '')}</span></div>`).join('');
   $$('#mapList .item').forEach(el => el.addEventListener('click', () => openMap(el.dataset.k)));
 }
 async function openMap(key) {
   const v = await window.coach.guide.map(key); if (!v) return;
   curMap = v.name; renderMapList(); showTab('maps');
-  $('#mapView').innerHTML = `<div class="head">${mapEmblem(v.type)}<h2>${esc(v.name)}</h2>${v.type ? `<span class="tag gold">${esc(G('g.mtype.' + v.type, {}, v.type))}</span>` : ''}</div>
+  $('#mapView').innerHTML = `<div class="head">${mapPic(v, 'mapEmblem big')}<h2>${esc(v.name)}</h2>${v.type ? `<span class="tag gold">${esc(G('g.mtype.' + v.type, {}, v.type))}</span>` : ''}</div>
     <div class="actions"><button class="small" data-act="set">${esc(G('g.playingMap'))}</button></div>${ES() ? '' : `<p class="muted small trnote">${esc(G('g.esNote'))}</p>`}${sections(v.sections, 4)}`;
   $('#mapView [data-act]').addEventListener('click', async () => { const r = await window.coach.state.set({ map: v.name }); STATE = r.state || STATE; ctxLine(); renderMapList(); });
 }
@@ -161,7 +169,7 @@ async function runCounters() {
   const bon = (info.bonusDamage || []).join(', ') || '—', arm = (info.bonusArmor || []).join(', ') || '—';
   let html = `<div class="ucard"><h3>${ico('units', info.en || ((String(info.name).match(/\(([^)]+)\)$/) || [])[1]) || info.name, 'ico big')}${esc(info.name)}</h3><div class="stats">
     <span>${esc(G('g.cost'))} <b>${esc(Object.entries(info.cost || {}).filter(([, v]) => v).map(([k, v]) => v + ' ' + k[0]).join(' '))}</b></span><span>HP <b>${esc(info.hp)}</b></span><span>${esc(G('g.attack'))} <b>${esc(info.attack)}</b> (${esc(info.attackType)})</span>
-    <span>${esc(G('g.armor'))} <b>${esc(info.armor)}</b></span><span>${esc(G('g.range'))} <b>${esc(info.range)}</b></span><span>${esc(G('g.speed'))} <b>${esc(info.speed)}</b></span><span>${esc(G('g.ageL'))} <b>${esc(info.age)}</b></span><span>${esc(G('g.madeAt'))} <b>${esc(bName(info.building))}</b></span></div>
+    <span>${esc(G('g.armor'))} <b>${esc(info.armor)}</b></span><span>${esc(G('g.range'))} <b>${esc(info.range)}</b></span><span>${esc(G('g.speed'))} <b>${esc(info.speed)}</b></span><span>${esc(G('g.ageL'))} <b>${esc(info.age)}</b></span><span>${esc(G('g.madeAt'))} <b>${ico('buildings', info.building, 'ico sm')}${esc(bName(info.building))}</b></span></div>
     <p class="small"><b>${esc(G('g.atkBonus'))}:</b> ${esc(bon)}<br><b>${esc(G('g.armBonus'))}:</b> ${esc(arm)}<br><b>${esc(G('g.classes'))}:</b> ${esc((info.armorClasses || []).join(', '))}</p></div>`;
   if (res && res.error) html += `<p class="err">${esc(res.error)}</p>`;
   else if (res && res.candidates) {
@@ -225,9 +233,10 @@ async function handleGoto(arg) {
   if (arg && arg.civ) openCiv(arg.civ);
   else if (arg && arg.tab === 'maps' && arg.map) { const m = IDX.maps.find(x => norm(x.name) === norm(arg.map) || x.aliases.some(a => norm(a) === norm(arg.map))) || IDX.maps.find(x => norm(x.name).includes(norm(arg.map))); if (m) openMap(m.name); else showTab('maps'); }
   else if (arg && arg.tab) showTab(arg.tab);
-  else if (STATE.oppCiv && !curCiv) openCiv(STATE.oppCiv);
-  }
+  else if (!curCiv) { const c = STATE.oppCiv || (STATE.enemies || [])[0] || STATE.myCiv; if (c) openCiv(c); }
+}
 // register before boot awaits anything, so a goto sent while loading is not lost
 let booted = false, pendingGoto = null;
 window.coach.guide.onGoto((arg) => { if (booted) handleGoto(arg); else pendingGoto = arg; });
+window.addEventListener('message', (e) => { const d = e.data || {}; if (d.type !== 'sp:goto') return; if (window.coach.setStateFromParent) window.coach.setStateFromParent(d.state || {}); const arg = d.arg || {}; if (booted) handleGoto(arg); else pendingGoto = arg; });
 boot();

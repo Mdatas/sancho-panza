@@ -65,10 +65,10 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 
 **Visual guide** (📖)
 * 56 civs with icons: units by building, what they lack, strong ages, win rates.
-* 129 maps with profiles.
+* 129 maps with profiles and the in-game minimap picture for almost all of them (from the Liquipedia and Fandom wikis; the few without one show an emblem for their type).
 * "What beats…?" counter calculator with unit stats.
 * Meta table (win rate and pick rate per civ, current patch).
-* Icons for civs, units and technologies (unique techs and everything a civ lacks), and an emblem for each map type.
+* Icons for civs, units and technologies (unique techs and everything a civ lacks).
 * Full-text search over all notes.
 * The interface is translated into all 7 languages. Civ/map profiles and notes are written in Spanish: in any other language a 🌐 *Translate* button on each section translates it with your own AI key (a fraction of a cent per section, cached on your device).
 
@@ -107,6 +107,7 @@ Every source is credited inside the notes, video by video, with its link and pub
 * [SiegeEngineers/aoe2techtree](https://github.com/SiegeEngineers/aoe2techtree) — civs, units, techs, stats and icons from the game files (MIT).
 * [CraftySalamander/rtsbuilds](https://github.com/CraftySalamander/rtsbuilds) — step-by-step build orders by Hera, Morley Games, DauT, TaToH and others (GPL-3.0, authors credited in each file).
 * Official patch notes and news — [ageofempires.com](https://www.ageofempires.com/) and [forums.ageofempires.com](https://forums.ageofempires.com/); complete patch history 2019–2026 cross-checked with [ageofempires.fandom.com](https://ageofempires.fandom.com/).
+* Map pictures — the in-game map icons published on the [Liquipedia Age of Empires wiki](https://liquipedia.net/ageofempires/) and, for a few maps, the minimaps on the [Age of Empires Series Wiki](https://ageofempires.fandom.com/) (Fandom). Images © Microsoft, used under its Game Content Usage Rules; the source page of every picture is listed in `data/img/Maps/SOURCES.json`. They are fetched by `tools/fetch_map_images.py` through the wikis' public APIs (one request every 2 seconds), never by scraping.
 
 **Videos (YouTube), summarised from their captions**
 * **Hera** — "So You Want To Play" (34 civ guides), "AoE2 Coaching" (69 game reviews), "New Player Friendly" (16), "Build Orders" (10), "Ultimate Guide To 2k" (2021, 9 episodes), "Hera's Guide To 2k" (2025).

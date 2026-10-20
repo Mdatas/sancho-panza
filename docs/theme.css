@@ -65,30 +65,65 @@ input[type=text], input:not([type]), input[type=password], select, textarea, inp
 #bar, #top { background: linear-gradient(180deg, #261c13, #19130d); border-bottom: 1px solid #000; box-shadow: inset 0 -1px 0 var(--iron); }
 .stateLine { font-size: 13px; color: var(--gilt); }
 #tabs { background: transparent; }
-#tabs button { box-shadow: none; background: transparent; color: var(--ash); font-weight: 600; font-size: 12.5px; border-bottom: 2px solid transparent; }
+#tabs button { box-shadow: none; background: transparent; color: var(--ash); font-weight: 600; font-size: 12.5px; border-bottom: 2px solid transparent; display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: 1 1 auto; min-width: 0; white-space: nowrap; padding-left: 4px; padding-right: 4px; }
+#tabs button svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+body.compact #tabs button svg { width: 13px; height: 13px; }
 #tabs button:hover { color: var(--vellum); }
 #tabs button.active { color: var(--gilt); border-bottom-color: var(--gilt); background: linear-gradient(0deg, rgba(202,162,76,.10), transparent 70%); }
 /* the guide button is a tab like the others (same size and weight) */
 #tabs .guideBtn { flex: 1; border-left: 0; padding-left: 4px; padding-right: 4px; color: var(--ash); }
 #tabs .guideBtn:hover { color: var(--gilt); background: transparent; }
 
-/* The memorable element: the 4 v 4 bar as two rows of heraldic shields. */
-.teamBar { background: linear-gradient(180deg, #1b140e, #15100b); border-bottom: 1px solid #000; box-shadow: inset 0 -1px 0 var(--iron); }
-.teamBar .slot {
-  box-shadow: none; border: 0; border-radius: 0; padding: 2px 3px 5px; height: 30px; flex-basis: 28px;
-  clip-path: polygon(0 0, 100% 0, 100% 58%, 50% 100%, 0 58%);
-  background: linear-gradient(180deg, #2b2117, #1b140d); color: var(--ash);
+/* The memorable element: the 4 v 4 bar — two groups of heraldic shields with captions (blue = your team, red = enemies). */
+.teamBar { display: flex; align-items: flex-end; justify-content: center; gap: 10px; padding: 4px 8px 5px; background: linear-gradient(180deg, #1b140e, #15100b); border-bottom: 1px solid #000; box-shadow: inset 0 -1px 0 var(--iron); }
+.teamBar .side { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 0 1 auto; }
+.teamBar .side .cap { font-family: var(--display); font-size: 10px; letter-spacing: .04em; color: var(--ash); line-height: 1.1; }
+.teamBar .side.mine .cap { color: #8fb3ea; } .teamBar .side.theirs .cap { color: #e08a7f; }
+.teamBar .slots { display: flex; gap: 4px; }
+.teamBar .slot { display: flex; flex-direction: column; align-items: center; gap: 1px; width: 38px; padding: 0; background: none; border: 0; box-shadow: none; color: var(--ash); cursor: pointer; }
+.teamBar .slot .sh { display: block; width: 32px; height: 36px; padding: 2px; clip-path: polygon(0 0, 100% 0, 100% 64%, 50% 100%, 0 64%); background: var(--rim, var(--iron2)); }
+.teamBar .slot .sh > i { display: grid; place-items: center; width: 100%; height: 100%; clip-path: polygon(0 0, 100% 0, 100% 64%, 50% 100%, 0 64%); background: linear-gradient(180deg, var(--fill, #2a2017), #140e09); font-style: normal; }
+.teamBar .slot .sh em { font-style: normal; font-size: 16px; line-height: 1; color: var(--ash); margin-bottom: 6px; }
+.teamBar .slot .sh .cico { width: 20px; height: 20px; margin-bottom: 7px; border-radius: 2px; box-shadow: none; }
+.teamBar .slot .nm { display: none; font-size: 10px; line-height: 1.1; color: var(--ash); max-width: 44px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.teamBar .side.mine .slot.set { --rim: #4a7cc4; --fill: #203a63; } .teamBar .side.mine .slot.set .nm { color: #c7d9f5; }
+.teamBar .side.mine .slot.me.set { --rim: var(--gilt); --fill: #27477a; }
+.teamBar .side.theirs .slot.set { --rim: #c24a3c; --fill: #5e1d16; } .teamBar .side.theirs .slot.set .nm { color: #f0b9b0; }
+.teamBar .slot.empty .sh { --rim: var(--iron2); } .teamBar .slot.empty:hover .sh { --rim: var(--gilt-dim); }
+.teamBar .slot:hover .sh > i { filter: brightness(1.2); }
+.teamBar .slot:focus-visible { outline: 2px solid var(--gilt); outline-offset: 2px; }
+.teamBar .vs { align-self: center; margin-top: 10px; font-family: var(--display); font-weight: 700; font-size: 13px; color: var(--gilt); background: none; border: 1px solid var(--gilt-dim); border-radius: 3px; padding: 2px 7px; box-shadow: none; cursor: pointer; }
+.teamBar .vs:hover { background: var(--gold-soft); }
+/* full window / web: bigger shields with the civ name under each one */
+body.full .teamBar { padding: 6px 8px 6px; gap: 10px; }
+body.full .teamBar .slot { width: 44px; } body.full .teamBar .slot .sh { width: 34px; height: 39px; } body.full .teamBar .slot .sh .cico { width: 22px; height: 22px; margin-bottom: 8px; }
+body.full .teamBar .slot .nm { display: block; max-width: 44px; font-size: 9.5px; } body.full .teamBar .side .cap { font-size: 11px; }
+@media (min-width: 640px) {
+  body.full .teamBar { gap: 18px; }
+  body.full .teamBar .slot { width: 56px; } body.full .teamBar .slot .sh { width: 40px; height: 46px; } body.full .teamBar .slot .sh .cico { width: 26px; height: 26px; margin-bottom: 9px; }
+  body.full .teamBar .slot .nm { max-width: 56px; font-size: 10.5px; }
 }
-.teamBar .slot.set { background: linear-gradient(180deg, var(--side, #2b2117), #160f09); }
-.teamBar .side.mine .slot.set { --side: #24406a; }
-.teamBar .side.theirs .slot.set { --side: #6a2119; }
-.teamBar .slot.me { --side: #2f5592; }
-.teamBar .slot:hover { filter: brightness(1.25); }
-.teamBar .slot i { color: var(--gilt-dim); opacity: 1; }
-.teamBar .cico { width: 18px; height: 18px; border-radius: 2px; }
-.teamBar .vs { color: var(--gilt); font-size: 13px; }
+.tbhint { font-size: 12px; color: var(--ash); padding: 4px 12px; background: #17110c; border-bottom: 1px solid var(--iron); }
+body.full .tbhint.off, .tbhint.off { display: none !important; }
 .tcPanel { background: #17110c; }
-.tcPanel .tcrow > b { color: #d9776b; font-family: var(--display); font-size: 12px; }
+.tcPanel.off, body.full .tcPanel.off { display: none !important; }
+.tcPanel .tch { cursor: pointer; } .tcPanel .tch::before { content: '▾ '; color: var(--gilt-dim); } .tcPanel.collapsed .tch::before { content: '▸ '; }
+.tcPanel.collapsed .tclegend, .tcPanel.collapsed .tcrow { display: none !important; }
+.tcPanel .tch { font-size: 12px; color: var(--vellum); } .tcPanel .tch b { color: var(--gilt); }
+.tclegend { display: flex; align-items: center; gap: 8px; font-size: 11px; padding: 2px 0 4px; }
+.tclegend .lg { padding: 1px 7px; border-radius: 3px; font-family: var(--display); }
+.tclegend .lg.enemy, .unit.enemy { background: rgba(178,57,45,.16); border: 1px solid #6a2119; color: #f3c2b8; }
+.tclegend .lg.mine, .unit.mine { background: rgba(62,108,176,.16); border: 1px solid #27477a; color: #cfe0fb; }
+.tcPanel .tcrow { display: grid; grid-template-columns: 120px 1fr; gap: 4px 10px; align-items: start; padding: 5px 0; border-top: 1px solid var(--iron); }
+.tcPanel .tcciv { display: flex; align-items: center; gap: 6px; font-family: var(--display); color: #e08a7f; font-size: 12.5px; }
+.tcPanel .tcciv .cico { width: 20px; height: 20px; }
+.tcpairs { display: flex; flex-direction: column; gap: 3px; }
+.pair { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.unit { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px 1px 2px; border-radius: 3px; font-size: 12px; line-height: 1.3; }
+.unit .uico { width: 18px; height: 18px; border-radius: 2px; } .unit i { font-style: normal; font-size: 9.5px; background: var(--gilt-dim); color: #1a1409; border-radius: 2px; padding: 0 3px; }
+.unit.mine span { font-weight: 700; }
+.pair .arr, .tclegend .arr { color: var(--gilt); font-weight: 700; }
+@media (max-width: 560px) { .tcPanel .tcrow { grid-template-columns: 1fr; } }
 
 /* Answers: quiet. The 3-line summary gets a gilt rule like a rubricated initial line. */
 .tldr { background: rgba(202,162,76,.08); border-left: 2px solid var(--gilt); border-radius: 0 4px 4px 0; font-weight: 700; }
@@ -131,3 +166,13 @@ input[type=text], input:not([type]), input[type=password], select, textarea, inp
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 /* keep reading lines short on wide screens */
 .card .body p, .card .body li, .boreader .rb p, .boreader .rb li { max-width: 80ch; }
+
+/* build-order cards: what kind is it, and how safe (meta / anti-meta / meme) */
+.bocard { border-left: 3px solid var(--iron2); }
+.bocard.steps { border-left-color: var(--gilt); } .bocard.note.tier-meta { border-left-color: #6f8f6a; } .bocard.tier-anti-meta { border-left-color: var(--warn); } .bocard.tier-meme { border-left-color: var(--madder); }
+.bocard .t .kind { display: inline-block; width: 16px; color: var(--gilt); margin-right: 4px; font-weight: 700; }
+.bocard .t .cico.sm { width: 16px; height: 16px; vertical-align: -3px; margin-right: 3px; border-radius: 2px; }
+/* in-page guide (web) */
+#tab-guide { padding: 0; } #guideFrame { flex: 1; width: 100%; border: 0; min-height: 0; background: var(--oak); }
+/* the selected civ / map in lists gets a gilt bar */
+.item.sel, .bocard.sel { box-shadow: inset 3px 0 0 var(--gilt); }

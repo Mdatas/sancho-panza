@@ -1,2 +1,4 @@
 Iconos tomados de SiegeEngineers/aoe2techtree (MIT para el código).
 Game Icons © Hidden Path Entertainment, Forgotten Empires, SkyBox Labs, Ensemble Studios — uso de fans no comercial según las reglas de contenido de juegos de Microsoft.
+
+Maps/: imagenes de los mapas (icono de mapa del juego) tomadas de la wiki Liquipedia Age of Empires (https://liquipedia.net/ageofempires/) y, para unos pocos mapas, minimapas de la Age of Empires Series Wiki (https://ageofempires.fandom.com/). Imagenes (c) Microsoft Corporation, uso de fans no comercial segun las Game Content Usage Rules. La pagina de origen de cada archivo esta en Maps/SOURCES.json; las descarga tools/fetch_map_images.py por las APIs publicas de las wikis.

@@ -26,6 +26,7 @@ for (const f of Object.keys(files).filter(k => k.startsWith('/data/game/trees/')
   }
 }
 img.civs = {}; // civ keys are resolved at runtime from the game data (Civs/<key lowercase>.png)
+img.maps = {}; try { for (const f of fs.readdirSync(path.join(data, 'img', 'Maps'))) if (/\.(webp|png)$/.test(f)) img.maps[f.replace(/\.(webp|png)$/, '')] = 'Maps/' + f; } catch { /* none yet */ }
 fs.writeFileSync(path.join(out, 'data', 'bundle.json'), JSON.stringify({ version: pkg.version, files, imgIndex: img }));
 fs.cpSync(path.join(data, 'img'), path.join(out, 'img'), { recursive: true });
 
@@ -43,11 +44,12 @@ for (const f of ['styles.css', 'guide.css', 'theme.css', 'app.js', 'guide.js', '
 fs.cpSync(path.join(R, 'fonts'), path.join(out, 'fonts'), { recursive: true });
 fs.cpSync(path.join(R, 'assets'), path.join(out, 'assets'), { recursive: true });
 const csp = "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; media-src 'self' data: blob:; script-src 'self'; connect-src 'self' https: http://localhost:* http://127.0.0.1:*";
-const head = `<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n  <meta name="theme-color" content="#16130f">\n  <link rel="manifest" href="manifest.webmanifest">\n  <link rel="apple-touch-icon" href="assets/icon-192.png">\n  <meta name="apple-mobile-web-app-capable" content="yes">\n  <link rel="stylesheet" href="web.css">`;
+const head = `<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n  <meta name="theme-color" content="#16130f">\n  <link rel="manifest" href="manifest.webmanifest">\n  <link rel="apple-touch-icon" href="assets/icon-192.png">\n  <meta name="apple-mobile-web-app-capable" content="yes">`;
 for (const page of ['index.html', 'guide.html']) {
   let h = fs.readFileSync(path.join(R, page), 'utf8');
   h = h.replace(/<meta[^>]*http-equiv="Content-Security-Policy"[^>]*>/, `<meta http-equiv="Content-Security-Policy" content="${csp}">\n  ${head}`);
   h = h.replace(/<body class="([^"]*)"/, (m, c) => `<body class="${c.replace(/\bcompact\b/, '').trim()} web full"`).replace(/<body>/, '<body class="web">');
+  h = h.replace('</head>', '<link rel="stylesheet" href="web.css">\n</head>'); // last, so it can override the theme
   h = h.replace(/(<script src="(?:i18n|app|guide)\.js"><\/script>)/, '<script src="coach-web.js"></script>\n$1');
   if (!h.includes(head.slice(0, 20))) throw new Error('CSP/head injection failed for ' + page);
   if (!h.includes('coach-web.js')) h = h.replace('</body>', '<script src="coach-web.js"></script>\n</body>');

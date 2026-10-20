@@ -24,11 +24,11 @@
 </header>
 <!-- ===== team bar: up to 4 v 4 civs (click a slot to set it; /aliados, /rivales or just say it in the chat) ===== -->
 <div class="teamBar" id="teamBar">
-<div class="side mine" id="tbMine"></div>
-<span class="vs" data-i18n="h.tbVs.1" data-i18n-title="t.tbVs.91" id="tbVs" title="Ver tus counters contra sus civs (/counters)">VS</span>
-<div class="side theirs" id="tbTheirs"></div>
-<span class="tbAge" data-i18n-title="t.tbAge.92" id="tbAge" title="Edad usada para los counters (/edad)"></span>
+<div class="side mine"><span class="cap" data-i18n="team.capMine">Tu equipo</span><div class="slots" id="tbMine"></div></div>
+<button class="vs" data-i18n="h.tbVs.1" data-i18n-title="t.tbVs.91" id="tbVs" title="Ver tus counters contra sus civs (/counters)">VS</button>
+<div class="side theirs"><span class="cap" data-i18n="team.capEnemy">Rivales</span><div class="slots" id="tbTheirs"></div></div>
 </div>
+<div class="tbhint fullOnly" data-i18n="team.hint" id="tbHint">Tocá un escudo para elegir tu civ, tus aliados y los rivales. Azul = tu equipo, rojo = rivales.</div>
 <div class="tcPanel fullOnly" id="tcPanel"></div>
 <div class="civPick hidden" id="civPick"><input autocomplete="off" data-i18n-ph="p.cpSearch" id="cpSearch" placeholder="Buscar civ…"/><div class="cpList" id="cpList"></div><div class="cpFoot"><button class="ghost small" data-i18n="h.cpClear.2" id="cpClear">Quitar</button><button class="ghost small" data-i18n="h.cpClose.3" id="cpClose">Cerrar</button></div></div>
 <!-- ===== build-order line (compact) ===== -->
@@ -37,10 +37,10 @@
 <div class="answer" id="answer"></div>
 <!-- ===== full view: tabs ===== -->
 <nav id="tabs">
-<button class="active" data-i18n="tab.chat" data-tab="chat">Chat</button>
-<button data-i18n="tab.bo" data-tab="bo">Build orders</button>
-<button data-i18n="tab.settings" data-tab="settings">Ajustes</button>
-<button class="guideBtn" data-i18n="h.btnGuide.4" data-i18n-title="t.btnGuide.93" id="btnGuide" title="Guía visual: civs, mapas, unidades y counters, meta, notas (F6 / /guia)">📖 Guía</button>
+<button class="active" data-tab="chat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span data-i18n="tab.chat">Chat</span></button>
+<button data-tab="bo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg><span data-i18n="tab.bo">Build orders</span></button>
+<button data-tab="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg><span data-i18n="tab.settings">Ajustes</span></button>
+<button class="guideBtn" data-i18n-title="t.btnGuide.93" id="btnGuide" title="Guía visual: civs, mapas, unidades y counters, meta, notas (F6 / /guia)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a3 3 0 0 1 3-3h13v17H7a3 3 0 0 0-3 3z"/><path d="M4 19a3 3 0 0 1 3-3h13"/><path d="M9 7h7M9 10h7"/></svg><span data-i18n="tab.guide">Guía</span></button>
 </nav>
 <section class="tab active fullOnly" id="tab-chat">
 <div class="banner hidden" id="setupBanner">
@@ -87,6 +87,7 @@
 <div class="small" id="boImportMsg"></div>
 </details>
 </section>
+<section class="tab fullOnly" id="tab-guide"><iframe id="guideFrame" title="Guía" src="about:blank"></iframe></section>
 <section class="tab fullOnly" id="tab-settings">
 <h3 data-i18n="set.brain">Cerebro</h3>
 <label class="field"><span data-i18n="set.provider">Proveedor</span>

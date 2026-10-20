@@ -97,22 +97,29 @@ function teamSlots() {
 }
 async function renderTeam() {
   const { mine, theirs } = teamSlots();
-  const slot = (side, i, key) => `<button class="slot ${key ? 'set' : ''} ${side === 'mine' && i === 0 ? 'me' : ''}" data-side="${side}" data-i="${i}" title="${esc(key ? civName(key) : (side === 'mine' ? (i === 0 ? tr('team.me') : tr('team.ally')) : tr('team.enemy')))}">${key ? civIcon(key) + `<span>${esc(civName(key))}</span>` : '<i>+</i>'}</button>`;
+  const slot = (side, i, key) => {
+    const role = side === 'mine' ? (i === 0 ? tr('team.me') : tr('team.ally')) : tr('team.enemy');
+    const title = key ? `${civName(key)} — ${role}` : `${role}: ${tr('team.pick')}`;
+    return `<button class="slot ${key ? 'set' : 'empty'} ${side === 'mine' && i === 0 ? 'me' : ''}" data-side="${side}" data-i="${i}" title="${esc(title)}" aria-label="${esc(title)}">
+      <span class="sh"><i>${key ? civIcon(key) : '<em>+</em>'}</i></span><span class="nm">${key ? esc(civName(key)) : esc(side === 'mine' && i === 0 ? tr('team.slotMe') : role)}</span></button>`;
+  };
   $('#tbMine').innerHTML = mine.map((k, i) => slot('mine', i, k)).join('');
   $('#tbTheirs').innerHTML = theirs.map((k, i) => slot('theirs', i, k)).join('');
-  $$('#teamBar .slot').forEach(b => b.addEventListener('click', (e) => openPick(b.dataset.side, Number(b.dataset.i), b)));
+  $$('#teamBar .slot').forEach(b => b.addEventListener('click', () => openPick(b.dataset.side, Number(b.dataset.i), b)));
   TC = await window.coach.team.counters();
-  $('#tbAge').textContent = (L.ages[TC.age] || '') + (TC.ageAssumed ? '?' : '');
-  // tooltip per enemy slot + the full panel
+  const anySet = mine.some(Boolean) || theirs.some(Boolean);
+  const hint = $('#tbHint'); if (hint) hint.classList.toggle('off', !!(state.myCiv && theirs.some(Boolean)));
   $$('#tbTheirs .slot').forEach(b => { const k = theirs[Number(b.dataset.i)]; const row = TC.rows.find(r => r.civ === k); if (row) b.title = civName(k) + '\n' + tcLines(row).join('\n'); });
-  $('#tcPanel').innerHTML = tcHtml();
+  $('#tcPanel').innerHTML = tcHtml(); $('#tcPanel').classList.toggle('off', !anySet);
 }
 function tcLines(row) { return row.threats.map(t => `${uName(t)}${t.unique ? ` (${tr('team.unique')})` : ''} → ${t.answers.length ? t.answers.map(a => uName(a)).join(' / ') : tr('team.noAnswer')}`); }
 function tcHtml() {
   if (!TC || !TC.rows.length) return `<span class="muted small">${tr('team.empty')}</span>`;
   if (!TC.myCiv) return `<span class="muted small">${tr('team.noCiv')}</span>`;
-  return `<div class="tch">${tr('team.header', { civ: `<b>${esc(civName(TC.myCiv))}</b>`, age: esc(L.ages[TC.age] || '') })}${TC.ageAssumed ? ' ' + tr('team.ageAssumed') : ''} · ${tr('team.method')}</div>` +
-    TC.rows.map(r => `<div class="tcrow">${civIcon(r.civ)}<b>${esc(civName(r.civ))}</b>${r.threats.map(t => `<span class="th">${unitIcon(t.unit)}${esc(uName(t))}${t.unique ? `<i>${tr('team.unique')}</i>` : ''} → ${t.answers.length ? t.answers.map(a => `${unitIcon(a.unit)}<b>${esc(uName(a))}</b>`).join(' / ') : `<span class="muted">${tr('team.noAnswer')}</span>`}</span>`).join('')}</div>`).join('');
+  const unit = (u, cls) => `<span class="unit ${cls}">${unitIcon(u.unit)}<span>${esc(uName(u))}</span>${u.unique ? `<i>${tr('team.unique')}</i>` : ''}</span>`;
+  return `<div class="tch">${tr('team.header', { civ: `<b>${esc(civName(TC.myCiv))}</b>`, age: esc(L.ages[TC.age] || '') })}${TC.ageAssumed ? ' ' + tr('team.ageAssumed') : ''} <span class="muted">· ${tr('team.method')}</span></div>
+    <div class="tclegend"><span class="lg enemy">${esc(tr('team.theyMake'))}</span><span class="arr">→</span><span class="lg mine">${esc(tr('team.youAnswer'))}</span></div>` +
+    TC.rows.map(r => `<div class="tcrow"><div class="tcciv">${civIcon(r.civ)}<b>${esc(civName(r.civ))}</b></div><div class="tcpairs">${r.threats.map(t => `<div class="pair">${unit(t, 'enemy')}<span class="arr">→</span>${t.answers.length ? t.answers.map(a => unit(a, 'mine')).join('') : `<span class="muted small">${tr('team.noAnswer')}</span>`}</div>`).join('')}</div></div>`).join('');
 }
 function showCountersNotice() {
   if (!TC || !TC.rows.length || !TC.myCiv) { sysNotice(tcHtml()); return; }
@@ -190,7 +197,7 @@ async function runCommand(line) {
     case 'guia': case 'guía': case 'guide': {
       const a = (arg || '').trim(); let go = {};
       if (a) { const c = (await window.coach.civs()).find(x => [x.name_es, x.name_en, x.key].some(n => (n || '').toLowerCase() === a.toLowerCase())); go = c ? { tab: 'civs', civ: c.key } : { tab: 'maps', map: a }; }
-      window.coach.guide.open(go); return true; }
+      openGuide(go); return true; }
     case 'mapas': case 'maps': { const ms = await window.coach.maps(); sysNotice('<b>Mapas:</b> ' + esc(ms.join(' · '))); return true; }
     case 'civ?': case 'perfil': case 'profile': { const r = await window.coach.profile('civ', arg); sysNotice(r ? md(r) : esc('—')); return true; }
     case 'mapa?': case 'map?': { const r = await window.coach.profile('map', arg || state.map); sysNotice(r ? md(r) : esc('—')); return true; }
@@ -456,23 +463,37 @@ function maybeWelcome() {
   $('#welcome').classList.remove('hidden'); setMode(false); wireLinks($('#welcome'));
   setTimeout(() => $('#wKey').focus(), 50);
 }
-function closeWelcome() { $('#welcome').classList.add('hidden'); if ($('#wNoMore').checked) save({ welcomeHide: true }); }
+function closeWelcome() { $('#welcome').classList.add('hidden'); if ($('#wNoMore').checked) save({ welcomeHide: true }); landAfterWelcome(); }
 async function welcomeTest() {
   const v = $('#wKey').value.trim(), msg = $('#wMsg');
   if (!/^sk-ant-/.test(v)) { msg.innerHTML = `<span class="warn">${tr('w.notKey')}</span>`; return; }
   msg.textContent = tr('w.testing');
   await save({ provider: 'anthropic', providerPreset: 'claude', anthropicApiKey: v });
   const r = await window.coach.chat.ask('Reply with exactly: OK'); await window.coach.chat.reset();
-  if (r.ok) { await save({ keyOk: true }); msg.innerHTML = `<span class="ok">${tr('w.ok')}</span>`; loadSettings(); setTimeout(() => { closeWelcome(); showTab('chat'); }, 1200); }
+  if (r.ok) { await save({ keyOk: true }); msg.innerHTML = `<span class="ok">${tr('w.ok')}</span>`; loadSettings(); setTimeout(() => { closeWelcome(); }, 1200); }
   else { msg.innerHTML = explainError(r.error); wireLinks(msg); }
 }
 
 /* ----------------------------------------------------------------- tabs */
 function showTab(name) {
-  $$('#tabs button[data-tab]').forEach(x => x.classList.toggle('active', x.dataset.tab === name));
+  $$('#tabs button').forEach(x => x.classList.toggle('active', x.dataset.tab === name || (name === 'guide' && x.id === 'btnGuide')));
   $$('.tab').forEach(s => s.classList.toggle('active', s.id === 'tab-' + name));
   if (name === 'bo') renderCatalog();
+  if (name === 'guide') loadGuideFrame();
+  // the counters table matters most while chatting; fold it elsewhere to leave room (click its title to unfold)
+  if (tcUserToggled == null) $('#tcPanel').classList.toggle('collapsed', name !== 'chat');
 }
+let tcUserToggled = null;
+document.addEventListener('click', (e) => { const h = e.target.closest && e.target.closest('#tcPanel .tch'); if (!h) return; const p = $('#tcPanel'); p.classList.toggle('collapsed'); tcUserToggled = p.classList.contains('collapsed'); });
+/** Web only: the guide lives in an iframe inside the Guide tab (desktop opens it as its own window). */
+function loadGuideFrame(arg) {
+  const f = $('#guideFrame'); if (!f) return;
+  const q = new URLSearchParams(); if (arg && arg.civ) q.set('civ', arg.civ); if (arg && arg.tab) q.set('tab', arg.tab); if (arg && arg.map) q.set('map', arg.map);
+  if (f.dataset.loaded) { try { f.contentWindow.postMessage({ type: 'sp:goto', arg: arg || {}, state }, '*'); } catch { /* */ } return; }
+  f.src = 'guide.html' + (q.toString() ? '?' + q : ''); f.dataset.loaded = '1';
+}
+function openGuide(arg) { if (window.coach.web) { setMode(false); showTab('guide'); loadGuideFrame(arg); } else window.coach.guide.open(arg || {}); }
+function landAfterWelcome() { openGuide({}); }
 
 /* ----------------------------------------------------------------- build-order catalog (list, not a drop-down) */
 let CAT = null, boType = '';
@@ -492,7 +513,8 @@ async function renderCatalog(force = false) {
     && (!q || norm([e.title, e.author, e.civs.join(' '), e.types.join(' '), e.date].join(' ')).includes(q));
   const steps = CAT.steps.filter(match), notes = CAT.notes.filter(match).sort((a, b) => (a.tier === 'meta' ? 0 : a.tier === 'anti-meta' ? 1 : 2) - (b.tier === 'meta' ? 0 : b.tier === 'anti-meta' ? 1 : 2) || String(b.date).localeCompare(String(a.date)));
   $('#boCount').textContent = tr('bo.count', { s: steps.length, n: notes.length, t: CAT.counts.steps + CAT.counts.notes });
-  const card = (e) => `<div class="bocard ${e.kind}" data-id="${esc(e.id)}"><div class="t">${esc(e.title)}</div><div class="s">${e.kind === 'steps' ? `<span class="tag gold">${tr('bo.stepTag')}</span>` : ''}${e.tier !== 'meta' ? `<span class="tag ${e.tier === 'meme' ? 'bad' : 'warn'}">${TIER_LABEL[e.tier]}</span>` : ''}<span>${esc(e.civs.map(c => c === 'Any' ? tr('bo.anyCiv') : c).join(', ') || tr('bo.anyCiv'))}</span>${e.types.length ? `<span class="muted">· ${esc(e.types.slice(0, 3).join(', '))}</span>` : ''}<span class="muted">· ${esc(e.author || '')}${e.date ? ' ' + esc(String(e.date).slice(0, 7)) : ''}${e.steps ? ` · ${e.steps} ${tr('bo.steps')}` : ''}</span></div></div>`;
+  const civKeyOf = (n) => { const c = civs.find(x => x.name_en === n || x.name_es === n || x.key === n); return c ? c.key : ''; };
+  const card = (e) => `<div class="bocard ${e.kind} tier-${e.tier}" data-id="${esc(e.id)}"><div class="t"><span class="kind" title="${esc(e.kind === 'steps' ? tr('bo.stepTag') : tr('bo.grpNotesShort'))}">${e.kind === 'steps' ? '≡' : '▶'}</span>${e.civs.filter(c => c !== 'Any').slice(0, 3).map(c => civIcon(civKeyOf(c), 'cico sm')).join('')}${esc(e.title)}</div><div class="s">${e.kind === 'steps' ? `<span class="tag gold">${tr('bo.stepTag')}</span>` : ''}${e.tier !== 'meta' ? `<span class="tag ${e.tier === 'meme' ? 'bad' : 'warn'}">${TIER_LABEL[e.tier]}</span>` : ''}<span>${esc(e.civs.map(c => c === 'Any' ? tr('bo.anyCiv') : c).join(', ') || tr('bo.anyCiv'))}</span>${e.types.length ? `<span class="muted">· ${esc(e.types.slice(0, 3).join(', '))}</span>` : ''}<span class="muted">· ${esc(e.author || '')}${e.date ? ' ' + esc(String(e.date).slice(0, 7)) : ''}${e.steps ? ` · ${e.steps} ${tr('bo.steps')}` : ''}</span></div></div>`;
   $('#boList').innerHTML = (steps.length ? `<div class="grp">${tr('bo.grpSteps')}</div>${steps.map(card).join('')}` : '') + (notes.length ? `<div class="grp">${tr('bo.grpNotes')}</div>${notes.slice(0, 300).map(card).join('')}${notes.length > 300 ? `<div class="muted small">${tr('bo.more', { n: notes.length - 300 })}</div>` : ''}` : '') || `<p class="muted">${tr('bo.none')}</p>`;
   $$('#boList .bocard').forEach(el => el.addEventListener('click', () => openCatalogEntry(el.dataset.id)));
 }
@@ -541,7 +563,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   try { IMG = await window.coach.app.imgIndex(); } catch {}
   $('#cpSearch').addEventListener('input', renderPick); $('#cpSearch').addEventListener('keydown', e => { if (e.key === 'Escape') $('#civPick').classList.add('hidden'); if (e.key === 'Enter') { const f = $('#cpList .cpi'); if (f) pickCiv(f.dataset.k); } });
   $('#cpClear').addEventListener('click', () => pickCiv('')); $('#cpClose').addEventListener('click', () => { $('#civPick').classList.add('hidden'); pickSlot = null; });
-  $('#tbVs').addEventListener('click', async () => { await renderTeam(); if (document.body.classList.contains('full')) $('#tcPanel').scrollIntoView({ block: 'nearest' }); else showCountersNotice(); });
+  $('#tbVs').addEventListener('click', async () => { await renderTeam(); if (document.body.classList.contains('full')) { $('#tcPanel').classList.remove('off'); $('#tcPanel').scrollIntoView({ block: 'nearest' }); } else showCountersNotice(); });
   const st = await window.coach.state.get(); state = st.state; renderState();
   await loadVoices(); bindSettings(); bindBo(); bindExtras(); renderPatch();
   refreshData(); loadBoList(); maybeWelcome();
@@ -554,7 +576,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   $('#wSkip').addEventListener('click', closeWelcome);
   $('#btnHide').addEventListener('click', () => window.coach.window.hide());
   $('#btnMode').addEventListener('click', () => setMode(document.body.classList.contains('full')));
-  $('#btnGuide').addEventListener('click', () => window.coach.guide.open({ civ: state.myCiv || '', map: state.map || '' }));
+  $('#btnGuide').addEventListener('click', () => openGuide(window.coach.web ? {} : { civ: state.myCiv || '', map: state.map || '' }));
   $('#btnVoice').addEventListener('click', () => runCommand('/voz'));
   const cmd = $('#cmd');
   cmd.addEventListener('keydown', (e) => {
