@@ -1,0 +1,5 @@
+maps: 129
+icons resolved: 36
+saved: 36
+missing: 93
+sample resolved: [('Acropolis', ('Acropolis AoE2DE.png', 'https://liquipedia.net/commons/images/c/cd/Acropolis_AoE2DE.png')), ('Arabia', ('Arabia AoE2DE.png', 'https://liquipedia.net/commons/images/2/2e/Arabia_AoE2DE.png')), ('Archipelago', ('Archipelago AoE2DE.png', 'https://liquipedia.net/commons/images/b/bc/Archipelago_AoE2DE.png')), ('Arena', ('Arena AoE2DE.png', 'https://liquipedia.net/commons/images/a/a0/Arena_AoE2DE.png')), ('Atacama', ('Atacama Aoe2DE.png', 'https://liquipedia.net/commons/images/0/09/Atacama_Aoe2DE.png'))]
