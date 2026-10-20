@@ -63,32 +63,51 @@ def get(url, **params):
     return r
 
 
-def list_map_icons():
-    """All files on the wiki named *_AoE2DE.<ext>: {normalized key: (file name, url)}."""
-    found, cont = {}, {}
-    pat = re.compile(r"^(.+?)_AoE2DE\.(png|jpg|jpeg|webp)$", re.I)
-    pages = 0
-    while True:
-        params = {"action": "query", "list": "allimages", "ailimit": "500", "aiprop": "url|size", "format": "json", **cont}
-        j = get(API, **params).json()
-        pages += 1
-        for im in j.get("query", {}).get("allimages", []):
-            m = pat.match(im.get("name", ""))
-            if m:
-                found.setdefault(key(m.group(1)), (im["name"], im["url"]))
-        cont = j.get("continue") or {}
-        if not cont:
-            break
-        if pages > 400:
-            break
-    print(f"listed {pages} pages, {len(found)} map icons", file=sys.stderr)
-    return found
+def chunks(xs, n):
+    for i in range(0, len(xs), n):
+        yield xs[i:i + n]
+
+
+def resolve_icons(maps):
+    """{map name: (file title, url)} using the images embedded in each map's wiki page (files live in Liquipedia Commons,
+    so list=allimages on the game wiki does not see them; prop=images + prop=imageinfo does)."""
+    pat = re.compile(r"^File:(.+?)_AoE2DE\.(png|jpg|jpeg|webp)$", re.I)
+    chosen = {}
+    names = [n for n, _ in maps]
+    for group in chunks(names, 40):
+        j = get(API, action="query", titles="|".join(group), prop="images", imlimit="500", redirects="1", format="json").json()
+        q = j.get("query", {})
+        # map the title we asked for -> the title the wiki answered with (normalized / redirected)
+        back = {}
+        for n in q.get("normalized", []) + q.get("redirects", []):
+            back[n["to"]] = back.get(n["from"], n["from"])
+        for page in q.get("pages", {}).values():
+            title = page.get("title", "")
+            asked = back.get(title, title)
+            if "missing" in page:
+                continue
+            cands = [im["title"] for im in page.get("images", []) if pat.match(im["title"])]
+            if not cands:
+                continue
+            exact = [c for c in cands if key(pat.match(c).group(1)) == key(asked) or key(pat.match(c).group(1)) == key(title)]
+            pick = exact[0] if exact else (cands[0] if len(cands) == 1 else None)
+            if pick:
+                chosen[asked] = pick
+    print(f"pages with an AoE2DE icon: {len(chosen)} of {len(names)}", file=sys.stderr)
+    urls = {}
+    for group in chunks(sorted(set(chosen.values())), 40):
+        j = get(API, action="query", titles="|".join(group), prop="imageinfo", iiprop="url", format="json").json()
+        for page in j.get("query", {}).get("pages", {}).values():
+            ii = page.get("imageinfo") or []
+            if ii and ii[0].get("url"):
+                urls[page["title"]] = ii[0]["url"]
+    return {m: (f.replace("File:", ""), urls[f]) for m, f in chosen.items() if f in urls}
 
 
 def main():
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     maps = read_maps()
-    icons = list_map_icons()
+    icons = resolve_icons(maps)
     webp = features.check("webp")
     ext = "webp" if webp else "png"
     sources = {}
@@ -100,11 +119,7 @@ def main():
     missing, done = [], 0
     for name, aliases in maps:
         k = key(name)
-        hit = None
-        for cand in [name, *[a for a in aliases if len(key(a)) >= 6]]:  # short aliases ("AC", "acro") would mis-match
-            if key(cand) in icons:
-                hit = icons[key(cand)]
-                break
+        hit = icons.get(name)
         if not hit:
             missing.append(name)
             continue

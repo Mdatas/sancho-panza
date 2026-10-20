@@ -24,6 +24,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/img/Maps
           git diff --cached --quiet && echo "no changes" && exit 0
-          git commit -m "Map icons: $(ls data/img/Maps | grep -c -E '\.(webp|png)$') maps (from Liquipedia, in-game icons © Microsoft)"
+          git commit -m "Map icons: $(ls data/img/Maps | grep -c -E '[.](webp|png)$') maps (from Liquipedia, in-game icons © Microsoft)"
           git pull --rebase origin main
           git push origin HEAD:main
