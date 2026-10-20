@@ -40,7 +40,6 @@ RESOLVED:
   Dunesprings <- Dunesprings AOE2DE minimap.png [liquipedia]
   Enclosed <- Enclosed AoE2DE icon.png [liquipedia]
   Eruption <- Eruption AoE2DE.png [liquipedia]
-  Forest Breach <- Aoe2de forest breach inside.png [fandom]
   Fortified Clearing <- Fortified Clearing AoE2DE icon.png [liquipedia]
   Fortress <- Fortress AoE2DE.png [liquipedia]
   Four Lakes <- Four-lakes AoE2DE.PNG [liquipedia]
@@ -127,18 +126,19 @@ RESOLVED:
   Wade <- Wade AoE2DE icon.png [liquipedia]
   Water Nomad <- Water Nomad AoE2DE.png [liquipedia]
   Wolf Hill <- Wolf Hill AoE2DE.png [liquipedia]
+  Yin Yang <- AOE2 YING YANG MINIMAP.png [fandom]
   Yucatan <- Yucatan AoE2DE.png [liquipedia]
 
 LIQUIPEDIA PAGE IMAGES (maps still missing):
   Cross: ['File:AoE2 Icon.png', 'File:Ar hd.png', 'File:Be hd.png', 'File:COPA LATINOAMERICANA allmode.png', 'File:Copa 3k Libertadores allmode.png', 'File:Copa America AoE logo.png', 'File:De hd.png', 'File:Dravidians AoE2 icon.png', 'File:Es hd.png', 'File:Flag Unknown.svg', 'File:Four-lakes AoE2DE.PNG', 'File:Four Lakes AoE2 Map.png', 'File:Fr hd.png', 'File:Georgians AoE2 icon.png', 'File:Hidden Cup 5 allmode.png', 'File:It hd.png', 'File:Italians AoE2 icon.png', 'File:Japanese AoE2 icon.png', 'File:Latin Champions logo allmode.png', 'File:Lithuanians AoE2 icon.png', 'File:MEGA LAN 2025 icon allmode.png', 'File:Malay AoE2 icon.png', 'File:Malians AoE2 icon.png', 'File:Mario Ovalle icon.png', 'File:Persians AoE2 icon.png', 'File:T90 Titans League 4 Gold League allmode.png', 'File:T90 Titans League 4 Platinum League.png', 'File:Thalassocracy Cup allmode.png', 'File:Ua hd.png', 'File:Us hd.png', 'File:VOD Red Icon.png', 'File:Wu AoE2 icon.png']
+  Forest Breach: (no page)
   Snake Forest: (no page)
   Stranded: ['File:AoE2 Bogota DC 2026 allmode.png', 'File:AoE2 Icon.png', 'File:Ar hd.png', 'File:Br hd.png', 'File:Byzantines AoE2 icon.png', 'File:Ca hd.png', 'File:Chinese AoE2 icon.png', 'File:De hd.png', 'File:GG Winter Cup Icon Allmode.png', 'File:Georgians AoE2 icon.png', 'File:Huns AoE2 icon.png', 'File:Japanese AoE2 icon.png', 'File:Khmer AoE2 icon.png', 'File:Kr hd.png', 'File:Mx hd.png', 'File:No hd.png', 'File:Pl hd.png', 'File:Rs hd.png', 'File:Spanish AoE2 icon.png', 'File:SvenskaAgeLigan 2026 Fall allmode.png', 'File:Svenska TG-ligan allmode.png', 'File:VOD Icon.png', 'File:Vn hd.png', 'File:WAL21 icon2.png', 'File:Wu AoE2 icon.png']
   Twin Forests: (no page)
-  Yin Yang: (no page)
 
 FANDOM PAGE IMAGES (maps still missing):
   Cross: (no page)
+  Forest Breach: ['File:3ADIcon48px.png', 'File:3Icon48px.png', 'File:3WCIcon48px.png', 'File:Age3DE Icon.png', 'File:Age of Empires Definitive Edition icon.png', 'File:AoE2-DLCicon-0.png', 'File:AoE2-DLCicon-1.png', 'File:AoE2-DLCicon-2.png', 'File:AoE2-DLCicon-3.png', 'File:AoE2-DLCicon-4.png', 'File:AoE2-DLCicon-5.png', 'File:AoE2Icon-DynastiesIndia.png']
   Snake Forest: ['File:3ADIcon48px.png', 'File:3Icon48px.png', 'File:3WCIcon48px.png', 'File:Age3DE Icon.png', 'File:Age of Empires Definitive Edition icon.png', 'File:AoE2-DLCicon-0.png', 'File:AoE2-DLCicon-1.png', 'File:AoE2-DLCicon-2.png', 'File:AoE2-DLCicon-3.png', 'File:AoE2-DLCicon-4.png', 'File:AoE2-DLCicon-5.png', 'File:AoE2Icon-DynastiesIndia.png']
   Stranded: ['File:3ADIcon48px.png', 'File:3Icon48px.png', 'File:3WCIcon48px.png', 'File:Age3DE Icon.png', 'File:Age of Empires Definitive Edition icon.png', 'File:AoE2-DLCicon-0.png', 'File:AoE2-DLCicon-1.png', 'File:AoE2-DLCicon-2.png', 'File:AoE2-DLCicon-3.png', 'File:AoE2-DLCicon-4.png', 'File:AoE2-DLCicon-5.png', 'File:AoE2Icon-DynastiesIndia.png']
   Twin Forests: ['File:3ADIcon48px.png', 'File:3Icon48px.png', 'File:3WCIcon48px.png', 'File:Age3DE Icon.png', 'File:Age of Empires Definitive Edition icon.png', 'File:AoE2-DLCicon-0.png', 'File:AoE2-DLCicon-1.png', 'File:AoE2-DLCicon-2.png', 'File:AoE2-DLCicon-3.png', 'File:AoE2-DLCicon-4.png', 'File:AoE2-DLCicon-5.png', 'File:AoE2Icon-DynastiesIndia.png']
-  Yin Yang: ['File:3ADIcon48px.png', 'File:3Icon48px.png', 'File:3WCIcon48px.png', 'File:AOE2 YING YANG MINIMAP.png', 'File:Age3DE Icon.png', 'File:Age of Empires Definitive Edition icon.png', 'File:AoE2-DLCicon-0.png', 'File:AoE2-DLCicon-1.png', 'File:AoE2-DLCicon-2.png', 'File:AoE2-DLCicon-3.png', 'File:AoE2-DLCicon-4.png', 'File:AoE2-DLCicon-5.png']
