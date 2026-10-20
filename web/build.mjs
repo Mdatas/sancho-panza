@@ -39,9 +39,10 @@ await esbuild.build({
 
 // 3) renderer pages, adapted for the web
 const R = path.join(root, 'src', 'renderer');
-for (const f of ['styles.css', 'guide.css', 'app.js', 'guide.js', 'i18n.js']) fs.copyFileSync(path.join(R, f), path.join(out, f));
+for (const f of ['styles.css', 'guide.css', 'theme.css', 'app.js', 'guide.js', 'i18n.js']) fs.copyFileSync(path.join(R, f), path.join(out, f));
+fs.cpSync(path.join(R, 'fonts'), path.join(out, 'fonts'), { recursive: true });
 fs.cpSync(path.join(R, 'assets'), path.join(out, 'assets'), { recursive: true });
-const csp = "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' data: blob:; script-src 'self'; connect-src 'self' https: http://localhost:* http://127.0.0.1:*";
+const csp = "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; media-src 'self' data: blob:; script-src 'self'; connect-src 'self' https: http://localhost:* http://127.0.0.1:*";
 const head = `<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n  <meta name="theme-color" content="#16130f">\n  <link rel="manifest" href="manifest.webmanifest">\n  <link rel="apple-touch-icon" href="assets/icon-192.png">\n  <meta name="apple-mobile-web-app-capable" content="yes">\n  <link rel="stylesheet" href="web.css">`;
 for (const page of ['index.html', 'guide.html']) {
   let h = fs.readFileSync(path.join(R, page), 'utf8');

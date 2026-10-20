@@ -68,6 +68,7 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 * 129 maps with profiles.
 * "What beats…?" counter calculator with unit stats.
 * Meta table (win rate and pick rate per civ, current patch).
+* Icons for civs, units and technologies (unique techs and everything a civ lacks), and an emblem for each map type.
 * Full-text search over all notes.
 * The interface is translated into all 7 languages. Civ/map profiles and notes are written in Spanish: in any other language a 🌐 *Translate* button on each section translates it with your own AI key (a fraction of a cent per section, cached on your device).
 

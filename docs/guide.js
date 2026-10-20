@@ -15,7 +15,7 @@ const BUILDING_KEY = { Barracks: 1, 'Archery Range': 1, Stable: 1, 'Siege Worksh
 const bName = (b) => (BUILDING_KEY[b] ? G('g.bld.' + b) : b);
 const civLabel = (c) => (ES() ? c.name_es : c.name_en);
 const unitLabel = (es, en) => (ES() ? (es || en) : (en || es));
-const missLabel = (x) => (ES() ? x : String(x).replace(/\s*\([^)]*\)\s*$/, ''));
+const missLabel = (x) => { const m = String(x).match(/^(.*?)\s*\(([^)]*)\)\s*$/); return m ? (ES() ? m[2] : m[1]) : x; };
 function applyGuideI18n() {
   const pick = (k, orig) => (L[k] != null ? L[k] : orig);
   $$('[data-i18n]').forEach(el => { if (el.dataset.orig == null) el.dataset.orig = el.textContent; el.textContent = pick(el.dataset.i18n, el.dataset.orig); });
@@ -82,7 +82,7 @@ function renderCivList() {
   $('#civChips').innerHTML = ['', ...styles].map(s => `<button class="chip ${civStyle === s ? 'on' : ''}" data-s="${esc(s)}">${esc(s ? G('g.style.' + s, {}, s) : G('g.all'))}</button>`).join('');
   $$('#civChips .chip').forEach(b => b.addEventListener('click', () => { civStyle = b.dataset.s; renderCivList(); }));
   const list = IDX.civs.filter(c => (!civStyle || c.style === civStyle) && (!q || norm(c.name_es + ' ' + c.name_en).includes(q)));
-  $('#civList').innerHTML = list.map(c => `<div class="item ${curCiv === c.key ? 'sel' : ''} ${STATE.myCiv === c.key ? 'mine' : ''} ${STATE.oppCiv === c.key ? 'theirs' : ''}" data-k="${esc(c.key)}">${ico('civs', c.key, 'ico civ')}<span>${esc(civLabel(c))}</span><span class="sub">${esc(c.style ? G('g.style.' + c.style, {}, c.style) : '')}</span></div>`).join('');
+  $('#civList').innerHTML = list.map(c => `<div class="item ${curCiv === c.key ? 'sel' : ''} ${STATE.myCiv === c.key ? 'mine' : ''} ${STATE.oppCiv === c.key ? 'theirs' : ''}" data-k="${esc(c.key)}">${ico('civs', c.key, 'ico civ')}<span>${esc(civLabel(c))}</span>${STATE.myCiv === c.key ? `<span class="badge mine">${esc(G('g.mineBadge'))}</span>` : ''}${STATE.oppCiv === c.key ? `<span class="badge theirs">${esc(G('g.oppBadge'))}</span>` : ''}<span class="sub">${esc(c.style ? G('g.style.' + c.style, {}, c.style) : '')}</span></div>`).join('');
   $$('#civList .item').forEach(el => el.addEventListener('click', () => openCiv(el.dataset.k)));
 }
 async function openCiv(key) {
@@ -91,7 +91,9 @@ async function openCiv(key) {
   const st = v.stats;
   const ages = [1, 2, 3, 4].map(a => `<span class="age ${v.bestAges.includes(a) ? 'on' : ''}">${esc(ageName(a))}</span>`).join('');
   const lineup = Object.entries(v.lineup).map(([b, us]) => `<div class="lu"><b>${esc(bName(b))}</b>${us.map(u => `<span class="u" title="${esc(u.en)}">${ico('units', u.en, 'ico sm')}${esc(unitLabel(u.name, u.en))}<i>${u.age ? esc(ageName(u.age)).slice(0, 1) : ''}</i></span>`).join('')}</div>`).join('');
-  const miss = [...v.missingUnits.map(x => `<span class="tag bad">${esc(G('g.without', { x: missLabel(x) }))}</span>`), ...v.missingTechs.map(x => `<span class="tag bad">${esc(G('g.without', { x }))}</span>`)].join('');
+  const enOf = (x) => String(x).replace(/\s*\([^)]*\)\s*$/, '');
+  const miss = [...v.missingUnits.map(x => `<span class="tech bad">${ico('units', enOf(x), 'ico sm')}${esc(G('g.without', { x: missLabel(x) }))}</span>`), ...v.missingTechs.map(x => `<span class="tech bad">${ico('techs', x, 'ico sm')}${esc(G('g.without', { x }))}</span>`)].join('');
+  const uts = (v.uniqueTechs || []).map(t => `<span class="tech">${ico('techs', t.en, 'ico sm')}${esc(ES() ? t.es : t.en)}${t.age ? `<i class="muted small">${esc(ageName(t.age))}</i>` : ''}</span>`).join('');
   $('#civView').innerHTML = `
     <div class="head">${ico('civs', v.key, 'ico big')}<h2>${esc(civLabel(v))}</h2><span class="muted">${esc(ES() ? v.name_en : v.name_es)}</span>
       ${v.style ? `<span class="tag gold">${esc(G('g.style.' + v.style, {}, v.style))}</span>` : ''}${v.derived ? `<span class="tag warn" title="${esc(G('g.derivedTitle'))}">${esc(G('g.derived'))}</span>` : ''}
@@ -100,6 +102,7 @@ async function openCiv(key) {
     ${ES() ? '' : `<p class="muted small trnote">${esc(G('g.esNote'))}</p>`}
     <h3 style="padding:0 18px">${esc(G('g.strongIn'))}</h3><div class="ages">${ages}</div>
     <h3 style="padding:4px 18px 0">${esc(G('g.lineup'))}</h3><div class="lineup">${lineup}</div>
+    ${uts ? `<h3 style="padding:0 18px">${esc(G('g.techsHead'))}</h3><div class="techs">${uts}</div>` : ''}
     ${miss ? `<h3 style="padding:0 18px">${esc(G('g.lacks'))}</h3><div class="miss">${miss}</div>` : ''}
     ${sections(v.sections, 3)}`;
   $$('#civView [data-act]').forEach(b => b.addEventListener('click', async () => {
@@ -109,6 +112,17 @@ async function openCiv(key) {
   }));
 }
 
+/* Map-type emblems (drawn for this app; the game's map images are not bundled) */
+const EMB = {
+  abierto: '<path d="M4 28 Q12 18 20 24 T36 22" /><path d="M4 33 Q14 27 22 31 T36 30" />',
+  semicerrado: '<path d="M5 30h30" /><path d="M8 30V18m5 12V16m5 14V18" /><path d="M24 30V18m5 12V16m5 14V18" />',
+  cerrado: '<path d="M6 32V14h6v5h5v-5h6v5h5v-5h6v18z" />',
+  agua: '<path d="M4 18q4-4 8 0t8 0 8 0 8 0" /><path d="M4 25q4-4 8 0t8 0 8 0 8 0" /><path d="M4 32q4-4 8 0t8 0 8 0 8 0" />',
+  'híbrido': '<path d="M10 22q10-12 20 0" /><path d="M4 28q4-4 8 0t8 0 8 0 8 0" /><path d="M4 34q4-4 8 0t8 0 8 0 8 0" />',
+  aleatorio: '<rect x="9" y="9" width="22" height="22" rx="3" /><circle cx="15" cy="15" r="1.6" /><circle cx="25" cy="25" r="1.6" /><circle cx="20" cy="20" r="1.6" />',
+  nomad: '<path d="M6 32L20 10l14 22z" /><path d="M20 10v22" /><path d="M16 32l4-8 4 8" />',
+};
+function mapEmblem(type) { const p = EMB[type] || EMB.abierto; return `<svg class="mapEmblem" viewBox="0 0 40 40" fill="none" stroke="#caa24c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`; }
 /* ------------------------------------------------------------ maps */
 function renderMapList() {
   const q = norm($('#mapSearch').value);
@@ -116,13 +130,13 @@ function renderMapList() {
   $('#mapChips').innerHTML = ['', ...types].map(s => `<button class="chip ${mapType === s ? 'on' : ''}" data-s="${esc(s)}">${esc(s ? G('g.mtype.' + s, {}, s) : G('g.allM'))}</button>`).join('');
   $$('#mapChips .chip').forEach(b => b.addEventListener('click', () => { mapType = b.dataset.s; renderMapList(); }));
   const list = IDX.maps.filter(m => (!mapType || m.type === mapType) && (!q || norm(m.name + ' ' + m.aliases.join(' ')).includes(q)));
-  $('#mapList').innerHTML = list.map(m => `<div class="item ${curMap === m.name ? 'sel' : ''} ${norm(STATE.map) === norm(m.name) ? 'mine' : ''}" data-k="${esc(m.name)}"><span>${esc(m.name)}</span><span class="sub">${esc(m.type ? G('g.mtype.' + m.type, {}, m.type) : '')}</span></div>`).join('');
+  $('#mapList').innerHTML = list.map(m => `<div class="item ${curMap === m.name ? 'sel' : ''} ${norm(STATE.map) === norm(m.name) ? 'mine' : ''}" data-k="${esc(m.name)}">${mapEmblem(m.type)}<span>${esc(m.name)}</span><span class="sub">${esc(m.type ? G('g.mtype.' + m.type, {}, m.type) : '')}</span></div>`).join('');
   $$('#mapList .item').forEach(el => el.addEventListener('click', () => openMap(el.dataset.k)));
 }
 async function openMap(key) {
   const v = await window.coach.guide.map(key); if (!v) return;
   curMap = v.name; renderMapList(); showTab('maps');
-  $('#mapView').innerHTML = `<div class="head"><h2>${esc(v.name)}</h2>${v.type ? `<span class="tag gold">${esc(G('g.mtype.' + v.type, {}, v.type))}</span>` : ''}</div>
+  $('#mapView').innerHTML = `<div class="head">${mapEmblem(v.type)}<h2>${esc(v.name)}</h2>${v.type ? `<span class="tag gold">${esc(G('g.mtype.' + v.type, {}, v.type))}</span>` : ''}</div>
     <div class="actions"><button class="small" data-act="set">${esc(G('g.playingMap'))}</button></div>${ES() ? '' : `<p class="muted small trnote">${esc(G('g.esNote'))}</p>`}${sections(v.sections, 4)}`;
   $('#mapView [data-act]').addEventListener('click', async () => { const r = await window.coach.state.set({ map: v.name }); STATE = r.state || STATE; ctxLine(); renderMapList(); });
 }

@@ -57,6 +57,7 @@ function civView({ gd, strategy, key, stats }) {
     style: p ? p.meta.style || '' : '', bestAges: p && Array.isArray(p.meta.best_ages) ? p.meta.best_ages.map(Number) : [], derived: !!(p && p.meta.derived === true),
     sections: p ? p.order.map(n => ({ name: n, text: p.sections[n] })).filter(s => s.text) : [],
     lineup: groups, missingUnits: sum.missingKeyUnits, missingTechs: sum.missingKeyTechs,
+    uniqueTechs: (civ.uniqueTechs || []).map(n => { const t = gd.findTech(n); return { en: n, es: (t && t.name_es) || n, age: t ? ((t.ageByCiv && t.ageByCiv[civ.key]) || t.age || 0) : 0 }; }),
     blacksmith: sum.fullBlacksmith, bonuses: sum.bonuses, teamBonus: sum.teamBonus, stats: st || null,
   };
 }

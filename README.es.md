@@ -67,6 +67,7 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 * 56 civs con íconos: unidades por edificio, qué les falta, edades fuertes, porcentaje de victorias.
 * 129 mapas con perfiles.
 * Calculadora de counters "¿Qué le gana a…?" con stats de unidades.
+* Íconos de civs, unidades y tecnologías (tecnologías únicas y todo lo que le falta a cada civ), y un emblema por tipo de mapa.
 * Tabla del meta (porcentaje de victorias y de elección por civ, parche actual).
 * Búsqueda de texto completo en todas las notas.
 * La interfaz está traducida a los 7 idiomas. Los perfiles de civs y mapas y las notas están escritos en castellano: en cualquier otro idioma, un botón 🌐 *Traducir* en cada sección la traduce con tu propia API key (una fracción de centavo por sección; queda guardada en tu dispositivo).

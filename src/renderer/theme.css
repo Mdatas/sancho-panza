@@ -1,0 +1,133 @@
+/*
+ * Sancho Panza theme — "castle hall at night": dark oak and leather surfaces, gilt for what matters,
+ * heraldic lapis (your side) and madder (the enemy). Display: Cinzel (Roman inscriptions, like the game's own UI).
+ * Text: Alegreya (a calligraphic book face that stays readable at overlay sizes). Fonts: SIL OFL, in ./fonts.
+ * Loaded after styles.css / guide.css; it only re-skins, the layout stays in those files.
+ */
+@font-face { font-family: "Cinzel"; font-weight: 600; font-display: swap; src: url(fonts/cinzel-latin-600-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215; }
+@font-face { font-family: "Cinzel"; font-weight: 600; font-display: swap; src: url(fonts/cinzel-latin-ext-600-normal.woff2) format("woff2"); unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Cinzel"; font-weight: 700; font-display: swap; src: url(fonts/cinzel-latin-700-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215; }
+@font-face { font-family: "Cinzel"; font-weight: 700; font-display: swap; src: url(fonts/cinzel-latin-ext-700-normal.woff2) format("woff2"); unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Alegreya"; font-weight: 400; font-display: swap; src: url(fonts/alegreya-latin-400-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215; }
+@font-face { font-family: "Alegreya"; font-weight: 400; font-display: swap; src: url(fonts/alegreya-latin-ext-400-normal.woff2) format("woff2"); unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Alegreya"; font-weight: 400; font-display: swap; src: url(fonts/alegreya-vietnamese-400-normal.woff2) format("woff2"); unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB; }
+@font-face { font-family: "Alegreya"; font-weight: 700; font-display: swap; src: url(fonts/alegreya-latin-700-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215; }
+@font-face { font-family: "Alegreya"; font-weight: 700; font-display: swap; src: url(fonts/alegreya-latin-ext-700-normal.woff2) format("woff2"); unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Alegreya"; font-weight: 700; font-display: swap; src: url(fonts/alegreya-vietnamese-700-normal.woff2) format("woff2"); unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB; }
+@font-face { font-family: "Alegreya"; font-style: italic; font-weight: 400; font-display: swap; src: url(fonts/alegreya-latin-400-italic.woff2) format("woff2"); }
+
+:root {
+  --oak: #14100c;        /* night oak: window background */
+  --leather: #1f1710;    /* panels */
+  --leather2: #2a2016;   /* raised panels, hover */
+  --iron: #3a2d21;       /* hairlines */
+  --iron2: #574330;      /* borders, inputs */
+  --vellum: #ece0c4;     /* text */
+  --ash: #a8977a;        /* secondary text */
+  --gilt: #caa24c;       /* the one accent */
+  --gilt-dim: #7a6232;
+  --lapis: #3e6cb0;      /* your side */
+  --madder: #b2392d;     /* the enemy, errors */
+  --verdigris: #5f9c80;  /* ok */
+
+  --bg: var(--oak); --panel: var(--leather); --panel2: var(--leather2); --border: var(--iron); --border2: var(--iron2);
+  --text: var(--vellum); --muted: var(--ash); --gold: var(--gilt); --gold-dim: var(--gilt-dim); --gold-soft: rgba(202,162,76,.13);
+  --danger: var(--madder); --ok: var(--verdigris); --warn: #d6a24a; --user: #2a2016; --assistant: #1a1611;
+  --radius: 6px;
+  --font: "Alegreya", "Noto Serif", Georgia, "Noto Sans CJK SC", "Noto Sans KR", "Malgun Gothic", "Microsoft YaHei", "PingFang SC", serif;
+  --display: "Cinzel", "Trajan Pro", Georgia, serif;
+}
+body {
+  font-family: var(--font); font-size: 14px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(202,162,76,.06), transparent 60%),
+    repeating-linear-gradient(97deg, rgba(255,255,255,.012) 0 2px, transparent 2px 9px),
+    var(--oak);
+}
+:lang(zh) body, :lang(ko) body, body:lang(zh), body:lang(ko) { font-family: "Noto Sans CJK SC", "Noto Sans KR", "Malgun Gothic", "Microsoft YaHei", "PingFang SC", sans-serif; }
+
+/* Display type: titles, tabs, section heads. Cinzel is inscriptional capitals; no extra tracking or uppercase transforms. */
+h2, h3, #tabs button, .stateLine, .teamBar .vs, .modal .mbox h2, .card > summary, .lu b, th, .bolist .grp, .group, .bopos b {
+  font-family: var(--display); text-transform: none; letter-spacing: .02em;
+}
+h3 { font-size: 12.5px; color: var(--gilt); border-bottom: 1px solid var(--iron); }
+th { font-size: 11.5px; color: var(--gilt-dim); }
+
+/* Buttons: gilt for the main action, iron outline for the rest. */
+button { border-radius: 4px; background: linear-gradient(180deg, #d8b25c, #b8903c); color: #1b130a; box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 1px 0 rgba(0,0,0,.4); }
+button.ghost, button.small.ghost { background: transparent; box-shadow: none; color: var(--vellum); border: 1px solid var(--iron2); }
+button.ghost:hover { background: var(--leather2); border-color: var(--gilt-dim); }
+button.ico { box-shadow: none; background: transparent; }
+:focus-visible { outline: 2px solid var(--gilt); outline-offset: 1px; }
+input[type=text], input:not([type]), input[type=password], select, textarea, input, select { background: #100c09; border-color: var(--iron2); border-radius: 4px; }
+
+/* Title bar and tabs: a carved lintel with a gilt rule under the active tab. */
+#bar, #top { background: linear-gradient(180deg, #261c13, #19130d); border-bottom: 1px solid #000; box-shadow: inset 0 -1px 0 var(--iron); }
+.stateLine { font-size: 13px; color: var(--gilt); }
+#tabs { background: transparent; }
+#tabs button { box-shadow: none; background: transparent; color: var(--ash); font-weight: 600; font-size: 12.5px; border-bottom: 2px solid transparent; }
+#tabs button:hover { color: var(--vellum); }
+#tabs button.active { color: var(--gilt); border-bottom-color: var(--gilt); background: linear-gradient(0deg, rgba(202,162,76,.10), transparent 70%); }
+/* the guide button is a tab like the others (same size and weight) */
+#tabs .guideBtn { flex: 1; border-left: 0; padding-left: 4px; padding-right: 4px; color: var(--ash); }
+#tabs .guideBtn:hover { color: var(--gilt); background: transparent; }
+
+/* The memorable element: the 4 v 4 bar as two rows of heraldic shields. */
+.teamBar { background: linear-gradient(180deg, #1b140e, #15100b); border-bottom: 1px solid #000; box-shadow: inset 0 -1px 0 var(--iron); }
+.teamBar .slot {
+  box-shadow: none; border: 0; border-radius: 0; padding: 2px 3px 5px; height: 30px; flex-basis: 28px;
+  clip-path: polygon(0 0, 100% 0, 100% 58%, 50% 100%, 0 58%);
+  background: linear-gradient(180deg, #2b2117, #1b140d); color: var(--ash);
+}
+.teamBar .slot.set { background: linear-gradient(180deg, var(--side, #2b2117), #160f09); }
+.teamBar .side.mine .slot.set { --side: #24406a; }
+.teamBar .side.theirs .slot.set { --side: #6a2119; }
+.teamBar .slot.me { --side: #2f5592; }
+.teamBar .slot:hover { filter: brightness(1.25); }
+.teamBar .slot i { color: var(--gilt-dim); opacity: 1; }
+.teamBar .cico { width: 18px; height: 18px; border-radius: 2px; }
+.teamBar .vs { color: var(--gilt); font-size: 13px; }
+.tcPanel { background: #17110c; }
+.tcPanel .tcrow > b { color: #d9776b; font-family: var(--display); font-size: 12px; }
+
+/* Answers: quiet. The 3-line summary gets a gilt rule like a rubricated initial line. */
+.tldr { background: rgba(202,162,76,.08); border-left: 2px solid var(--gilt); border-radius: 0 4px 4px 0; font-weight: 700; }
+.msg { border-radius: 4px; }
+.msg.user { background: #241b12; border-color: var(--iron2); }
+.msg.assistant { background: #19140f; border-color: var(--iron); border-left: 2px solid var(--gilt-dim); }
+.msg.error, .answer .err { color: #f1c3b6; }
+.replayIn { box-shadow: none; background: var(--leather2); color: var(--gilt); border-radius: 4px; }
+
+/* Cards, chips, lists */
+.card, .lu, .ucard, .bocard, .bostep, .boreader, .banner { border-radius: 4px; }
+.card { background: linear-gradient(180deg, #1f1710, #1a130d); }
+.card > summary { color: var(--gilt); font-size: 13.5px; }
+.card .body b, .bonotes b { color: #f0d995; }
+.chip { box-shadow: none; border-radius: 3px; font-family: var(--font); font-weight: 400; font-size: 12.5px; }
+.chip.on { background: var(--gold-soft); color: var(--gilt); border-color: var(--gilt-dim); }
+.tag { border-radius: 3px; }
+.bocard:hover, .item:hover { background: var(--leather2); }
+.item.sel, .bocard.sel { background: rgba(202,162,76,.10); border-color: var(--gilt-dim); }
+.age { border-radius: 3px; font-family: var(--display); font-size: 11.5px; }
+.age.on { background: linear-gradient(180deg, #d8b25c, #b8903c); color: #1b130a; }
+.bar > i { background: linear-gradient(90deg, var(--gilt-dim), var(--gilt)); }
+.agetag { font-family: var(--display); text-transform: none; letter-spacing: 0; border-radius: 3px; }
+.modal .mbox { border-radius: 4px; border-color: var(--gilt-dim); background: linear-gradient(180deg, #221a12, #17110c); }
+.toast { border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: var(--iron2); border-radius: 0; }
+
+/* Guide: icons sit in small gilt frames */
+.ico { border-radius: 3px; box-shadow: 0 0 0 1px rgba(202,162,76,.35); }
+.ico.big { border-radius: 4px; box-shadow: 0 0 0 1px var(--gilt-dim), 0 0 0 3px #000; }
+.badge { font-size: 10.5px; border-radius: 3px; padding: 0 5px; margin-left: 4px; font-family: var(--font); }
+.badge.mine { background: var(--lapis); color: #eef3fb; } .badge.theirs { background: var(--madder); color: #fff; }
+.item.mine::after, .item.theirs::after { content: none; }
+.techs { padding: 4px 18px 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.tech { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px 3px 3px; border: 1px solid var(--iron2); border-radius: 3px; background: var(--leather); font-size: 12.5px; }
+.tech.bad { border-color: #6b2a22; color: #e7b2a8; } .tech.bad .ico { filter: grayscale(1) brightness(.75); }
+.mapEmblem { width: 40px; height: 40px; flex: none; }
+.item .mapEmblem { width: 22px; height: 22px; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+/* keep reading lines short on wide screens */
+.card .body p, .card .body li, .boreader .rb p, .boreader .rb li { max-width: 80ch; }

@@ -458,7 +458,10 @@ window.I18N = {
   "g.avgElo": "ELO medio",
   "g.results": "{n} resultado(s) para \"{q}\"",
   "g.none": "Sin resultados.",
-  "g.esNote": "Los perfiles y notas están en castellano: tocá 🌐 Traducir en cada sección para traducirla con tu IA."
+  "g.esNote": "Los perfiles y notas están en castellano: tocá 🌐 Traducir en cada sección para traducirla con tu IA.",
+  "g.techsHead": "Tecnologías únicas",
+  "g.mineBadge": "tuya",
+  "g.oppBadge": "rival"
  },
  "en": {
   "state.empty": "Tell me your ELO, civ, opponent and map (or just ask)",
@@ -918,7 +921,10 @@ window.I18N = {
   "g.avgElo": "Avg ELO",
   "g.results": "{n} result(s) for \"{q}\"",
   "g.none": "No results.",
-  "g.esNote": "Profiles and notes are written in Spanish: press 🌐 Translate on any section to translate it with your AI."
+  "g.esNote": "Profiles and notes are written in Spanish: press 🌐 Translate on any section to translate it with your AI.",
+  "g.techsHead": "Unique technologies",
+  "g.mineBadge": "yours",
+  "g.oppBadge": "enemy"
  },
  "de": {
   "state.empty": "Sag mir dein ELO, deine Civ, deinen Gegner und die Map (oder frag einfach direkt)",
@@ -1378,7 +1384,10 @@ window.I18N = {
   "g.avgElo": "Ø ELO",
   "g.results": "{n} Ergebnis(se) für \"{q}\"",
   "g.none": "Keine Ergebnisse.",
-  "g.esNote": "Profile und Notizen sind auf Spanisch: Tipp in jedem Abschnitt auf 🌐 Übersetzen, um ihn mit deiner KI zu übersetzen."
+  "g.esNote": "Profile und Notizen sind auf Spanisch: Tipp in jedem Abschnitt auf 🌐 Übersetzen, um ihn mit deiner KI zu übersetzen.",
+  "g.techsHead": "Einzigartige Technologien",
+  "g.mineBadge": "deine",
+  "g.oppBadge": "Gegner"
  },
  "pt": {
   "state.empty": "Me diga seu ELO, civ, adversário e mapa (ou pergunte direto)",
@@ -1838,7 +1847,10 @@ window.I18N = {
   "g.avgElo": "ELO médio",
   "g.results": "{n} resultado(s) para \"{q}\"",
   "g.none": "Sem resultados.",
-  "g.esNote": "Os perfis e notas estão em espanhol: toque em 🌐 Traduzir em cada seção para traduzi-la com sua IA."
+  "g.esNote": "Os perfis e notas estão em espanhol: toque em 🌐 Traduzir em cada seção para traduzi-la com sua IA.",
+  "g.techsHead": "Tecnologias únicas",
+  "g.mineBadge": "sua",
+  "g.oppBadge": "rival"
  },
  "zh": {
   "state.empty": "告诉我你的 ELO、文明、对手和地图（或者直接提问）",
@@ -2298,7 +2310,10 @@ window.I18N = {
   "g.avgElo": "平均 ELO",
   "g.results": "\"{q}\" 共 {n} 条结果",
   "g.none": "无结果。",
-  "g.esNote": "档案和笔记为西班牙语：在各节点击 🌐 翻译，即可用你的 AI 翻译。"
+  "g.esNote": "档案和笔记为西班牙语：在各节点击 🌐 翻译，即可用你的 AI 翻译。",
+  "g.techsHead": "独特科技",
+  "g.mineBadge": "你的",
+  "g.oppBadge": "对手"
  },
  "vi": {
   "state.empty": "Cho mình biết ELO, civ, đối thủ và bản đồ của bạn (hoặc hỏi luôn)",
@@ -2758,7 +2773,10 @@ window.I18N = {
   "g.avgElo": "ELO TB",
   "g.results": "{n} kết quả cho \"{q}\"",
   "g.none": "Không có kết quả.",
-  "g.esNote": "Hồ sơ và ghi chú viết bằng tiếng Tây Ban Nha: bấm 🌐 Dịch ở mỗi mục để dịch bằng AI của bạn."
+  "g.esNote": "Hồ sơ và ghi chú viết bằng tiếng Tây Ban Nha: bấm 🌐 Dịch ở mỗi mục để dịch bằng AI của bạn.",
+  "g.techsHead": "Công nghệ độc nhất",
+  "g.mineBadge": "của bạn",
+  "g.oppBadge": "đối thủ"
  },
  "ko": {
   "state.empty": "ELO, 문명, 상대, 맵을 알려 주세요 (또는 바로 질문하세요)",
@@ -3218,6 +3236,9 @@ window.I18N = {
   "g.avgElo": "평균 ELO",
   "g.results": "\"{q}\" 검색 결과 {n}개",
   "g.none": "결과 없음.",
-  "g.esNote": "프로필과 노트는 스페인어로 되어 있습니다: 각 섹션의 🌐 번역을 눌러 AI로 번역하세요."
+  "g.esNote": "프로필과 노트는 스페인어로 되어 있습니다: 각 섹션의 🌐 번역을 눌러 AI로 번역하세요.",
+  "g.techsHead": "고유 기술",
+  "g.mineBadge": "내 문명",
+  "g.oppBadge": "상대"
  }
 };
