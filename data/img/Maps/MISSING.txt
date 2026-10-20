@@ -1,73 +1,36 @@
-African Clearing
-Aftermath
-Amazon Tunnel
 Aquarena
 Arabian Desert
-Black Forest
-Bogland
 Border Dispute
-Budapest
 Canals
 Capricious
 Chaos Pit
 City of Lakes
 Cliffbound
-Coastal
-Coastal Forest
-Crater
 Crater Lake
 Crossroads
-Crownwood
-Dingos
-Dorothea Quarry
 Dunesprings
-Enclosed
-Forest Breach
-Fortified Clearing
-Fortress
-Frigid Lake
-Glacis
 Glade
 Golden Stream
-Graupel
 Graveyards
-Greenland
-Hamburger
-Hengehold
 Hideout
-Highland
 Hollow Woodlands
-Holy Line
 Isthmus
 Jungle Islands
-Jungle Lanes
 Karsts
-Kilimanjaro
-Land Nomad
-Loch Ness
-Lombardia
-Marketplace
-Meadow
-Mediterranean
 MegaRandom
 Metropolis
-Michi
 Mired
 Moats
-Morass
 Mountain Dunes
 Mountain Pass
-Mountain Ridge
 Murkwood
 Nile Delta
 Nomad
 Pacific Islands
 Paradise Island
 Prairie
-Rampart
 River Divide
 Rivers
-Runestones
 Salt Marsh
 Sandbank
 Sandrift
@@ -78,7 +41,6 @@ Shipwreck
 Shoals
 Shrubland
 Snake Forest
-Stonefront
 Stranded
 The Passage
 Twin Forests

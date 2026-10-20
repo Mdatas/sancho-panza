@@ -263,5 +263,271 @@
   "source": "https://ageofempires.fandom.com/wiki/File:AOE2DE_Vulpine.webp",
   "via": "fandom",
   "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "africanclearing": {
+  "map": "African Clearing",
+  "file": "AfricanCLearing AoE2DE.png",
+  "source": "https://liquipedia.net/ageofempires/File:AfricanCLearing_AoE2DE.png",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "aftermath": {
+  "map": "Aftermath",
+  "file": "Aftermath minimap aoe2DE.PNG",
+  "source": "https://ageofempires.fandom.com/wiki/File:Aftermath_minimap_aoe2DE.PNG",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "amazontunnel": {
+  "map": "Amazon Tunnel",
+  "file": "Amazon Tunnel minimap aoe2DE.PNG",
+  "source": "https://ageofempires.fandom.com/wiki/File:Amazon_Tunnel_minimap_aoe2DE.PNG",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "blackforest": {
+  "map": "Black Forest",
+  "file": "Black-forest AoE2DE.png",
+  "source": "https://liquipedia.net/ageofempires/File:Black-forest_AoE2DE.png",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "bogland": {
+  "map": "Bogland",
+  "file": "Bogland AoE2DE.png",
+  "source": "https://liquipedia.net/ageofempires/File:Bogland_AoE2DE.png",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "budapest": {
+  "map": "Budapest",
+  "file": "Budapest AoE2DE.png",
+  "source": "https://liquipedia.net/ageofempires/File:Budapest_AoE2DE.png",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "coastal": {
+  "map": "Coastal",
+  "file": "Coastal AoE2DE.png",
+  "source": "https://liquipedia.net/ageofempires/File:Coastal_AoE2DE.png",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "coastalforest": {
+  "map": "Coastal Forest",
+  "file": "Coastal Forest minimap aoe2DE.PNG",
+  "source": "https://ageofempires.fandom.com/wiki/File:Coastal_Forest_minimap_aoe2DE.PNG",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "crater": {
+  "map": "Crater",
+  "file": "Crater.png",
+  "source": "https://ageofempires.fandom.com/wiki/File:Crater.png",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "crownwood": {
+  "map": "Crownwood",
+  "file": "AOE2DE Crownwood.webp",
+  "source": "https://ageofempires.fandom.com/wiki/File:AOE2DE_Crownwood.webp",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "dingos": {
+  "map": "Dingos",
+  "file": "Dingos minimap.jpg",
+  "source": "https://ageofempires.fandom.com/wiki/File:Dingos_minimap.jpg",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "dorotheaquarry": {
+  "map": "Dorothea Quarry",
+  "file": "AOE2DE Dorothea-Quarry.webp",
+  "source": "https://ageofempires.fandom.com/wiki/File:AOE2DE_Dorothea-Quarry.webp",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "enclosed": {
+  "map": "Enclosed",
+  "file": "Enclosed minimap aoe2DE.PNG",
+  "source": "https://ageofempires.fandom.com/wiki/File:Enclosed_minimap_aoe2DE.PNG",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "forestbreach": {
+  "map": "Forest Breach",
+  "file": "Aoe2de forest breach inside.png",
+  "source": "https://ageofempires.fandom.com/wiki/File:Aoe2de_forest_breach_inside.png",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "fortifiedclearing": {
+  "map": "Fortified Clearing",
+  "file": "Fortified clearing minimap.jpg",
+  "source": "https://ageofempires.fandom.com/wiki/File:Fortified_clearing_minimap.jpg",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "fortress": {
+  "map": "Fortress",
+  "file": "Fortress AoE2DE.png",
+  "source": "https://liquipedia.net/ageofempires/File:Fortress_AoE2DE.png",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "frigidlake": {
+  "map": "Frigid Lake",
+  "file": "Frigid Lake minimap aoe2DE.PNG",
+  "source": "https://ageofempires.fandom.com/wiki/File:Frigid_Lake_minimap_aoe2DE.PNG",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "glacis": {
+  "map": "Glacis",
+  "file": "AOE2DE Glacis.webp",
+  "source": "https://ageofempires.fandom.com/wiki/File:AOE2DE_Glacis.webp",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "graupel": {
+  "map": "Graupel",
+  "file": "Graupel.jpg",
+  "source": "https://ageofempires.fandom.com/wiki/File:Graupel.jpg",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "greenland": {
+  "map": "Greenland",
+  "file": "Greenland AoE2DE.png",
+  "source": "https://liquipedia.net/ageofempires/File:Greenland_AoE2DE.png",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "hamburger": {
+  "map": "Hamburger",
+  "file": "Hamburger AoE2DE.png",
+  "source": "https://liquipedia.net/ageofempires/File:Hamburger_AoE2DE.png",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "hengehold": {
+  "map": "Hengehold",
+  "file": "AOE2DE Hengehold.webp",
+  "source": "https://ageofempires.fandom.com/wiki/File:AOE2DE_Hengehold.webp",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "highland": {
+  "map": "Highland",
+  "file": "Highland AoE2DE.png",
+  "source": "https://liquipedia.net/ageofempires/File:Highland_AoE2DE.png",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "holyline": {
+  "map": "Holy Line",
+  "file": "Holy Line Mini Map.png",
+  "source": "https://ageofempires.fandom.com/wiki/File:Holy_Line_Mini_Map.png",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "junglelanes": {
+  "map": "Jungle Lanes",
+  "file": "Jungle Lanes mini map.png",
+  "source": "https://ageofempires.fandom.com/wiki/File:Jungle_Lanes_mini_map.png",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "kilimanjaro": {
+  "map": "Kilimanjaro",
+  "file": "Kilimanjaro AoE2DE.png",
+  "source": "https://liquipedia.net/ageofempires/File:Kilimanjaro_AoE2DE.png",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "landnomad": {
+  "map": "Land Nomad",
+  "file": "Land Nomad AoE2DE.PNG",
+  "source": "https://liquipedia.net/ageofempires/File:Land_Nomad_AoE2DE.PNG",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "lochness": {
+  "map": "Loch Ness",
+  "file": "AOE2DE Loch-Ness.webp",
+  "source": "https://ageofempires.fandom.com/wiki/File:AOE2DE_Loch-Ness.webp",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "lombardia": {
+  "map": "Lombardia",
+  "file": "Lombardia AoE2DE.png",
+  "source": "https://liquipedia.net/ageofempires/File:Lombardia_AoE2DE.png",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "marketplace": {
+  "map": "Marketplace",
+  "file": "Marketplace AoE2DE.png",
+  "source": "https://liquipedia.net/ageofempires/File:Marketplace_AoE2DE.png",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "meadow": {
+  "map": "Meadow",
+  "file": "Meadow minimap aoe2DE.PNG",
+  "source": "https://ageofempires.fandom.com/wiki/File:Meadow_minimap_aoe2DE.PNG",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "mediterranean": {
+  "map": "Mediterranean",
+  "file": "Mediterranean AoE2DE.png",
+  "source": "https://liquipedia.net/ageofempires/File:Mediterranean_AoE2DE.png",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "michi": {
+  "map": "Michi",
+  "file": "Michi minimap aoe2DE.PNG",
+  "source": "https://ageofempires.fandom.com/wiki/File:Michi_minimap_aoe2DE.PNG",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "morass": {
+  "map": "Morass",
+  "file": "Morass minimap aoe2DE.PNG",
+  "source": "https://ageofempires.fandom.com/wiki/File:Morass_minimap_aoe2DE.PNG",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "mountainridge": {
+  "map": "Mountain Ridge",
+  "file": "Mountain ridge mini map.png",
+  "source": "https://ageofempires.fandom.com/wiki/File:Mountain_ridge_mini_map.png",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "rampart": {
+  "map": "Rampart",
+  "file": "AOE2DE Rampart.webp",
+  "source": "https://ageofempires.fandom.com/wiki/File:AOE2DE_Rampart.webp",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "runestones": {
+  "map": "Runestones",
+  "file": "Runestones AoE2DE.png",
+  "source": "https://liquipedia.net/ageofempires/File:Runestones_AoE2DE.png",
+  "via": "liquipedia",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "stonefront": {
+  "map": "Stonefront",
+  "file": "AOE2DE Stonefront.webp",
+  "source": "https://ageofempires.fandom.com/wiki/File:AOE2DE_Stonefront.webp",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
  }
 }
