@@ -69,6 +69,28 @@ def chunks(xs, n):
 
 
 PAGE_IMAGES = {}
+
+
+def query_images(api, titles):
+    """prop=images for a batch of page titles, following the API continuation (imlimit counts across ALL pages
+    of the request, so busy tournament-heavy pages would otherwise starve the others). Returns (pages, back) where
+    pages = {title: {..., 'images': [titles]}} and back maps answered titles to the titles we asked for."""
+    pages, back, cont = {}, {}, {}
+    while True:
+        j = get(api, action="query", titles="|".join(titles), prop="images", imlimit="500", redirects="1", format="json", **cont).json()
+        q = j.get("query", {})
+        for n in q.get("normalized", []) + q.get("redirects", []):
+            back[n["to"]] = back.get(n["from"], n["from"])
+        for pid, page in q.get("pages", {}).items():
+            cur = pages.setdefault(pid, {"title": page.get("title", ""), "missing": "missing" in page, "images": []})
+            cur["images"] += [im["title"] for im in page.get("images", [])]
+        cont = j.get("continue") or {}
+        cont.pop("continue", None)
+        if not cont:
+            break
+    return pages, back
+
+
 FANDOM_API = "https://ageofempires.fandom.com/api.php"
 
 
@@ -78,19 +100,14 @@ def resolve_icons(maps):
     pat = re.compile(r"^File:(.+?)[ _]AoE2DE\.(png|jpg|jpeg|webp)$", re.I)  # the API returns titles with spaces
     chosen = {}
     names = [n for n, _ in maps]
-    for group in chunks(names, 40):
-        j = get(API, action="query", titles="|".join(group), prop="images", imlimit="500", redirects="1", format="json").json()
-        q = j.get("query", {})
-        # map the title we asked for -> the title the wiki answered with (normalized / redirected)
-        back = {}
-        for n in q.get("normalized", []) + q.get("redirects", []):
-            back[n["to"]] = back.get(n["from"], n["from"])
-        for page in q.get("pages", {}).values():
-            title = page.get("title", "")
+    for group in chunks(names, 20):
+        pages, back = query_images(API, group)
+        for page in pages.values():
+            title = page["title"]
             asked = back.get(title, title)
-            if "missing" in page:
+            if page["missing"]:
                 continue
-            allimgs = [im["title"] for im in page.get("images", [])]
+            allimgs = page["images"]
             PAGE_IMAGES[asked] = allimgs
             cands = [t for t in allimgs if pat.match(t)]
             if not cands:
@@ -115,17 +132,13 @@ def resolve_fandom(names):
     an image whose name contains the map name and looks like the DE minimap ("minimap", "DE", "AoE2DE"). Conservative."""
     out, cands_report = {}, {}
     pat = re.compile(r"^File:(.+)\.(png|jpg|jpeg|webp)$", re.I)
-    for group in chunks(names, 40):
-        j = get(FANDOM_API, action="query", titles="|".join(group), prop="images", imlimit="500", redirects="1", format="json").json()
-        q = j.get("query", {})
-        back = {}
-        for n in q.get("normalized", []) + q.get("redirects", []):
-            back[n["to"]] = back.get(n["from"], n["from"])
-        for page in q.get("pages", {}).values():
-            title = page.get("title", ""); asked = back.get(title, title)
-            if "missing" in page:
+    for group in chunks(names, 20):
+        pages, back = query_images(FANDOM_API, group)
+        for page in pages.values():
+            title = page["title"]; asked = back.get(title, title)
+            if page["missing"]:
                 continue
-            imgs = [im["title"] for im in page.get("images", []) if pat.match(im["title"])]
+            imgs = [t for t in page["images"] if pat.match(t)]
             k = key(asked)
             scored = []
             for t in imgs:
