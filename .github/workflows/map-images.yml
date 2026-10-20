@@ -1,0 +1,29 @@
+# Downloads the in-game map icons (via the Liquipedia Age of Empires wiki) for the maps that have a profile
+# and commits small copies to data/img/Maps. Runs on demand (Actions tab → Run workflow) or when the script changes.
+name: map-images
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['tools/fetch_map_images.py', '.github/workflows/map-images.yml']
+permissions:
+  contents: write
+concurrency: map-images
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install --quiet requests pillow
+      - run: python3 tools/fetch_map_images.py
+      - name: Commit the icons
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/img/Maps
+          git diff --cached --quiet && echo "no changes" && exit 0
+          git commit -m "Map icons: $(ls data/img/Maps | grep -c -E '\.(webp|png)$') maps (from Liquipedia, in-game icons © Microsoft)"
+          git pull --rebase origin main
+          git push origin HEAD:main
