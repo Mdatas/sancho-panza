@@ -18,7 +18,7 @@ const matchwatch = require('./matchwatch');
 const bocatalog = require('./bocatalog');
 const { pathToFileURL } = require('url');
 
-const APP_NAME = 'Sancho Panza - AOE2 Squier';
+const APP_NAME = 'Sancho Panza - Age of Empires 2 Companion';
 // Keep the user-data folder of earlier versions (%APPDATA%\\AoE2 Coach): settings, key, logs and imports survive the rename.
 app.setName(APP_NAME);
 try { app.setPath('userData', path.join(app.getPath('appData'), 'AoE2 Coach')); } catch { /* ignore */ }

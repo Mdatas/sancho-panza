@@ -1,5 +1,5 @@
 @echo off
-title Sancho Panza - AOE2 Squier - instalacion
+title Sancho Panza - Age of Empires 2 Companion - instalacion
 cd /d "%~dp0"
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0setup.ps1"
 if errorlevel 1 (

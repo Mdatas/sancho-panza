@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 V=$(node -p "require('./package.json').version")
 rm -rf dist && npx electron-builder --mac zip --arm64 --x64 --publish never
-APP="Sancho Panza - AOE2 Squier.app"; mkdir -p out
+APP="Sancho Panza - Age of Empires 2 Companion.app"; mkdir -p out
 for pair in "mac-arm64:arm64" "mac:x64"; do
   d=${pair%%:*}; a=${pair##*:}
   if command -v codesign >/dev/null; then codesign --force --deep --sign - "dist/$d/$APP"; elif command -v rcodesign >/dev/null; then rcodesign sign "dist/$d/$APP"; fi

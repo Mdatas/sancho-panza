@@ -71,7 +71,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: v${{ needs.check.outputs.version }}
         run: |
-          NOTES="release-notes/$TAG.md"; [ -f "$NOTES" ] || { echo "Sancho Panza · AOE2 Squier $TAG" > /tmp/notes.md; NOTES=/tmp/notes.md; }
+          NOTES="release-notes/$TAG.md"; [ -f "$NOTES" ] || { echo "Sancho Panza · Age of Empires 2 Companion $TAG" > /tmp/notes.md; NOTES=/tmp/notes.md; }
           TITLE=$(head -1 "$NOTES" | sed 's/^#* *//')
           tail -n +2 "$NOTES" > /tmp/body.md
           gh release create "$TAG" assets/*.zip --target "$GITHUB_SHA" --title "$TITLE" --notes-file /tmp/body.md --latest

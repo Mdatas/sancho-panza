@@ -1,8 +1,8 @@
 {
   "name": "aoe2coach",
-  "productName": "Sancho Panza - AOE2 Squier",
-  "version": "0.16.1",
-  "description": "Sancho Panza - AOE2 Squier: companion para Age of Empires II DE — coach con IA, build orders, counters, voz",
+  "productName": "Sancho Panza - Age of Empires 2 Companion",
+  "version": "0.16.2",
+  "description": "Sancho Panza - Age of Empires 2 Companion: companion para Age of Empires II DE — coach con IA, build orders, counters, voz",
   "main": "src/main/main.js",
   "author": "M",
   "license": "SEE LICENSE IN LICENSE",
@@ -25,7 +25,7 @@
   },
   "build": {
     "appId": "ar.m.aoe2coach",
-    "productName": "Sancho Panza - AOE2 Squier",
+    "productName": "Sancho Panza - Age of Empires 2 Companion",
     "directories": {
       "output": "dist",
       "buildResources": "build"

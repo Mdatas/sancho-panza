@@ -1,4 +1,4 @@
-# Sancho Panza · AOE2 Squier
+# Sancho Panza · Age of Empires 2 Companion
 
 **Un coach con IA que se sienta al lado tuyo mientras jugás Age of Empires II: Definitive Edition.**
 Escribís (o preguntás) qué está pasando en tu partida — "Soy francos vs mongoles en Edad de los Castillos y él hace Mangudai" — y en pocos segundos te responde qué hacer en los próximos dos minutos, en base a datos actuales del juego, ~1.000 videos y guías de jugadores top, y matemática de duelos. Puede leerte la respuesta en voz alta.
@@ -169,4 +169,4 @@ Las correcciones son muy bienvenidas — sobre todo de traducciones (hechas con 
 
 Idea, pruebas y dirección: **M** ([Mdatas](https://github.com/Mdatas)). Construido con **Claude** (Anthropic).
 Gracias a cada creador listado en *Fuentes* — esta herramienta existe solo porque ellos comparten su conocimiento gratis.
-Age of Empires II: Definitive Edition © Microsoft Corporation. Sancho Panza · AOE2 Squier se creó bajo las "Game Content Usage Rules" de Microsoft usando recursos de Age of Empires II. No está respaldado por Microsoft ni afiliado a Microsoft.
+Age of Empires II: Definitive Edition © Microsoft Corporation. Sancho Panza · Age of Empires 2 Companion se creó bajo las "Game Content Usage Rules" de Microsoft usando recursos de Age of Empires II. No está respaldado por Microsoft ni afiliado a Microsoft.
