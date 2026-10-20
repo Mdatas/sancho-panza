@@ -1,48 +1,5 @@
-Aquarena
-Arabian Desert
-Border Dispute
-Canals
-Capricious
-Chaos Pit
-City of Lakes
-Cliffbound
-Crater Lake
-Crossroads
-Dunesprings
-Glade
-Golden Stream
-Graveyards
-Hideout
-Hollow Woodlands
-Isthmus
-Jungle Islands
-Karsts
-MegaRandom
-Metropolis
-Mired
-Moats
-Mountain Dunes
-Mountain Pass
-Murkwood
-Nile Delta
-Nomad
-Pacific Islands
-Paradise Island
-Prairie
-River Divide
-Rivers
-Salt Marsh
-Sandbank
-Sandrift
-Sardis
-Seasons
-Sherwood Forest
-Shipwreck
-Shoals
-Shrubland
+Cross
 Snake Forest
 Stranded
-The Passage
 Twin Forests
-Wade
 Yin Yang
