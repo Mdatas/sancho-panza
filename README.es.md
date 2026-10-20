@@ -171,6 +171,10 @@ npm run build:web        # web version → docs/ (GitHub Pages)
 
 Estructura del repositorio: `src/main` (motor, cerebro de IA, voz, sincronización de datos; `api.js` es la única implementación detrás del IPC de escritorio y del `window.coach` de la web), `src/renderer` (interfaz y traducciones), `data` (datos del juego, build orders, notas de conocimiento, íconos), `web` (versión para navegador), `docs` (app web publicada), `installer` (instalador de Windows), `tools` (scripts de datos), `test`.
 
+## Ideas a considerar
+
+Lo que se revisó y no se aplicó (todavía) —replays, más builds, editor de builds en la app, perfiles pre-traducidos, firma de código, etc.— está en [`design/PENDIENTES.md`](design/PENDIENTES.md). Son ideas a considerar en próximas versiones, no compromisos.
+
 ## Contribuir
 
 Las correcciones son muy bienvenidas — sobre todo de traducciones (hechas con IA) y de notas de estrategia desactualizadas. Abrí un issue o un pull request. Según la [licencia](LICENSE), cualquier versión modificada tiene que publicarse, darle crédito a este proyecto y seguir siendo no comercial.

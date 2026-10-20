@@ -170,6 +170,10 @@ npm run build:web        # web version → docs/ (GitHub Pages)
 
 Repository layout: `src/main` (engine, AI brain, voice, data sync; `api.js` is the one implementation behind both the desktop IPC and the web `window.coach`), `src/renderer` (UI and translations), `data` (game data, build orders, knowledge notes, icons), `web` (browser version), `docs` (published web app), `installer` (Windows installer), `tools` (data scripts), `test`.
 
+## Ideas under consideration
+
+What was reviewed and not (yet) applied — replays, more builds, an in-app build editor, pre-translated profiles, code signing and so on — is listed in [`design/PENDIENTES.md`](design/PENDIENTES.md) (Spanish). They are ideas to consider for future versions, not commitments.
+
 ## Contributing
 
 Corrections are very welcome — especially translations (made with AI) and outdated strategy notes. Open an issue or a pull request. Under the [license](LICENSE), any modified version must be published, credit this project and stay non-commercial.
