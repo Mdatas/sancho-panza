@@ -214,5 +214,54 @@
   "file": "Yucatan AoE2DE.png",
   "source": "https://liquipedia.net/ageofempires/File:Yucatan AoE2DE.png",
   "copyright": "Microsoft Corporation (in-game map icon)"
+ },
+ "alpinelakes": {
+  "map": "Alpine Lakes",
+  "file": "Alpine lakes minimap aoe2DE.png",
+  "source": "https://ageofempires.fandom.com/wiki/File:Alpine_lakes_minimap_aoe2DE.png",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "borderstones": {
+  "map": "Border Stones",
+  "file": "Border Stones mini map.jpg",
+  "source": "https://ageofempires.fandom.com/wiki/File:Border_Stones_mini_map.jpg",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "mangrovejungle": {
+  "map": "Mangrove Jungle",
+  "file": "Mangrove jungle.PNG",
+  "source": "https://ageofempires.fandom.com/wiki/File:Mangrove_jungle.PNG",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "migration": {
+  "map": "Migration",
+  "file": "Migration.jpg",
+  "source": "https://ageofempires.fandom.com/wiki/File:Migration.jpg",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "pilgrims": {
+  "map": "Pilgrims",
+  "file": "Pilgrims map.jpg",
+  "source": "https://ageofempires.fandom.com/wiki/File:Pilgrims_map.jpg",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "thames": {
+  "map": "Thames",
+  "file": "AOE2DE Thames.webp",
+  "source": "https://ageofempires.fandom.com/wiki/File:AOE2DE_Thames.webp",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
+ },
+ "vulpine": {
+  "map": "Vulpine",
+  "file": "AOE2DE Vulpine.webp",
+  "source": "https://ageofempires.fandom.com/wiki/File:AOE2DE_Vulpine.webp",
+  "via": "fandom",
+  "copyright": "Microsoft Corporation (in-game map image)"
  }
 }

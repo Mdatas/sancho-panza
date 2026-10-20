@@ -1,13 +1,11 @@
 African Clearing
 Aftermath
-Alpine Lakes
 Amazon Tunnel
 Aquarena
 Arabian Desert
 Black Forest
 Bogland
 Border Dispute
-Border Stones
 Budapest
 Canals
 Capricious
@@ -48,14 +46,12 @@ Kilimanjaro
 Land Nomad
 Loch Ness
 Lombardia
-Mangrove Jungle
 Marketplace
 Meadow
 Mediterranean
 MegaRandom
 Metropolis
 Michi
-Migration
 Mired
 Moats
 Morass
@@ -67,7 +63,6 @@ Nile Delta
 Nomad
 Pacific Islands
 Paradise Island
-Pilgrims
 Prairie
 Rampart
 River Divide
@@ -85,9 +80,7 @@ Shrubland
 Snake Forest
 Stonefront
 Stranded
-Thames
 The Passage
 Twin Forests
-Vulpine
 Wade
 Yin Yang
