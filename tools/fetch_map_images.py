@@ -97,7 +97,7 @@ FANDOM_API = "https://ageofempires.fandom.com/api.php"
 def resolve_icons(maps):
     """{map name: (file title, url)} using the images embedded in each map's wiki page (files live in Liquipedia Commons,
     so list=allimages on the game wiki does not see them; prop=images + prop=imageinfo does)."""
-    pat = re.compile(r"^File:(.+?)[ _]AoE2DE\.(png|jpg|jpeg|webp)$", re.I)  # the API returns titles with spaces
+    pat = re.compile(r"^File:(.+?)\.(png|jpg|jpeg|webp)$", re.I)
     chosen = {}
     names = [n for n, _ in maps]
     for group in chunks(names, 20):
@@ -109,13 +109,27 @@ def resolve_icons(maps):
                 continue
             allimgs = page["images"]
             PAGE_IMAGES[asked] = allimgs
-            cands = [t for t in allimgs if pat.match(t)]
-            if not cands:
-                continue
-            exact = [c for c in cands if key(pat.match(c).group(1)) == key(asked) or key(pat.match(c).group(1)) == key(title)]
-            pick = exact[0] if exact else (cands[0] if len(cands) == 1 else None)
-            if pick:
-                chosen[asked] = pick
+            k = key(asked) or key(title)
+            best = None
+            for t in allimgs:
+                m = pat.match(t)
+                if not m:
+                    continue
+                stem = key(m.group(1))
+                if not stem.startswith(k):
+                    continue
+                rest = stem[len(k):]
+                if any(x in rest for x in ("allmode", "darkmode", "lightmode", "original", "logo", "cup", "league", "hd", "ddd")):
+                    continue
+                score = {"aoe2de": 10, "aoe2deicon": 9, "aoe2demap": 8, "aoe2deminimap": 8, "aoe2map": 6, "aoe2": 6, "aoe2minimap": 6, "": 4, "map": 5, "minimap": 5}.get(rest)
+                if score is None and "aoe2de" in rest:
+                    score = 7
+                if score is None:
+                    continue
+                if best is None or score > best[0]:
+                    best = (score, t)
+            if best:
+                chosen[asked] = best[1]
     print(f"pages with an AoE2DE icon: {len(chosen)} of {len(names)}", file=sys.stderr)
     urls = {}
     for group in chunks(sorted(set(chosen.values())), 40):
@@ -147,11 +161,13 @@ def resolve_fandom(names):
                     continue
                 rest = stem.replace(k, "", 1)
                 score = 0
-                if "aoe2de" in rest or rest in ("de", "mapde", "minimapde", "deminimap", "minimap", "map", ""):
+                if "aoe2de" in rest or rest in ("de", "mapde", "minimapde", "deminimap", "minimap", "map", "aoe2minimap", "aoe2map", ""):
                     score += 3
                 if "minimap" in rest:
-                    score += 2
-                if "de" in rest:
+                    score += 3
+                if "aoe2" in rest:
+                    score += 1
+                if rest.endswith("de"):
                     score += 1
                 if any(x in rest for x in ("screenshot", "hd", "aok", "aoc", "aoe1", "aoe3", "aom", "concept", "logo")):
                     score -= 5
