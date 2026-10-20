@@ -29,7 +29,7 @@ API = "https://liquipedia.net/ageofempires/api.php"
 UA = "SanchoPanzaFanCompanion/1.0 (https://github.com/Mdatas/sancho-panza; non-commercial fan tool; map icons)"
 HEADERS = {"User-Agent": UA, "Accept-Encoding": "gzip"}
 DELAY = 2.1  # seconds between requests (Liquipedia asks for >= 2 s)
-SIZE = 256   # px, longest side
+SIZE = 512   # px, longest side (the guide shows the picture up to ~360 px wide, and larger on click)
 
 
 def key(s: str) -> str:
@@ -231,7 +231,7 @@ def main():
             sources.pop(k, None)
             continue
         out = OUT_DIR / f"{k}.{ext}"
-        if out.exists() and sources.get(k, {}).get("file") == hit[0]:
+        if out.exists() and sources.get(k, {}).get("file") == hit[0] and sources.get(k, {}).get("px") == SIZE:
             done += 1
             continue
         try:
@@ -245,7 +245,7 @@ def main():
                 im.save(out, "PNG", optimize=True)
             src = hit[2] if len(hit) > 2 else "liquipedia"
             page = (f"https://liquipedia.net/ageofempires/File:{hit[0]}" if src == "liquipedia" else f"https://ageofempires.fandom.com/wiki/File:{hit[0]}").replace(" ", "_")
-            sources[k] = {"map": name, "file": hit[0], "source": page, "via": src, "copyright": "Microsoft Corporation (in-game map image)"}
+            sources[k] = {"map": name, "file": hit[0], "source": page, "via": src, "px": SIZE, "copyright": "Microsoft Corporation (in-game map image)"}
             done += 1
             print(f"ok  {name} <- {hit[0]}", file=sys.stderr)
         except Exception as e:  # keep going; report at the end
