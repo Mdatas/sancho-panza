@@ -7,7 +7,7 @@ Read this in: **English** · [Español](README.es.md)
 
 | | |
 |---|---|
-| **Windows** | [Latest release](https://github.com/Mdatas/sancho-panza/releases/latest) → `AoE2Coach-…-setup.zip` → unzip → `Instalar.bat` |
+| **Windows** | [Latest release](https://github.com/Mdatas/sancho-panza/releases/latest) → `SanchoPanza-…-windows-x64.zip` → unzip → `Instalar.bat` |
 | **Mac** (Apple chip or Intel) | [Latest release](https://github.com/Mdatas/sancho-panza/releases/latest) → `SanchoPanza-…-mac-arm64.zip` (M1–M4) or `…-mac-x64.zip` (Intel) |
 | **Web / Android / iPhone** | https://mdatas.github.io/sancho-panza/ → browser menu → "Add to Home screen" |
 | **Languages** | Español · English · Deutsch · Português · 中文 · Tiếng Việt · 한국어 |

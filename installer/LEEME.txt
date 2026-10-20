@@ -1,4 +1,4 @@
-Sancho Panza - AOE2 Squier v0.16 - instalacion en Windows
+Sancho Panza - AOE2 Squier v0.16.1 - instalacion en Windows
 ==========================================================
 
 1. Doble clic en "Instalar.bat".
@@ -14,6 +14,7 @@ Sancho Panza - AOE2 Squier v0.16 - instalacion en Windows
    /bo scouts (buscar build) -> /bo 2 (elegir) -> /n /p (pasos)   /voz on|off   /mal <que estuvo mal>   /ayuda
    O decilo directamente en la pregunta: el coach registra la situacion y la muestra en la barra.
 
+Nuevo en v0.16.1: la Guia tambien esta traducida a los 7 idiomas; los perfiles y notas (en castellano) tienen un boton 🌐 Traducir que usa tu propia key. El zip de Windows ahora se llama SanchoPanza-...-windows-x64.zip.
 Nuevo en v0.16: (1) 7 idiomas en la interfaz y en las respuestas: espanol, ingles, aleman, portugues, chino, vietnamita y coreano (Ajustes > Ventana > Idioma de la interfaz; la voz cambia sola al idioma elegido). Las traducciones se hicieron con IA: correcciones bienvenidas. (2) Boton 🔊 dentro de cada respuesta (en la ventana chica y en el historial) para volver a escucharla; /repetir sigue funcionando. (3) Version web para celular (Android e iPhone): https://mdatas.github.io/sancho-panza/ -> menu del navegador -> "Agregar a pantalla de inicio". (4) Codigo, versiones y explicacion completa en https://github.com/Mdatas/sancho-panza (licencia no comercial, ver LICENSE).
 En v0.15: playlists de Poop Lord completas: "every unique strategy" (362 videos con nota; 42 sin subtitulos y 4 duplicados o sin estrategia quedan afuera) y "Legend of the game" (26 de 27; uno no es de AoE2). Cada nota con fecha y chequeo de vigencia contra el parche 185872 (ej.: la Fortified Church ya no sirve para tirar edificios, el Hussite Wagon y la honda inca fueron nerfeados). El coach las usa como MEME/ANTI-META y para saber como frenarlas.
 En v0.14.2: mas estrategias de Poop Lord ("every unique strategy": 253 videos cargados de 411; "Legend of the game": 14 de 27), cada una con fecha y chequeo de vigencia contra el parche 185872; aparecen en Build orders filtrando MEME.

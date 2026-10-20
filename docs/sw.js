@@ -1,5 +1,5 @@
 // Offline cache for the web app shell and data. Version bump = new cache. AI calls are never cached.
-const CACHE = 'sancho-panza-0.16.0';
+const CACHE = 'sancho-panza-0.16.1';
 const SHELL = ['./', 'index.html', 'guide.html', 'styles.css', 'guide.css', 'web.css', 'i18n.js', 'app.js', 'guide.js', 'coach-web.js', 'data/bundle.json', 'manifest.webmanifest', 'assets/icon.png', 'assets/icon-192.png'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', (e) => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });

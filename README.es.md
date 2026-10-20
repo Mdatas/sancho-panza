@@ -7,7 +7,7 @@ Leelo en: [English](README.md) · **Español**
 
 | | |
 |---|---|
-| **Windows** | [Última versión](https://github.com/Mdatas/sancho-panza/releases/latest) → `AoE2Coach-…-setup.zip` → descomprimí → `Instalar.bat` |
+| **Windows** | [Última versión](https://github.com/Mdatas/sancho-panza/releases/latest) → `SanchoPanza-…-windows-x64.zip` → descomprimí → `Instalar.bat` |
 | **Mac** (chip Apple o Intel) | [Última versión](https://github.com/Mdatas/sancho-panza/releases/latest) → `SanchoPanza-…-mac-arm64.zip` (M1–M4) o `…-mac-x64.zip` (Intel) |
 | **Web / Android / iPhone** | https://mdatas.github.io/sancho-panza/ → menú del navegador → "Agregar a la pantalla principal" |
 | **Idiomas** | Español · English · Deutsch · Português · 中文 · Tiếng Việt · 한국어 |
