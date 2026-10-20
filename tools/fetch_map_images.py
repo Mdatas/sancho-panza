@@ -71,7 +71,7 @@ def chunks(xs, n):
 def resolve_icons(maps):
     """{map name: (file title, url)} using the images embedded in each map's wiki page (files live in Liquipedia Commons,
     so list=allimages on the game wiki does not see them; prop=images + prop=imageinfo does)."""
-    pat = re.compile(r"^File:(.+?)_AoE2DE\.(png|jpg|jpeg|webp)$", re.I)
+    pat = re.compile(r"^File:(.+?)[ _]AoE2DE\.(png|jpg|jpeg|webp)$", re.I)  # the API returns titles with spaces
     chosen = {}
     names = [n for n, _ in maps]
     for group in chunks(names, 40):
@@ -147,6 +147,7 @@ def main():
     for n in missing:
         print("  -", n, file=sys.stderr)
     (OUT_DIR / "MISSING.txt").write_text("\n".join(missing) + ("\n" if missing else ""), encoding="utf8")
+    (OUT_DIR / "REPORT.txt").write_text(f"maps: {len(maps)}\nicons resolved: {len(icons)}\nsaved: {done}\nmissing: {len(missing)}\nsample resolved: {list(icons.items())[:5]}\n", encoding="utf8")
 
 
 if __name__ == "__main__":
