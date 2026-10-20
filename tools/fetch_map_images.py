@@ -3,8 +3,9 @@
 Fetch the in-game map icons for the maps that have a profile (data/knowledge/maps/*.md) and store small
 copies in data/img/Maps/<key>.webp, plus SOURCES.json (where each file came from).
 
-Source: Liquipedia Age of Empires wiki (MediaWiki API), files named "<Map>_AoE2DE.png" ("In game map icon",
-copyright Microsoft; usable in non-profit fan projects under Microsoft's Game Content Usage Rules).
+Sources: Liquipedia Age of Empires wiki (MediaWiki API), files named "<Map> AoE2DE.png" / "... AoE2DE icon.png" /
+"... AoE2 Map.png" ("In game map icon", copyright Microsoft; usable in non-profit fan projects under Microsoft's Game
+Content Usage Rules), and, for maps Liquipedia has no icon for, the Age of Empires Series Wiki (Fandom) minimaps.
 The script respects Liquipedia's API terms: descriptive User-Agent, gzip, one request every 2 seconds.
 
 Run by .github/workflows/map-images.yml (GitHub's runners have open internet) or locally:
@@ -94,42 +95,49 @@ def query_images(api, titles):
 FANDOM_API = "https://ageofempires.fandom.com/api.php"
 
 
+def best_liquipedia(name, keys, allimgs, pat):
+    """Pick the in-game icon for one map among the files embedded in its page: the file stem must start with the map name
+    (or an alias) and end with one of the wiki's naming variants (" AoE2DE", " AoE2DE icon", " AoE2DE map", " AoE2 Map"...)."""
+    best = None
+    for t in allimgs:
+        m = pat.match(t)
+        if not m:
+            continue
+        stem = key(m.group(1))
+        for k in keys:
+            if not k or not stem.startswith(k):
+                continue
+            rest = stem[len(k):]
+            if any(x in rest for x in ("allmode", "darkmode", "lightmode", "original", "logo", "cup", "league", "hd", "ddd", "icon48", "screenshot", "inside")):
+                continue
+            score = {"aoe2de": 10, "aoe2deicon": 9, "aoe2demap": 8, "aoe2deminimap": 8, "aoe2map": 6, "aoe2": 6, "aoe2minimap": 6, "": 4, "map": 5, "minimap": 5}.get(rest)
+            if score is None and "aoe2de" in rest:
+                score = 7
+            if score is None:
+                continue
+            if best is None or score > best[0]:
+                best = (score, t)
+    return best[1] if best else None
+
+
 def resolve_icons(maps):
     """{map name: (file title, url)} using the images embedded in each map's wiki page (files live in Liquipedia Commons,
     so list=allimages on the game wiki does not see them; prop=images + prop=imageinfo does)."""
     pat = re.compile(r"^File:(.+?)\.(png|jpg|jpeg|webp)$", re.I)
     chosen = {}
+    keys_of = {n: [key(n)] + [key(a) for a in al if key(a) and key(a) != key(n)] for n, al in maps}
     names = [n for n, _ in maps]
     for group in chunks(names, 20):
         pages, back = query_images(API, group)
         for page in pages.values():
             title = page["title"]
             asked = back.get(title, title)
-            if page["missing"]:
+            if page["missing"] or asked not in keys_of:
                 continue
-            allimgs = page["images"]
-            PAGE_IMAGES[asked] = allimgs
-            k = key(asked) or key(title)
-            best = None
-            for t in allimgs:
-                m = pat.match(t)
-                if not m:
-                    continue
-                stem = key(m.group(1))
-                if not stem.startswith(k):
-                    continue
-                rest = stem[len(k):]
-                if any(x in rest for x in ("allmode", "darkmode", "lightmode", "original", "logo", "cup", "league", "hd", "ddd")):
-                    continue
-                score = {"aoe2de": 10, "aoe2deicon": 9, "aoe2demap": 8, "aoe2deminimap": 8, "aoe2map": 6, "aoe2": 6, "aoe2minimap": 6, "": 4, "map": 5, "minimap": 5}.get(rest)
-                if score is None and "aoe2de" in rest:
-                    score = 7
-                if score is None:
-                    continue
-                if best is None or score > best[0]:
-                    best = (score, t)
-            if best:
-                chosen[asked] = best[1]
+            PAGE_IMAGES[asked] = page["images"]
+            f = best_liquipedia(asked, keys_of[asked], page["images"], pat)
+            if f:
+                chosen[asked] = f
     print(f"pages with an AoE2DE icon: {len(chosen)} of {len(names)}", file=sys.stderr)
     urls = {}
     for group in chunks(sorted(set(chosen.values())), 40):
@@ -141,41 +149,49 @@ def resolve_icons(maps):
     return {m: (f.replace("File:", ""), urls[f]) for m, f in chosen.items() if f in urls}
 
 
-def resolve_fandom(names):
-    """Second source for maps without a Liquipedia icon: the Age of Empires Series Wiki (Fandom). Picks, on the map's page,
-    an image whose name contains the map name and looks like the DE minimap ("minimap", "DE", "AoE2DE"). Conservative."""
+def resolve_fandom(maps):
+    """Second source for maps without a Liquipedia icon: the Age of Empires Series Wiki (Fandom). Picks, on the map's page
+    (or "<Map> (Age of Empires II)"), an image whose name contains the map name (or an alias) and looks like the DE minimap
+    ("minimap", "mini map", "DE", "AoE2DE"). Conservative: in-game screenshots ("inside", "screenshot") are skipped."""
     out, cands_report = {}, {}
     pat = re.compile(r"^File:(.+)\.(png|jpg|jpeg|webp)$", re.I)
-    for group in chunks(names, 20):
+    keys_of = {n: [key(n)] + [key(a) for a in al if key(a) and key(a) != key(n)] for n, al in maps}
+    titles = {}
+    for n, _ in maps:
+        titles[n] = n
+        titles[f"{n} (Age of Empires II)"] = n
+    asked_titles = list(titles)
+    for group in chunks(asked_titles, 20):
         pages, back = query_images(FANDOM_API, group)
         for page in pages.values():
             title = page["title"]; asked = back.get(title, title)
-            if page["missing"]:
+            name = titles.get(asked)
+            if page["missing"] or not name or name in out:
                 continue
             imgs = [t for t in page["images"] if pat.match(t)]
-            k = key(asked)
             scored = []
             for t in imgs:
                 stem = key(pat.match(t).group(1))
-                if k not in stem:
-                    continue
-                rest = stem.replace(k, "", 1)
-                score = 0
-                if "aoe2de" in rest or rest in ("de", "mapde", "minimapde", "deminimap", "minimap", "map", "aoe2minimap", "aoe2map", ""):
-                    score += 3
-                if "minimap" in rest:
-                    score += 3
-                if "aoe2" in rest:
-                    score += 1
-                if rest.endswith("de"):
-                    score += 1
-                if any(x in rest for x in ("screenshot", "hd", "aok", "aoc", "aoe1", "aoe3", "aom", "concept", "logo")):
-                    score -= 5
-                scored.append((score, len(rest), t))
-            cands_report[asked] = imgs[:12]
+                for k in keys_of[name]:
+                    if k not in stem:
+                        continue
+                    rest = stem.replace(k, "", 1)
+                    score = 0
+                    if "map" in rest or rest in ("", "de", "aoe2de", "aoe2", "aoe2dede"):
+                        score += 3
+                    if "minimap" in rest:
+                        score += 2
+                    if "aoe2" in rest:
+                        score += 1
+                    if rest.endswith("de"):
+                        score += 1
+                    if any(x in rest for x in ("screenshot", "inside", "ingame", "gameplay", "hd", "aok", "aoc", "aoe1", "aoe3", "aom", "concept", "logo", "icon48")):
+                        score -= 5
+                    scored.append((score, len(rest), t))
+            cands_report.setdefault(name, []).extend(imgs[:12])
             scored.sort(key=lambda x: (-x[0], x[1]))
             if scored and scored[0][0] >= 3:
-                out[asked] = scored[0][2]
+                out[name] = scored[0][2]
     urls = {}
     for group in chunks(sorted(set(out.values())), 40):
         j = get(FANDOM_API, action="query", titles="|".join(group), prop="imageinfo", iiprop="url", format="json").json()
@@ -190,7 +206,7 @@ def main():
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     maps = read_maps()
     icons = {m: (f, u, "liquipedia") for m, (f, u) in resolve_icons(maps).items()}
-    left = [n for n, _ in maps if n not in icons]
+    left = [(n, al) for n, al in maps if n not in icons]
     fand, fand_report = resolve_fandom(left) if left else ({}, {})
     icons.update(fand)
     webp = features.check("webp")
@@ -201,12 +217,18 @@ def main():
             sources = json.loads((OUT_DIR / "SOURCES.json").read_text(encoding="utf8"))
         except Exception:
             sources = {}
+    for k, v in sources.items():  # entries written by the first version of this script
+        v.setdefault("via", "liquipedia")
     missing, done = [], 0
     for name, aliases in maps:
         k = key(name)
         hit = icons.get(name)
         if not hit:
             missing.append(name)
+            for stale in OUT_DIR.glob(f"{k}.*"):  # an earlier, looser match may have stored the wrong picture
+                stale.unlink()
+                print(f"removed stale {stale.name}", file=sys.stderr)
+            sources.pop(k, None)
             continue
         out = OUT_DIR / f"{k}.{ext}"
         if out.exists() and sources.get(k, {}).get("file") == hit[0]:

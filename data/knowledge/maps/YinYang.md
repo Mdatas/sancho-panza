@@ -1,6 +1,6 @@
 ---
 map: Yin Yang
-aliases: [Yin Yang, yin yang]
+aliases: [Yin Yang, yin yang, Ying Yang, ying yang]
 type: híbrido
 ---
 # Yin Yang
