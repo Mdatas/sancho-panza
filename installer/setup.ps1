@@ -11,7 +11,7 @@ $ZipUrl = "https://github.com/electron/electron/releases/download/v$ElectronVers
 $Zip = Join-Path $Cache "electron-v$ElectronVersion-win32-x64.zip"
 
 Write-Host ''
-Write-Host '=== Sancho Panza - Age of Empires 2 Companion — instalación ===' -ForegroundColor Yellow
+Write-Host '=== Sancho Panza - Age of Empires 2 Fan Companion — instalación ===' -ForegroundColor Yellow
 Write-Host "Destino: $Dest"
 New-Item -ItemType Directory -Force -Path $Dest, $Cache | Out-Null
 
@@ -45,19 +45,20 @@ Remove-Item -Force -ErrorAction SilentlyContinue (Join-Path $Dest 'resources\def
 # 3) App files (app.asar, game data, whisper)
 Copy-Item -Recurse -Force (Join-Path $Here 'app\resources\*') (Join-Path $Dest 'resources')
 
-# 4) Desktop shortcut (the app is now called "Sancho Panza - Age of Empires 2 Companion"; the old shortcut is replaced)
+# 4) Desktop shortcut (the app is now called "Sancho Panza - Age of Empires 2 Fan Companion"; the old shortcut is replaced)
 $Desk = [Environment]::GetFolderPath('Desktop')
 Remove-Item -Force -ErrorAction SilentlyContinue (Join-Path $Desk 'AoE2 Coach.lnk')
 Remove-Item -Force -ErrorAction SilentlyContinue (Join-Path $Desk 'Sancho Panza - AOE2 Squier.lnk')
+Remove-Item -Force -ErrorAction SilentlyContinue (Join-Path $Desk 'Sancho Panza - Age of Empires 2 Companion.lnk')
 $Shell = New-Object -ComObject WScript.Shell
-$Lnk = $Shell.CreateShortcut((Join-Path $Desk 'Sancho Panza - Age of Empires 2 Companion.lnk'))
+$Lnk = $Shell.CreateShortcut((Join-Path $Desk 'Sancho Panza - Age of Empires 2 Fan Companion.lnk'))
 $Lnk.TargetPath = Join-Path $Dest 'AoE2 Coach.exe'
 $Lnk.WorkingDirectory = $Dest
 $Lnk.IconLocation = (Join-Path $Dest 'AoE2 Coach.exe') + ',0'
-$Lnk.Description = 'Sancho Panza - Age of Empires 2 Companion'
+$Lnk.Description = 'Sancho Panza - Age of Empires 2 Fan Companion'
 $Lnk.Save()
 
 Write-Host ''
-Write-Host 'Listo. Acceso directo "Sancho Panza - Age of Empires 2 Companion" en el Escritorio.' -ForegroundColor Green
+Write-Host 'Listo. Acceso directo "Sancho Panza - Age of Empires 2 Fan Companion" en el Escritorio.' -ForegroundColor Green
 Write-Host 'Primer paso en la app: Ajustes -> Cerebro -> pegar la API key de Claude.'
 Start-Process -FilePath (Join-Path $Dest 'AoE2 Coach.exe') -WorkingDirectory $Dest

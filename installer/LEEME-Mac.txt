@@ -1,13 +1,13 @@
-Sancho Panza - Age of Empires 2 Companion v0.16 - Mac
+Sancho Panza - Age of Empires 2 Fan Companion v0.16 - Mac
 ======================================
 
 Cual bajar: Mac con chip Apple (M1, M2, M3, M4...) -> "mac-arm64". Mac con Intel -> "mac-x64".
 (Menu Apple > Acerca de esta Mac: si dice "Chip Apple M..." es arm64; si dice "Procesador Intel" es x64.)
 
-1. Descomprimi el zip y arrastra "Sancho Panza - Age of Empires 2 Companion" a la carpeta Aplicaciones.
+1. Descomprimi el zip y arrastra "Sancho Panza - Age of Empires 2 Fan Companion" a la carpeta Aplicaciones.
 2. Abrila. La primera vez macOS la bloquea porque no esta firmada por Apple:
    Ajustes del Sistema > Privacidad y seguridad > abajo: "Se bloqueo Sancho Panza..." > "Abrir de todos modos" > confirmar.
-   (Alternativa en Terminal:  xattr -dr com.apple.quarantine "/Applications/Sancho Panza - Age of Empires 2 Companion.app" )
+   (Alternativa en Terminal:  xattr -dr com.apple.quarantine "/Applications/Sancho Panza - Age of Empires 2 Fan Companion.app" )
 3. Al abrir aparece la ventana de la API key (igual que en Windows).
 4. En el juego conviene modo ventana o ventana sin bordes; la app se mantiene arriba tambien en pantalla completa.
 5. Atajos: F10 escribir, F9 mostrar/ocultar, F7/F8 pasos del build. En Mac las teclas F suelen ser de brillo/volumen:
