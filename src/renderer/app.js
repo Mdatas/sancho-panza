@@ -501,10 +501,18 @@ async function openCatalogEntry(id) {
   $$('#boList .bocard').forEach(x => x.classList.toggle('sel', x.dataset.id === id));
   if (e.kind === 'steps') { $('#boReader').classList.add('hidden'); await selectBo(e.id); $('#boStep').scrollIntoView({ block: 'nearest' }); return; }
   const t = await window.coach.bo.noteText({ file: e.file, stem: e.stem });
-  $('#boReader').innerHTML = `<div class="rh"><b>${esc(t.title)}</b> <span class="muted small">${esc(e.author)} ${esc(e.date || '')}</span>${e.tier !== 'meta' ? ` <span class="tag ${e.tier === 'meme' ? 'bad' : 'warn'}">${TIER_LABEL[e.tier]}</span>` : ''}<button class="ghost small" id="boReaderAsk">${tr('bo.ask')}</button><button class="ghost small" id="boReaderClose">✕</button></div>
+  $('#boReader').innerHTML = `<div class="rh"><b>${esc(t.title)}</b> <span class="muted small">${esc(e.author)} ${esc(e.date || '')}</span>${e.tier !== 'meta' ? ` <span class="tag ${e.tier === 'meme' ? 'bad' : 'warn'}">${TIER_LABEL[e.tier]}</span>` : ''}${(S.uiLanguage || 'es') !== 'es' ? `<button class="ghost small" id="boReaderTr">🌐 ${tr('g.translate')}</button>` : ''}<button class="ghost small" id="boReaderAsk">${tr('bo.ask')}</button><button class="ghost small" id="boReaderClose">✕</button></div>
     <div class="rb">${md(t.lessons)}</div>${t.vigencia ? `<details open><summary>${tr('bo.vig')}</summary><div class="rb">${md(t.vigencia)}</div></details>` : ''}`;
   $('#boReader').classList.remove('hidden'); $('#boReader').scrollTop = 0;
   $('#boReaderClose').addEventListener('click', () => $('#boReader').classList.add('hidden'));
+  const trb = $('#boReaderTr');
+  if (trb) trb.addEventListener('click', async () => {
+    trb.disabled = true; trb.textContent = '… ' + tr('g.translating');
+    const lang = S.uiLanguage || 'en'; const parts = [t.lessons, t.vigencia].filter(Boolean);
+    const out = await Promise.all(parts.map(x => window.coach.guide.translate({ text: x, lang })));
+    if (out.every(r => r && r.ok)) { const bodies = $$('#boReader .rb'); out.forEach((r, i) => { if (bodies[i]) bodies[i].innerHTML = md(r.text); }); trb.remove(); }
+    else { trb.disabled = false; trb.textContent = '⚠ ' + tr('g.trFail'); const e = out.find(r => !r || !r.ok); trb.title = (e && e.error) || ''; }
+  });
   $('#boReaderAsk').addEventListener('click', () => { const c = $('#cmd'); c.value = tr('bo.askText', { t: t.title }); showTab('chat'); focusInput(); });
 }
 function bindBo() {

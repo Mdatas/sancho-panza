@@ -1,9 +1,10 @@
-node_modules/
-dist/
+# never commit user data or keys
+*.key
 *.log
 .DS_Store
-Thumbs.db
-# never commit user data or keys
-settings.json
-*.key
 .env
+Thumbs.db
+dist/
+node_modules/
+out/
+settings.json

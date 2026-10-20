@@ -88,3 +88,7 @@ tr.click { cursor: pointer; } tr.click:hover td { background: var(--panel2); }
 .ico.civ { width: 24px; height: 24px; }
 .ico.big { width: 40px; height: 40px; margin-right: 10px; border-radius: 6px; }
 .u { display: inline-flex; align-items: center; }
+/* AI translate button (non-Spanish UI) */
+.trBtn { margin-left: 8px; font-size: 11px; padding: 1px 7px; border-radius: 6px; background: var(--panel2); color: var(--gold); border: 1px solid var(--border2); cursor: pointer; vertical-align: middle; }
+.trBtn:hover { border-color: var(--gold-dim); } .trBtn:disabled { opacity: .7; cursor: default; }
+.cardbar { padding: 6px 12px 0; } .trnote { padding: 0 18px; margin: 4px 0; }

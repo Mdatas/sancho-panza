@@ -348,6 +348,7 @@ function registerIpc() {
   ipcMain.handle('guide:civ', (_e, key) => guideData.civView({ gd, strategy, key, stats: civStats() }));
   ipcMain.handle('guide:map', (_e, key) => guideData.mapView({ strategy, key }));
   ipcMain.handle('guide:stats', () => civStats());
+  ipcMain.handle('guide:translate', async (_e, { text, lang }) => { try { return { ok: true, text: await brain.translate(text, lang) }; } catch (e) { return { ok: false, error: e.message }; } });
   ipcMain.handle('guide:notes', (_e, q) => guideData.searchNotes({ knowledge, q }));
   ipcMain.handle('guide:noteList', () => guideData.listNotes({ knowledge }));
   ipcMain.handle('guide:noteText', (_e, { file, title }) => guideData.noteText({ knowledge, file, title }));
@@ -504,6 +505,10 @@ async function smokeTest() {
     probe.guideMeta = await gjs(`document.querySelectorAll('#metaTable tr').length + ' rows'`); await gshot('meta');
     await gjs(`document.querySelector('[data-tab="notes"]').click(); const i = document.getElementById('noteSearch'); i.value = 'men-at-arms'; i.dispatchEvent(new Event('input'))`); await new Promise(r => setTimeout(r, 1200));
     probe.guideNotes = await gjs(`document.querySelectorAll('#noteView details').length + ' hits'`); await gshot('notes');
+    { const prevLang = settings.get().uiLanguage; settings.set({ uiLanguage: 'en' }); guideWin.webContents.reload(); await new Promise(r => setTimeout(r, 2500));
+      await gjs(`handleGoto({ civ: 'Franks' })`); await new Promise(r => setTimeout(r, 1200));
+      probe.guideEn = await gjs(`document.querySelector('#civView h2').textContent + ' | ' + document.querySelectorAll('#civView .trBtn').length + ' translate buttons | tab ' + document.querySelector('#tabs button').textContent + ' | ' + document.querySelector('#civView summary').textContent.slice(0, 30)`);
+      await gshot('civ-en'); settings.set({ uiLanguage: prevLang || 'es' }); }
     // key handling: default = v0.11 (plain in the settings field), experimental privacy = masked, amnesiac = nothing on disk, back = restored
     {
       const set = (p) => js(`window.coach.settings.set(${JSON.stringify(p)})`); const get = () => js('window.coach.settings.get()');

@@ -1,0 +1,65 @@
+# Push a tag like v0.17.0 → builds Windows + Mac packages and publishes a GitHub Release with them.
+# Release text: release-notes/<tag>.md (falls back to an auto-generated text).
+name: release
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag: { description: 'Existing tag to (re)publish, e.g. v0.16.0', required: true }
+permissions:
+  contents: write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: "${{ github.event.inputs.tag || github.ref }}" }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci
+      - run: npm test
+      - name: No API keys in the repository
+        run: "! grep -rIE 'sk-ant-[A-Za-z0-9_-]{20,}' --exclude-dir=node_modules . | grep -v smoke-test"
+  windows:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: "${{ github.event.inputs.tag || github.ref }}" }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci
+      - run: bash scripts/package-win.sh
+      - uses: actions/upload-artifact@v4
+        with: { name: windows, path: out/*.zip }
+  mac:
+    needs: test
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: "${{ github.event.inputs.tag || github.ref }}" }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci
+      - run: bash scripts/package-mac.sh
+        env: { CSC_IDENTITY_AUTO_DISCOVERY: 'false' }
+      - uses: actions/upload-artifact@v4
+        with: { name: mac, path: out/*.zip }
+  publish:
+    needs: [windows, mac]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: "${{ github.event.inputs.tag || github.ref }}" }
+      - uses: actions/download-artifact@v4
+        with: { path: assets, merge-multiple: true }
+      - name: Create or update the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event.inputs.tag || github.ref_name }}
+        run: |
+          NOTES="release-notes/$TAG.md"; [ -f "$NOTES" ] || { echo "Sancho Panza · AOE2 Squier $TAG" > /tmp/notes.md; NOTES=/tmp/notes.md; }
+          TITLE=$(head -1 "$NOTES" | sed 's/^#* *//')
+          if gh release view "$TAG" >/dev/null 2>&1; then gh release upload "$TAG" assets/*.zip --clobber; gh release edit "$TAG" --notes-file "$NOTES";
+          else gh release create "$TAG" assets/*.zip --title "$TITLE" --notes-file "$NOTES" --latest; fi

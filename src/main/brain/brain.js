@@ -147,6 +147,17 @@ class Brain {
     return parts.join('\n\n');
   }
 
+  /** Translate a Spanish strategy note into the UI language (guide / build-order reader). Uses the cheap model. */
+  async translate(text, lang) {
+    const NAMES = { en: 'English', de: 'German', pt: 'Brazilian Portuguese', zh: 'Simplified Chinese', vi: 'Vietnamese', ko: 'Korean', es: 'Spanish' };
+    const target = NAMES[lang] || 'English';
+    const s = this.getSettings(); const a = this._providerArgs(s, { extraction: true });
+    if (!a.apiKey && a.provider !== 'openai') throw new Error('No Claude API key set');
+    const system = `Translate the user's Age of Empires II strategy note from Spanish to ${target}. Keep the markdown exactly (lines starting with "- ", **bold**), keep numbers, dates, URLs, patch numbers and the words META / ANTI-META / MEME / VIGENCIA as they are. Use the official in-game ${target} names for units, civs, buildings and technologies when you know them, otherwise the English game names. Output ONLY the translation, nothing before or after.`;
+    const r = await plainComplete(a.provider, { ...a, system, user: String(text).slice(0, 12000), maxTokens: 3000 });
+    if (r.cost) this.totals.cost += r.cost;
+    return String(r.text || '').trim();
+  }
   /** 4v4 bar data: what each enemy civ fields and my civ's answers (duel maths). */
   teamCounters() {
     const st = this.state; const enemies = (st.enemies && st.enemies.length) ? st.enemies : (st.oppCiv ? [st.oppCiv] : []);

@@ -22,7 +22,7 @@ contextBridge.exposeInMainWorld('coach', {
     setCompact: (c) => ipcRenderer.invoke('window:setCompact', c), release: () => ipcRenderer.invoke('window:release') },
   guide: {
     open: (arg) => ipcRenderer.invoke('guide:open', arg), index: () => ipcRenderer.invoke('guide:index'), civ: (k) => ipcRenderer.invoke('guide:civ', k), map: (k) => ipcRenderer.invoke('guide:map', k),
-    stats: () => ipcRenderer.invoke('guide:stats'), notes: (q) => ipcRenderer.invoke('guide:notes', q), noteList: () => ipcRenderer.invoke('guide:noteList'), noteText: (a) => ipcRenderer.invoke('guide:noteText', a),
+    stats: () => ipcRenderer.invoke('guide:stats'), notes: (q) => ipcRenderer.invoke('guide:notes', q), noteList: () => ipcRenderer.invoke('guide:noteList'), noteText: (a) => ipcRenderer.invoke('guide:noteText', a), translate: (a) => ipcRenderer.invoke('guide:translate', a),
     tool: (name, input) => ipcRenderer.invoke('guide:tool', { name, input }), onGoto: on('guide:goto'),
   },
   patch: { status: () => ipcRenderer.invoke('patch:status'), check: () => ipcRenderer.invoke('patch:check'), onStatus: on('patch:status') },

@@ -69,6 +69,7 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 * "What beats…?" counter calculator with unit stats.
 * Meta table (win rate and pick rate per civ, current patch).
 * Full-text search over all notes.
+* The interface is translated into all 7 languages. Civ/map profiles and notes are written in Spanish: in any other language a 🌐 *Translate* button on each section translates it with your own AI key (a fraction of a cent per section, cached on your device).
 
 **Optional match detection**
 * Off by default. If you set your public AoE2 profile, it reads your current match (civs, map, teams) from the community service aoe2companion and fills what you have not typed. Your own input always wins.
@@ -150,10 +151,12 @@ Built in 2026 by **M** **in conversation with Claude (Anthropic)**, inside the C
 npm install
 npm test                 # engine, knowledge, integrations, strategy, brain, team tests
 npm start                # run the desktop app
-npm run dist:win         # Windows build (zip)
-npx electron-builder --mac zip --arm64 --x64   # Mac build
+bash scripts/package-win.sh   # Windows package → out/
+bash scripts/package-mac.sh   # Mac packages → out/ (ad-hoc signed)
 npm run build:web        # web version → docs/ (GitHub Pages)
 ```
+
+**Releases are automatic:** pushing a tag like `v0.17.0` runs `.github/workflows/release.yml`, which tests, builds Windows and Mac on GitHub's servers and publishes the release with the text in `release-notes/<tag>.md`.
 
 Repository layout: `src/main` (engine, AI brain, voice, data sync), `src/renderer` (UI and translations), `data` (game data, build orders, knowledge notes, icons), `web` (browser version), `docs` (published web app), `installer` (Windows installer), `test`.
 

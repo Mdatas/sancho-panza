@@ -111,6 +111,7 @@ window.coach = {
     stats: R(() => civStatsCache || (civStatsCache = guideData.parseCivStats(['/data/knowledge']))),
     notes: R((q) => guideData.searchNotes({ knowledge, q })), noteList: R(() => guideData.listNotes({ knowledge })),
     noteText: R(({ file, title }) => guideData.noteText({ knowledge, file, title })),
+    translate: R(async ({ text, lang }) => { try { return { ok: true, text: await brain.translate(text, lang) }; } catch (e) { return { ok: false, error: e.message }; } }),
     tool: R((name, input) => { if (!['lookup_unit', 'find_counters', 'civ_matchup', 'compare_units'].includes(name)) return { error: 'not allowed' }; try { return makeDispatcher({ gd, buildOrders, knowledge, strategy, lang: 'es', state: { ...brain.state }, onState: () => {} })(name, input || {}); } catch (e) { return { error: e.message }; } }),
     onGoto: (cb) => { const p = new URLSearchParams(location.search); const arg = {}; for (const k of ['civ', 'tab', 'map']) if (p.get(k)) arg[k] = p.get(k); if (Object.keys(arg).length) setTimeout(() => cb(arg), 300); return () => {}; },
   },

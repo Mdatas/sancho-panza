@@ -69,6 +69,7 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 * Calculadora de counters "¿Qué le gana a…?" con stats de unidades.
 * Tabla del meta (porcentaje de victorias y de elección por civ, parche actual).
 * Búsqueda de texto completo en todas las notas.
+* La interfaz está traducida a los 7 idiomas. Los perfiles de civs y mapas y las notas están escritos en castellano: en cualquier otro idioma, un botón 🌐 *Traducir* en cada sección la traduce con tu propia API key (una fracción de centavo por sección; queda guardada en tu dispositivo).
 
 **Detección de partida opcional**
 * Desactivada por defecto. Si configurás tu perfil público de AoE2, lee tu partida actual (civs, mapa, equipos) desde el servicio comunitario aoe2companion y completa lo que no escribiste. Lo que vos ingresás siempre tiene prioridad.
@@ -151,10 +152,12 @@ Construido en 2026 por **M** **conversando con Claude (Anthropic)**, dentro de l
 npm install
 npm test                 # engine, knowledge, integrations, strategy, brain, team tests
 npm start                # run the desktop app
-npm run dist:win         # Windows build (zip)
-npx electron-builder --mac zip --arm64 --x64   # Mac build
+bash scripts/package-win.sh   # paquete de Windows → out/
+bash scripts/package-mac.sh   # paquetes de Mac → out/ (firma ad-hoc)
 npm run build:web        # web version → docs/ (GitHub Pages)
 ```
+
+**Los releases son automáticos:** al subir un tag como `v0.17.0` corre `.github/workflows/release.yml`, que testea, arma Windows y Mac en los servidores de GitHub y publica el release con el texto de `release-notes/<tag>.md`.
 
 Estructura del repositorio: `src/main` (motor, cerebro de IA, voz, sincronización de datos), `src/renderer` (interfaz y traducciones), `data` (datos del juego, build orders, notas de conocimiento, íconos), `web` (versión para navegador), `docs` (app web publicada), `installer` (instalador de Windows), `test`.
 
