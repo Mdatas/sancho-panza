@@ -75,9 +75,13 @@
 <ul class="bonotes" id="boNotes"></ul>
 </div>
 <div class="row wrap">
+<button class="ghost small clock" data-i18n-title="bo.clockTitle" id="boClock" title="Reloj del build: tocá ▶ cuando empieza la partida; los pasos avanzan solos según su tiempo (F7/F8 siguen funcionando)">▶ 0:00</button>
+<button class="ghost small" data-i18n-title="bo.clockReset" id="boClockReset" title="Reiniciar reloj">↺</button>
+<span class="small muted" id="boDelta"></span>
 <label class="check"><input id="boSpeak" type="checkbox"/> <span data-i18n="bo.speak">Leer cada paso en voz alta</span></label>
 <button class="ghost small" data-i18n="bo.off" id="boOff">Quitar build</button>
 </div>
+<p class="muted small hidden" id="boCivNotes"></p>
 </div>
 <details class="import">
 <summary data-i18n="bo.import">Importar build order (JSON de buildorderguide.com / RTS Overlay)</summary>
@@ -111,6 +115,7 @@
 <option data-i18n="h.option.25" value="claude-haiku-5-5">claude-haiku-5-5 — rápido y barato, se equivoca más</option>
 </select></label>
 <p class="muted small" data-i18n="set.keyHelp">Creá la key en console.anthropic.com (API Keys). Se guarda cifrada en esta PC.</p>
+<p class="warn small hidden" data-i18n="set.keyPlain" id="keyPlainWarn">Tu sistema no ofrece cifrado: la key se guarda SIN cifrar en settings.json.</p>
 </div>
 <div class="hidden" id="provOpenai">
 <label class="field"><span data-i18n="h.span.26">Base URL</span><input data-i18n-ph="p.setOpenaiUrl" id="setOpenaiUrl" placeholder="http://localhost:11434/v1"/></label>
@@ -132,7 +137,30 @@
 </details>
 <label class="field"><span data-i18n="set.lang">Idioma de las respuestas</span>
 <select id="setLanguage"><option data-i18n="h.option.48" value="auto">Automático (según la pregunta)</option><option data-i18n="h.option.49" value="es">Español</option><option data-i18n="h.option.50" value="en">English</option><option value="de">Deutsch</option><option value="pt">Português</option><option value="zh">中文</option><option value="vi">Tiếng Việt</option><option value="ko">한국어</option></select></label>
+<label class="check"><input id="setStreaming" type="checkbox"/> <span data-i18n="set.streaming">Mostrar la respuesta mientras se escribe (y leer el resumen apenas está listo)</span></label>
 <div class="row"><button class="ghost" data-i18n="set.test" id="btnTestBrain">Probar conexión</button><span class="small" id="testBrainMsg"></span></div>
+<h3 data-i18n="set.voice">Voz</h3>
+<label class="field"><span data-i18n="set.ttsEngine">Voz de salida</span>
+<select id="setTtsEngine"><option data-i18n="h.option.72" value="edge">Microsoft Edge neural (gratis, online)</option><option data-i18n="h.option.73" value="sapi">Windows SAPI (offline, robótica)</option><option data-i18n="h.option.74" value="off">Apagada</option></select></label>
+<label class="field"><span data-i18n="set.ttsVoice">Voz</span><select id="setTtsVoice"></select></label>
+<label class="field"><span data-i18n="set.ttsRate">Velocidad</span><span class="keyrow"><input id="setTtsRate" max="1.6" min="0.8" step="0.05" type="range"/><b id="ttsRateVal"></b></span></label>
+<div class="row"><button class="ghost small" data-i18n="set.testVoice" id="btnTestTts">Probar voz</button></div>
+<h3 data-i18n="set.hotkeys">Atajos (globales, funcionan con el juego en foco)</h3>
+<div class="grid2">
+<label class="field"><span data-i18n="set.hkAsk">Escribir al coach</span><input data-i18n-ph="p.hkAsk" id="hkAsk" placeholder="F10"/></label>
+<label class="field"><span data-i18n="set.hkToggle">Mostrar / ocultar</span><input data-i18n-ph="p.hkToggle" id="hkToggle" placeholder="F9"/></label>
+<label class="field"><span data-i18n="set.hkPrev">Paso anterior</span><input data-i18n-ph="p.hkPrev" id="hkPrev" placeholder="F7"/></label>
+<label class="field"><span data-i18n="set.hkNext">Paso siguiente</span><input data-i18n-ph="p.hkNext" id="hkNext" placeholder="F8"/></label>
+<p class="warn small hidden" id="hkWarn"></p>
+</div>
+<label class="field"><span data-i18n="set.focusReturn">Al enviar (Enter) o con Esc</span>
+<select id="setFocusReturn"><option data-i18n="h.option.75" value="blur">Devolver el foco al juego</option><option data-i18n="h.option.76" value="minimize">Minimizar y volver a mostrar (si lo anterior no funciona)</option><option data-i18n="h.option.77" value="none">No hacer nada</option></select></label>
+<p class="muted small" data-i18n="set.hkHelp">Formato Electron: F9, Alt+Q, Ctrl+Shift+C, num5… Si el juego ya usa la tecla, elegí otra.</p>
+<h3 data-i18n="set.window">Ventana</h3>
+<label class="field"><span data-i18n="set.opacity">Opacidad</span><span class="keyrow"><input id="setOpacity" max="1" min="0.4" step="0.02" type="range"/><b id="opacityVal"></b></span></label>
+<label class="check"><input id="setOnTop" type="checkbox"/> <span data-i18n="set.onTop">Siempre encima (ventana sin bordes en el juego)</span></label>
+<label class="field"><span data-i18n="set.uiLang">Idioma de la interfaz</span><select id="setUiLang"><option data-i18n="h.option.78" value="es">Español</option><option data-i18n="h.option.79" value="en">English</option><option value="de">Deutsch</option><option value="pt">Português</option><option value="zh">中文</option><option value="vi">Tiếng Việt</option><option value="ko">한국어</option></select></label>
+<details class="advanced" id="advanced"><summary data-i18n="set.advanced">Avanzado</summary>
 <h3 data-i18n="h.h3.51">Partida automática (opcional)</h3>
 <p class="muted small" data-i18n="h.p.52">Lee tu partida en curso desde el perfil público de AoE2 (servicio comunitario aoe2companion) y completa civs y mapa. Si no hay partida o está apagado, la app funciona igual: lo que escribas vos siempre manda.</p>
 <label class="check"><input id="setMatchDetect" type="checkbox"/> <span data-i18n="h.span.53">Detectar mi partida (consulta cada ~90 s mientras la app está visible)</span></label>
@@ -152,35 +180,19 @@
 <label class="check"><input id="setExpPrivacy" type="checkbox"/> <span data-i18n="h.span.69">Privacidad reforzada: la key no se vuelve a mostrar, no se envía por http:// a servidores públicos, y permite el modo amnésico</span></label>
 <div class="hidden" id="expPrivacyBox"><label class="check"><input id="setAmnesiac" type="checkbox"/> <span data-i18n="h.span.70">Modo amnésico: no guardar las API keys en disco (hay que pegarlas en cada sesión)</span></label></div>
 <label class="check"><input id="setExpCache" type="checkbox"/> <span data-i18n="h.span.71">Ahorro de tokens: separar el prompt fijo del variable para reutilizar caché (Claude)</span></label>
-<h3 data-i18n="set.voice">Voz</h3>
-<label class="field"><span data-i18n="set.ttsEngine">Voz de salida</span>
-<select id="setTtsEngine"><option data-i18n="h.option.72" value="edge">Microsoft Edge neural (gratis, online)</option><option data-i18n="h.option.73" value="sapi">Windows SAPI (offline, robótica)</option><option data-i18n="h.option.74" value="off">Apagada</option></select></label>
-<label class="field"><span data-i18n="set.ttsVoice">Voz</span><select id="setTtsVoice"></select></label>
-<label class="field"><span data-i18n="set.ttsRate">Velocidad</span><span class="keyrow"><input id="setTtsRate" max="1.6" min="0.8" step="0.05" type="range"/><b id="ttsRateVal"></b></span></label>
-<div class="row"><button class="ghost small" data-i18n="set.testVoice" id="btnTestTts">Probar voz</button></div>
-<h3 data-i18n="set.hotkeys">Atajos (globales, funcionan con el juego en foco)</h3>
-<div class="grid2">
-<label class="field"><span data-i18n="set.hkAsk">Escribir al coach</span><input data-i18n-ph="p.hkAsk" id="hkAsk" placeholder="F10"/></label>
-<label class="field"><span data-i18n="set.hkToggle">Mostrar / ocultar</span><input data-i18n-ph="p.hkToggle" id="hkToggle" placeholder="F9"/></label>
-<label class="field"><span data-i18n="set.hkPrev">Paso anterior</span><input data-i18n-ph="p.hkPrev" id="hkPrev" placeholder="F7"/></label>
-<label class="field"><span data-i18n="set.hkNext">Paso siguiente</span><input data-i18n-ph="p.hkNext" id="hkNext" placeholder="F8"/></label>
-</div>
-<label class="field"><span data-i18n="set.focusReturn">Al enviar (Enter) o con Esc</span>
-<select id="setFocusReturn"><option data-i18n="h.option.75" value="blur">Devolver el foco al juego</option><option data-i18n="h.option.76" value="minimize">Minimizar y volver a mostrar (si lo anterior no funciona)</option><option data-i18n="h.option.77" value="none">No hacer nada</option></select></label>
-<p class="muted small" data-i18n="set.hkHelp">Formato Electron: F9, Alt+Q, Ctrl+Shift+C, num5… Si el juego ya usa la tecla, elegí otra.</p>
-<h3 data-i18n="set.window">Ventana</h3>
-<label class="field"><span data-i18n="set.opacity">Opacidad</span><span class="keyrow"><input id="setOpacity" max="1" min="0.4" step="0.02" type="range"/><b id="opacityVal"></b></span></label>
-<label class="check"><input id="setOnTop" type="checkbox"/> <span data-i18n="set.onTop">Siempre encima (ventana sin bordes en el juego)</span></label>
-<label class="field"><span data-i18n="set.uiLang">Idioma de la interfaz</span><select id="setUiLang"><option data-i18n="h.option.78" value="es">Español</option><option data-i18n="h.option.79" value="en">English</option><option value="de">Deutsch</option><option value="pt">Português</option><option value="zh">中文</option><option value="vi">Tiếng Việt</option><option value="ko">한국어</option></select></label>
 <h3 data-i18n="set.data">Datos</h3>
 <div class="small muted" id="dataInfo"></div>
 <div class="row wrap">
 <button class="ghost small" data-i18n="set.sync" id="btnSync">Sincronizar ahora</button>
 <button class="ghost small" data-i18n="set.openDir" id="btnOpenDir">Carpeta de datos</button>
 <button class="ghost small" data-i18n="set.openLogs" id="btnOpenLogs">Carpeta de logs</button>
-<button class="ghost small danger" data-i18n="set.quit" id="btnQuit">Salir de la app</button>
 </div>
 <p class="muted small" data-i18n="set.dataHelp">Stats y árboles: SiegeEngineers/aoe2techtree. Builds: CraftySalamander/rtsbuilds (Hera, Morley Games, DauT…) + tus imports. Se sincronizan al abrir la app. En la carpeta de datos podés agregar builds (.json) y notas (.md).</p>
+</details>
+<h3 data-i18n="set.about">Acerca de</h3>
+<p class="muted small" data-i18n="about.text">Proyecto de fans, de código abierto y sin fines comerciales, hecho por curiosidad sobre lo que se puede construir con IA. Código, versiones y explicación completa en github.com/Mdatas/sancho-panza (licencia no comercial, ver LICENSE). Datos del juego: SiegeEngineers/aoe2techtree (MIT). Build orders: CraftySalamander/rtsbuilds (GPL-3.0). Imágenes de mapas: wikis Liquipedia y Fandom.</p>
+<p class="muted small">Age of Empires II: Definitive Edition © Microsoft Corporation. Sancho Panza · Age of Empires 2 Fan Companion was created under Microsoft's "Game Content Usage Rules" using assets from Age of Empires II. It is not endorsed by or affiliated with Microsoft. <a data-url="https://github.com/Mdatas/sancho-panza">github.com/Mdatas/sancho-panza</a> · <a data-url="https://github.com/Mdatas/sancho-panza/blob/main/LICENSE">LICENSE</a></p>
+<div class="row wrap end"><button class="ghost small danger" data-i18n="set.quit" id="btnQuit">Salir de la app</button></div>
 </section>
 <!-- ===== welcome / API key (shown at every start until a key works or "no mostrar más") ===== -->
 <div aria-modal="true" class="modal hidden" id="welcome" role="dialog">
@@ -193,8 +205,9 @@
 </ol>
 <div class="keyrow"><input autocomplete="off" data-i18n-ph="p.wKey" id="wKey" placeholder="sk-ant-…" type="password"/><button data-i18n="h.wTest.84" id="wTest">Guardar y probar</button></div>
 <div class="small" id="wMsg"></div>
+<p class="muted small desktopOnly" data-i18n="w.borderless">En el juego elegí «Ventana sin bordes» (Opciones → Gráficos) para que el coach se vea encima de la partida.</p>
 <p class="muted small" data-i18n-html="h.p.85">Sin key igual podés usar: <b>Build orders</b>, la <b>Guía</b> (civs, mapas, counters), los comandos <code>/civ</code> <code>/vs</code> <code>/bo</code>. Otras IAs (algunas gratis) en Ajustes → Cerebro.</p>
-<div class="row end"><label class="check small"><input id="wNoMore" type="checkbox"/> <span data-i18n="h.span.86">No mostrar más</span></label><button class="ghost" data-i18n="h.wSkip.87" id="wSkip">Saltar</button></div>
+<div class="row end"><label class="check small"><input id="wNoMore" type="checkbox"/> <span data-i18n="h.span.86">No mostrar más</span></label><button data-i18n="h.wSkip.87" id="wSkip">Usar sin IA por ahora</button></div>
 </div>
 </div>
 <!-- ===== input line (always visible) ===== -->

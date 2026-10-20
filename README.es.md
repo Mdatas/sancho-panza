@@ -49,7 +49,9 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 
 **Coach por chat**
 * Overlay compacto que queda arriba del juego (ventana sin bordes), o ventana completa.
-* Las respuestas arrancan con un **resumen de 3 líneas** (decisión · qué hacer, con números · el dato clave), y después un detalle corto.
+* Las respuestas arrancan con un **resumen de 3 líneas** (decisión · qué hacer, con números · el dato clave), y después un detalle corto. La respuesta se muestra **mientras el modelo la escribe** (streaming) y el resumen se lee en voz alta apenas está completo.
+* Antes de que el modelo responda, la app precalcula los counters al ejército que registraste ("me tira mangudai") y los counters por equipo, así la mayoría de las preguntas necesitan menos rondas de herramientas; la extracción de datos de la partida corre en paralelo con la respuesta.
+* **Caché de prompt** activada por defecto (las reglas fijas y las notas de cada pregunta van en bloques separados): unos US$0,03–0,05 por pregunta con Claude Sonnet; el costo se muestra debajo de cada respuesta.
 * **Voz**: voces neuronales naturales (Microsoft Edge, gratis) en cada idioma — Elena (Argentina) por defecto; sin conexión usa la voz del sistema. Un botón 🔊 en cada respuesta la vuelve a leer.
 * Recuerda el estado de la partida durante la sesión y pregunta solo lo que necesita ("Para afinar: ¿tu ELO?").
 * Explicaciones amigables cuando falla la API key (falta, inválida, sin crédito, límite de uso, sin conexión).
@@ -60,6 +62,8 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 
 **Build orders**
 * 41 builds paso a paso (Hera, Morley Games, DauT, TaToH…) que avanzan con F7/F8 y se pueden leer en voz alta.
+* **Reloj del build**: tocás ▶ cuando empieza la partida y los pasos avanzan solos según su tiempo; si movés un paso a mano te dice cuántos segundos vas adelantado o atrasado respecto del build. Un build genérico muestra los bonus de inicio/economía de la civ que registraste.
+* **Benchmarks** de tiempos con nota (A+ … E) para los builds estándar (clic a Feudal/Castillos, primer ejército), tomados de la referencia de builds de Cicero, disponibles para el coach como herramienta.
 * ~640 guías de builds/estrategia sacadas de videos, navegables como tarjetas con filtros: civ, tipo (Scouts, Arqueros, Drush, Fast Castle, Torres, TC drop, Castle drop, Agua, Boom…), fuente y meta/anti-meta/meme. Cada una se abre con lo que enseña y lo que cambió desde entonces.
 * Importá tus propios builds (buildorderguide.com / RTS Overlay JSON).
 
@@ -69,7 +73,8 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 * Calculadora de counters "¿Qué le gana a…?" con stats de unidades.
 * Íconos de civs, unidades y tecnologías (tecnologías únicas y todo lo que le falta a cada civ).
 * Tabla del meta (porcentaje de victorias y de elección por civ, parche actual).
-* Búsqueda de texto completo en todas las notas.
+* Un solo buscador para todo: civs, mapas, unidades y notas.
+* Búsqueda de texto completo en todas las notas (índice BM25 con stemming bilingüe y sinónimos: "malienses", "malians" y "malíes" son un mismo término).
 * La interfaz está traducida a los 7 idiomas. Los perfiles de civs y mapas y las notas están escritos en castellano: en cualquier otro idioma, un botón 🌐 *Traducir* en cada sección la traduce con tu propia API key (una fracción de centavo por sección; queda guardada en tu dispositivo).
 
 **Detección de partida opcional**
@@ -81,7 +86,7 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 
 **Privacidad**
 * La app viene **sin API key**. Cada usuario trae la suya; queda en su dispositivo (cifrada en escritorio; en el almacenamiento local del navegador en la versión web).
-* Lo que sale de tu dispositivo: tus preguntas y las notas relevantes van al proveedor de IA que elegiste; el texto de las respuestas va a Microsoft solo si usás la voz de Edge; tu id de perfil va a aoe2companion solo si activás la detección de partida. No se le envía nada al autor.
+* Lo que sale de tu dispositivo: tus preguntas y las notas relevantes van al proveedor de IA que elegiste; el texto de las respuestas va a Microsoft solo si usás la voz de Edge; tu id de perfil va a aoe2companion solo si activás la detección de partida; al abrir, la app de escritorio consulta GitHub por datos del juego (aoe2techtree) y builds (rtsbuilds) más nuevos, y una vez por día ageofempires.com por noticias de parches (las dos cosas se apagan en Ajustes). Los logs de conversación quedan en tu dispositivo y se borran a los 30 días por defecto. No se le envía nada al autor.
 * Los registros de conversación quedan en tu computadora, con borrado automático opcional.
 
 ## Versiones
@@ -145,14 +150,17 @@ Construido en 2026 por **M** **conversando con Claude (Anthropic)**, dentro de l
 | La verdad sobre los números | Datos del juego de aoe2techtree + motor de duelos propio | Los parches cambian los números todo el tiempo; la memoria de los modelos está desactualizada, así que los números tienen que salir de los datos. |
 | Voz | TTS neuronal de Microsoft Edge (vía `msedge-tts`), SAPI / `say` sin conexión, voz del navegador en la web | Voces naturales en todos los idiomas gratis, con alternativa sin conexión. |
 | Web / celulares | El mismo renderer + un shim para navegador, empaquetado con **esbuild**, alojado en **GitHub Pages** como PWA | Una sola base de código, sin servidor, sin costo, instalable en Android e iOS. |
-| Empaquetado | electron-builder; el instalador de Windows descarga el runtime de Electron y verifica su SHA-256; apps de Mac con firma ad-hoc usando `rcodesign` | Descargas chicas; no hacen falta certificados pagos. |
-| Tests | Scripts de test en Node + un smoke test headless de la app real (Electron + xvfb), Playwright para la versión web | Cada versión se chequea antes de publicarse, incluido un escaneo de que no haya ninguna API key dentro de ningún paquete. |
+| Empaquetado | electron-builder; el instalador de Windows descarga el runtime de Electron, verifica su SHA-256 y cierra los "fuses" de Electron (sin `ELECTRON_RUN_AS_NODE`, `NODE_OPTIONS` ni `--inspect` contra la app instalada); las apps de Mac llevan los mismos fuses y firma ad-hoc | Descargas chicas; no hacen falta certificados pagos. |
+| Tests | Scripts de test en Node (motor, notas, integraciones, estrategia, cerebro, streaming, equipos), un smoke test headless de la app real (Electron + xvfb) y un test Playwright de la versión web (vista de compu y de celular); ESLint + Prettier | Cada versión corre todo eso en CI antes de publicarse, incluido un escaneo de que no haya ninguna API key dentro de ningún paquete. |
 
 ## Compilar desde el código fuente
 
 ```bash
 npm install
-npm test                 # engine, knowledge, integrations, strategy, brain, team tests
+npm test                 # tests de motor, notas, integraciones, estrategia, cerebro, streaming y equipos
+npm run lint             # ESLint
+npm run smoke            # smoke test headless de la app real (necesita xvfb)
+npm run test:web         # test Playwright de la versión web (después de build:web; una vez: `npx playwright install chromium`)
 npm start                # run the desktop app
 bash scripts/package-win.sh   # paquete de Windows → out/
 bash scripts/package-mac.sh   # paquetes de Mac → out/ (firma ad-hoc)
@@ -161,7 +169,7 @@ npm run build:web        # web version → docs/ (GitHub Pages)
 
 **Los releases son automáticos:** cuando cambia la `version` de `package.json` en `main`, `.github/workflows/release.yml` testea la app, arma Windows y Mac en los servidores de GitHub y publica el release `v<versión>` con el texto de `release-notes/v<versión>.md`.
 
-Estructura del repositorio: `src/main` (motor, cerebro de IA, voz, sincronización de datos), `src/renderer` (interfaz y traducciones), `data` (datos del juego, build orders, notas de conocimiento, íconos), `web` (versión para navegador), `docs` (app web publicada), `installer` (instalador de Windows), `test`.
+Estructura del repositorio: `src/main` (motor, cerebro de IA, voz, sincronización de datos; `api.js` es la única implementación detrás del IPC de escritorio y del `window.coach` de la web), `src/renderer` (interfaz y traducciones), `data` (datos del juego, build orders, notas de conocimiento, íconos), `web` (versión para navegador), `docs` (app web publicada), `installer` (instalador de Windows), `tools` (scripts de datos), `test`.
 
 ## Contribuir
 

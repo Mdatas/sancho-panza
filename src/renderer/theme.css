@@ -77,7 +77,7 @@ body.compact #tabs button svg { width: 13px; height: 13px; }
 /* The memorable element: the 4 v 4 bar — two groups of heraldic shields with captions (blue = your team, red = enemies). */
 .teamBar { display: flex; align-items: flex-end; justify-content: center; gap: 10px; padding: 4px 8px 5px; background: linear-gradient(180deg, #1b140e, #15100b); border-bottom: 1px solid #000; box-shadow: inset 0 -1px 0 var(--iron); }
 .teamBar .side { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 0 1 auto; }
-.teamBar .side .cap { font-family: var(--display); font-size: 10px; letter-spacing: .04em; color: var(--ash); line-height: 1.1; }
+.teamBar .side .cap { font-family: var(--display); font-size: 11px; letter-spacing: .04em; color: var(--ash); line-height: 1.1; }
 .teamBar .side.mine .cap { color: #8fb3ea; } .teamBar .side.theirs .cap { color: #e08a7f; }
 .teamBar .slots { display: flex; gap: 4px; }
 .teamBar .slot { display: flex; flex-direction: column; align-items: center; gap: 1px; width: 38px; padding: 0; background: none; border: 0; box-shadow: none; color: var(--ash); cursor: pointer; }
@@ -85,7 +85,7 @@ body.compact #tabs button svg { width: 13px; height: 13px; }
 .teamBar .slot .sh > i { display: grid; place-items: center; width: 100%; height: 100%; clip-path: polygon(0 0, 100% 0, 100% 64%, 50% 100%, 0 64%); background: linear-gradient(180deg, var(--fill, #2a2017), #140e09); font-style: normal; }
 .teamBar .slot .sh em { font-style: normal; font-size: 16px; line-height: 1; color: var(--ash); margin-bottom: 6px; }
 .teamBar .slot .sh .cico { width: 20px; height: 20px; margin-bottom: 7px; border-radius: 2px; box-shadow: none; }
-.teamBar .slot .nm { display: none; font-size: 10px; line-height: 1.1; color: var(--ash); max-width: 44px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.teamBar .slot .nm { display: none; font-size: 11px; line-height: 1.1; color: var(--ash); max-width: 44px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .teamBar .side.mine .slot.set { --rim: #4a7cc4; --fill: #203a63; } .teamBar .side.mine .slot.set .nm { color: #c7d9f5; }
 .teamBar .side.mine .slot.me.set { --rim: var(--gilt); --fill: #27477a; }
 .teamBar .side.theirs .slot.set { --rim: #c24a3c; --fill: #5e1d16; } .teamBar .side.theirs .slot.set .nm { color: #f0b9b0; }
@@ -97,11 +97,11 @@ body.compact #tabs button svg { width: 13px; height: 13px; }
 /* full window / web: bigger shields with the civ name under each one */
 body.full .teamBar { padding: 6px 8px 6px; gap: 10px; }
 body.full .teamBar .slot { width: 44px; } body.full .teamBar .slot .sh { width: 34px; height: 39px; } body.full .teamBar .slot .sh .cico { width: 22px; height: 22px; margin-bottom: 8px; }
-body.full .teamBar .slot .nm { display: block; max-width: 44px; font-size: 9.5px; } body.full .teamBar .side .cap { font-size: 11px; }
+body.full .teamBar .slot .nm { display: block; max-width: 48px; font-size: 10.5px; } body.full .teamBar .side .cap { font-size: 11px; }
 @media (min-width: 640px) {
   body.full .teamBar { gap: 18px; }
   body.full .teamBar .slot { width: 56px; } body.full .teamBar .slot .sh { width: 40px; height: 46px; } body.full .teamBar .slot .sh .cico { width: 26px; height: 26px; margin-bottom: 9px; }
-  body.full .teamBar .slot .nm { max-width: 56px; font-size: 10.5px; }
+  body.full .teamBar .slot .nm { max-width: 56px; font-size: 12px; }
 }
 .tbhint { font-size: 12px; color: var(--ash); padding: 4px 12px; background: #17110c; border-bottom: 1px solid var(--iron); }
 body.full .tbhint.off, .tbhint.off { display: none !important; }
@@ -110,7 +110,7 @@ body.full .tbhint.off, .tbhint.off { display: none !important; }
 .tcPanel .tch { cursor: pointer; } .tcPanel .tch::before { content: '▾ '; color: var(--gilt-dim); } .tcPanel.collapsed .tch::before { content: '▸ '; }
 .tcPanel.collapsed .tclegend, .tcPanel.collapsed .tcrow { display: none !important; }
 .tcPanel .tch { font-size: 12px; color: var(--vellum); } .tcPanel .tch b { color: var(--gilt); }
-.tclegend { display: flex; align-items: center; gap: 8px; font-size: 11px; padding: 2px 0 4px; }
+.tclegend { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 2px 0 4px; }
 .tclegend .lg { padding: 1px 7px; border-radius: 3px; font-family: var(--display); }
 .tclegend .lg.enemy, .unit.enemy { background: rgba(178,57,45,.16); border: 1px solid #6a2119; color: #f3c2b8; }
 .tclegend .lg.mine, .unit.mine { background: rgba(62,108,176,.16); border: 1px solid #27477a; color: #cfe0fb; }
@@ -176,3 +176,18 @@ body.full .tbhint.off, .tbhint.off { display: none !important; }
 #tab-guide { padding: 0; } #guideFrame { flex: 1; width: 100%; border: 0; min-height: 0; background: var(--oak); }
 /* the selected civ / map in lists gets a gilt bar */
 .item.sel, .bocard.sel { box-shadow: inset 3px 0 0 var(--gilt); }
+
+/* streamed answer while the model is still writing */
+.msg.assistant.live { opacity: 0.85; border-left-color: var(--gilt); }
+.msg.assistant.live::after { content: '▍'; color: var(--gilt); animation: blink 1s steps(2) infinite; }
+@keyframes blink { to { opacity: 0; } }
+
+/* quick-action chips inside the welcome / new-game notice */
+.qchips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.qchips button { font-family: var(--display); font-size: 11px; letter-spacing: 0.03em; padding: 2px 8px; border-radius: 3px; border: 1px solid var(--iron2); background: var(--leather2); color: var(--ash); cursor: pointer; white-space: nowrap; }
+.qchips button:hover { color: var(--vellum); border-color: var(--gilt-dim); }
+/* narrow windows (the 470 px desktop window, phones): labels only, never a clipped tab */
+#tabs button span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 560px) { #tabs button svg { display: none; } #tabs button { font-size: 12px; } }
+#boClock.on { color: var(--gilt); border-color: var(--gilt-dim); }
+#boCivNotes { padding: 0 2px; color: var(--ash); }

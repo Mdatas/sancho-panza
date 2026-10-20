@@ -49,7 +49,9 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 
 **Chat coach**
 * Compact overlay that stays on top of the game (borderless window), or a full window.
-* Answers start with a **3-line summary** (decision · what to make, with numbers · the key fact), then a short detail.
+* Answers start with a **3-line summary** (decision · what to make, with numbers · the key fact), then a short detail. The answer is **streamed** while the model writes it, and the summary is read aloud as soon as it is complete.
+* Before the model answers, the app pre-computes the counters to the army you registered ("me tira mangudai") and the team counters, so most questions need fewer tool rounds; the match-fact extraction runs in parallel with the answer.
+* **Prompt cache** on by default (the fixed rules and the per-question notes are separate cached blocks): about US$0.03–0.05 per question with Claude Sonnet; the cost is shown under every answer.
 * **Voice**: natural neural voices (Microsoft Edge, free) in each language — Elena (Argentina) by default; offline fallback to the system voice. A 🔊 button inside every answer re-reads it.
 * Remembers the match state for the session and asks only what it needs ("To refine: your ELO?").
 * Friendly explanations when the API key fails (missing, invalid, no credit, rate limit, offline).
@@ -60,6 +62,8 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 
 **Build orders**
 * 41 step-by-step builds (Hera, Morley Games, DauT, TaToH…) that advance with F7/F8 and can be read aloud.
+* **Build clock**: press ▶ when the game starts and the steps advance by their time stamp; if you move a step by hand it tells you how many seconds ahead or behind the build you are. A generic build shows the start/eco bonuses of the civ you registered.
+* Graded timing **benchmarks** (A+ … E) for the standard builds (Feudal/Castle click, first army), from Cicero's build-order reference, available to the coach as a tool.
 * ~640 build/strategy guides from videos, browsable as cards with filters: civ, type (Scouts, Archers, Drush, Fast Castle, Towers, TC drop, Castle drop, Water, Boom…), source, and meta/anti-meta/meme. Each opens with what it teaches and what changed since.
 * Import your own builds (buildorderguide.com / RTS Overlay JSON).
 
@@ -69,7 +73,8 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 * "What beats…?" counter calculator with unit stats.
 * Meta table (win rate and pick rate per civ, current patch).
 * Icons for civs, units and technologies (unique techs and everything a civ lacks).
-* Full-text search over all notes.
+* One search box for everything: civs, maps, units and notes.
+* Full-text search over all notes (BM25 index with bilingual stemming and alias folding: "malienses", "malians" and "malíes" are one term).
 * The interface is translated into all 7 languages. Civ/map profiles and notes are written in Spanish: in any other language a 🌐 *Translate* button on each section translates it with your own AI key (a fraction of a cent per section, cached on your device).
 
 **Optional match detection**
@@ -81,7 +86,7 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 
 **Privacy**
 * The app ships with **no API key**. Each user brings their own; it stays on their device (encrypted on desktop; in the browser's local storage on the web version).
-* What leaves your device: your questions and the relevant notes go to the AI provider you chose; answer text goes to Microsoft only if you use the Edge voice; your profile id goes to aoe2companion only if you turn on match detection. Nothing is sent to the author.
+* What leaves your device: your questions and the relevant notes go to the AI provider you chose; answer text goes to Microsoft only if you use the Edge voice; your profile id goes to aoe2companion only if you turn on match detection; at start the desktop app checks GitHub for newer game data (aoe2techtree) and builds (rtsbuilds), and once a day ageofempires.com for patch news (both can be turned off in Settings). Conversation logs stay on your device and are deleted after 30 days by default. Nothing is sent to the author.
 * Conversation logs stay on your computer, with optional automatic deletion.
 
 ## Versions
@@ -144,14 +149,17 @@ Built in 2026 by **M** **in conversation with Claude (Anthropic)**, inside the C
 | Truth about numbers | aoe2techtree game data + own duel engine | Patches change numbers constantly; models' memory is outdated, so numbers must come from data. |
 | Voice | Microsoft Edge neural TTS (via `msedge-tts`), SAPI / `say` offline, browser speech on web | Natural voices in every language for free, with an offline fallback. |
 | Web / phones | Same renderer + a browser shim, bundled with **esbuild**, hosted on **GitHub Pages** as a PWA | One codebase, no server, no cost, installable on Android and iOS. |
-| Packaging | electron-builder; Windows installer downloads the Electron runtime and checks its SHA-256; Mac apps ad-hoc signed with `rcodesign` | Small downloads; no paid certificates needed. |
-| Tests | Node test scripts + a headless smoke test of the real app (Electron + xvfb), Playwright for the web version | Every release is checked before shipping, including a scan that no API key is inside any package. |
+| Packaging | electron-builder; Windows installer downloads the Electron runtime, checks its SHA-256 and flips the Electron fuses (no `ELECTRON_RUN_AS_NODE`, `NODE_OPTIONS` or `--inspect` against the installed app); Mac apps get the same fuses and an ad-hoc signature | Small downloads; no paid certificates needed. |
+| Tests | Node test scripts (engine, knowledge, integrations, strategy, brain, streaming, team), a headless smoke test of the real app (Electron + xvfb) and a Playwright test of the web build (desktop and phone viewports); ESLint + Prettier | Every release runs all of them in CI before shipping, including a scan that no API key is inside any package. |
 
 ## Build from source
 
 ```bash
 npm install
-npm test                 # engine, knowledge, integrations, strategy, brain, team tests
+npm test                 # engine, knowledge, integrations, strategy, brain, streaming, team tests
+npm run lint             # ESLint
+npm run smoke            # headless smoke test of the real app (needs xvfb)
+npm run test:web         # Playwright test of the web build (after build:web; needs `npx playwright install chromium` once)
 npm start                # run the desktop app
 bash scripts/package-win.sh   # Windows package → out/
 bash scripts/package-mac.sh   # Mac packages → out/ (ad-hoc signed)
@@ -160,7 +168,7 @@ npm run build:web        # web version → docs/ (GitHub Pages)
 
 **Releases are automatic:** when the `version` in `package.json` changes on `main`, `.github/workflows/release.yml` tests the app, builds Windows and Mac on GitHub's servers and publishes release `v<version>` with the text in `release-notes/v<version>.md`.
 
-Repository layout: `src/main` (engine, AI brain, voice, data sync), `src/renderer` (UI and translations), `data` (game data, build orders, knowledge notes, icons), `web` (browser version), `docs` (published web app), `installer` (Windows installer), `test`.
+Repository layout: `src/main` (engine, AI brain, voice, data sync; `api.js` is the one implementation behind both the desktop IPC and the web `window.coach`), `src/renderer` (UI and translations), `data` (game data, build orders, knowledge notes, icons), `web` (browser version), `docs` (published web app), `installer` (Windows installer), `tools` (data scripts), `test`.
 
 ## Contributing
 

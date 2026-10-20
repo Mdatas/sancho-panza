@@ -69,7 +69,10 @@ while keeping it out of commercial, dishonest, illegal or unfair use.
    Any breach of this license ends Your rights under it automatically. Rights may be restored only
    with the written consent of the copyright holder.
 
-7. Third-party material (keeps its own license; this license does not change it)
+7. Third-party material (keeps its own license; this license does not change it).
+   Sections 1 to 6 apply only to the Software's own code, texts and notes; none of their terms
+   (non-commercial use, share-alike, attribution to this project) is imposed on the material
+   listed below, which you may use under its own license.
    - Game data and icons from SiegeEngineers/aoe2techtree — code under the MIT License
      (data/img/LICENSE_aoe2techtree.txt). Game names, data and icons belong to their owners
      (Microsoft / World's Edge, Forgotten Empires, Ensemble Studios, SkyBox Labs, Hidden Path
@@ -77,7 +80,13 @@ while keeping it out of commercial, dishonest, illegal or unfair use.
      Usage Rules.
    - Build orders in data/build_orders/rtsbuilds from CraftySalamander/rtsbuilds — GNU GPL v3
      (data/build_orders/rtsbuilds/LICENSE). Authors are credited inside each file. They are
-     distributed unmodified, alongside (not as part of) the Software.
+     distributed unmodified and kept apart from the Software's own material (their own folder in
+     the desktop packages, their own file docs/data/rtsbuilds.json in the web version); the
+     Software only reads them, like any other build-order file the user imports.
+   - Map pictures in data/img/Maps: in-game map icons published on the Liquipedia Age of Empires
+     wiki and minimaps from the Age of Empires Series Wiki (Fandom), © Microsoft, used as
+     non-commercial fan content under the Game Content Usage Rules; the source page of each file
+     is listed in data/img/Maps/SOURCES.json.
    - The strategy notes in data/knowledge are original summaries, in Spanish, of public videos,
      guides and patch notes. The ideas and strategies belong to their creators, who are credited
      in the notes and in the README; no video, transcript or article is reproduced. Creators who

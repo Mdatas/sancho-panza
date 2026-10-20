@@ -11,12 +11,22 @@ const gd = new GameData(path.join(root, 'game')).load();
 const kn = new Knowledge([path.join(root, 'knowledge')]).load();
 const st = new Strategy([path.join(root, 'knowledge')]).load();
 const bo = new BuildOrders([path.join(root, 'build_orders')]).load();
-const s = { provider: 'anthropic', anthropicApiKey: process.env.ANTHROPIC_API_KEY, anthropicModel: process.env.MODEL || 'claude-sonnet-5-5', extractModel: 'claude-haiku-5-5', language: 'auto', extractState: true };
+const s = {
+  provider: 'anthropic',
+  anthropicApiKey: process.env.ANTHROPIC_API_KEY,
+  anthropicModel: process.env.MODEL || 'claude-sonnet-5-5',
+  extractModel: 'claude-haiku-5-5',
+  language: 'auto',
+  extractState: true,
+};
 const brain = new Brain({ gd, buildOrders: bo, knowledge: kn, strategy: st, getSettings: () => s });
 (async () => {
   for (const q of process.argv.slice(2)) {
     const t0 = Date.now();
-    const r = await brain.ask(q, { onEvent: e => e.type === 'tool' && process.stderr.write(' [' + e.name + ']') });
+    const r = await brain.ask(q, { onEvent: (e) => e.type === 'tool' && process.stderr.write(' [' + e.name + ']') });
     console.log('\n> ' + q + '\n' + r.text + `\n(${((Date.now() - t0) / 1000).toFixed(1)}s, $${(r.cost || 0).toFixed(4)}) state: ${brain.stateLine()}`);
   }
-})().catch(e => { console.error('ERR', e.message); process.exit(1); });
+})().catch((e) => {
+  console.error('ERR', e.message);
+  process.exit(1);
+});

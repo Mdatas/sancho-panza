@@ -8,6 +8,8 @@ rm -rf dist && npx electron-builder --mac zip --arm64 --x64 --publish never
 APP="Sancho Panza - Age of Empires 2 Fan Companion.app"; mkdir -p out
 for pair in "mac-arm64:arm64" "mac:x64"; do
   d=${pair%%:*}; a=${pair##*:}
+  # harden the runtime before signing: no ELECTRON_RUN_AS_NODE / NODE_OPTIONS / --inspect against the installed app
+  node scripts/fuses.js "dist/$d/$APP/Contents/MacOS/${APP%.app}"
   if command -v codesign >/dev/null; then codesign --force --deep --sign - "dist/$d/$APP"; elif command -v rcodesign >/dev/null; then rcodesign sign "dist/$d/$APP"; fi
   ST=$(mktemp -d); cp -a "dist/$d/$APP" "$ST/"; cp installer/LEEME-Mac.txt "$ST/LEEME.txt"; cp LICENSE "$ST/LICENSE.txt"
   (cd "$ST" && zip -qry -9 "$OLDPWD/out/SanchoPanza-$V-mac-$a.zip" "$APP" LEEME.txt LICENSE.txt)

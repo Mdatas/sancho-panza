@@ -12,23 +12,37 @@ const RAW = 'https://raw.githubusercontent.com/SiegeEngineers/aoe2techtree/maste
 const FILES = { 'data.json': 'data/data.json', 'strings_en.json': 'data/locales/en/strings.json', 'strings_es.json': 'data/locales/es/strings.json' };
 
 async function get(url, timeoutMs = 20000) {
-  const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), timeoutMs);
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
-    const res = await fetch(url, { signal: ctrl.signal, headers: { 'user-agent': 'aoe2coach' } });
+    const res = await fetch(url, { signal: ctrl.signal, headers: { 'user-agent': 'SanchoPanzaFanCompanion (https://github.com/Mdatas/sancho-panza)' } });
     if (!res.ok) throw new Error(`${res.status} for ${url}`);
     return Buffer.from(await res.arrayBuffer());
-  } finally { clearTimeout(t); }
+  } finally {
+    clearTimeout(t);
+  }
 }
 
-function sha(buf) { return crypto.createHash('sha1').update(buf).digest('hex'); }
+function sha(buf) {
+  return crypto.createHash('sha1').update(buf).digest('hex');
+}
 
 function isComplete(dir) {
-  return ['data.json', 'strings_en.json', 'strings_es.json'].every(f => fs.existsSync(path.join(dir, f)))
-    && fs.existsSync(path.join(dir, 'trees')) && fs.readdirSync(path.join(dir, 'trees')).filter(f => f.endsWith('.json')).length >= 40;
+  try {
+    if (!['data.json', 'strings_en.json', 'strings_es.json'].every((f) => fs.existsSync(path.join(dir, f)))) return false;
+    if (!fs.existsSync(path.join(dir, 'trees')) || fs.readdirSync(path.join(dir, 'trees')).filter((f) => f.endsWith('.json')).length < 40) return false;
+    // a truncated or hand-edited cache must never take the app down: it has to parse and look like the dataset
+    const d = JSON.parse(fs.readFileSync(path.join(dir, 'data.json'), 'utf8'));
+    return !!(d && d.civs && d.data && Object.keys(d.civs).length >= 40);
+  } catch {
+    return false;
+  }
 }
 
-/** Pick the best data dir: cache if complete, else bundled. */
-function chooseDataDir(cacheDir, bundledDir) { return isComplete(cacheDir) ? cacheDir : bundledDir; }
+/** Pick the best data dir: the cache when it is complete and readable, else the bundled snapshot. */
+function chooseDataDir(cacheDir, bundledDir) {
+  return isComplete(cacheDir) ? cacheDir : bundledDir;
+}
 
 /**
  * Sync if upstream data.json differs from what we have. Returns { updated, reason, dir }.
@@ -41,7 +55,7 @@ async function sync({ cacheDir, bundledDir, onProgress = () => {} }) {
   const dataBuf = await get(RAW + FILES['data.json']);
   if (sha(dataBuf) === have) return { updated: false, reason: 'already current', dir: current };
   const parsed = JSON.parse(dataBuf.toString('utf8'));
-  const civs = Object.values(parsed.civs).map(c => c.internal_name.toUpperCase());
+  const civs = Object.values(parsed.civs).map((c) => c.internal_name.toUpperCase());
   const tmp = cacheDir + '.tmp';
   fs.rmSync(tmp, { recursive: true, force: true });
   fs.mkdirSync(path.join(tmp, 'trees'), { recursive: true });

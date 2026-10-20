@@ -1,0 +1,8 @@
+docs/
+dist/
+out/
+node_modules/
+data/
+src/renderer/i18n.js
+src/renderer/fonts/
+*.min.js

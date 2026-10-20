@@ -4,7 +4,8 @@ const AGE_NAMES = { 1: 'Dark Age', 2: 'Feudal Age', 3: 'Castle Age', 4: 'Imperia
 /** Compact one-line state for the user-turn header and the UI. */
 function stateLine(st = {}) {
   const parts = [];
-  const al = (st.allies || []).filter(Boolean), en = (st.enemies || []).filter(Boolean);
+  const al = (st.allies || []).filter(Boolean),
+    en = (st.enemies || []).filter(Boolean);
   if (al.length || en.length > 1) parts.push(`team game: ${[st.myCiv || '?', ...al].join(' + ')} vs ${(en.length ? en : [st.oppCiv || '?']).join(' + ')}`);
   else if (st.myCiv || st.oppCiv) parts.push(`${st.myCiv || '?'} vs ${st.oppCiv || '?'}`);
   if (st.age) parts.push(`my age: ${AGE_NAMES[st.age] || st.age}${st.oppAge ? ` (opp: ${AGE_NAMES[st.oppAge] || st.oppAge})` : ''}`);
@@ -25,16 +26,20 @@ function stateLine(st = {}) {
  */
 function buildSystemBlocks({ state = {}, lang = 'auto', dataVersion = '', keyData = '', patchInfo = '' } = {}) {
   const LANG_NAMES = { de: 'German', pt: 'Portuguese (Brazilian)', zh: 'Simplified Chinese', vi: 'Vietnamese', ko: 'Korean' };
-  const langRule = lang === 'es' ? 'Answer in Spanish (rioplatense, informal "vos").'
-    : lang === 'en' ? 'Answer in English.'
-    : LANG_NAMES[lang] ? `Answer in ${LANG_NAMES[lang]}. The strategy notes are in Spanish/English: translate what you use. Give unit and civ names in English (the in-game English names) the first time, then in ${LANG_NAMES[lang]} if a common name exists.`
-    : 'Answer in the language the player wrote in (Spanish, English, German, Portuguese, Chinese, Vietnamese, Korean…); Spanish = rioplatense, informal "vos" (hacé, poné, tenés), never "tú". Unit names: use the name the player used; give the other language once if it helps.';
+  const langRule =
+    lang === 'es'
+      ? 'Answer in Spanish (rioplatense, informal "vos").'
+      : lang === 'en'
+        ? 'Answer in English.'
+        : LANG_NAMES[lang]
+          ? `Answer in ${LANG_NAMES[lang]}. The strategy notes are in Spanish/English: translate what you use. Give unit and civ names in English (the in-game English names) the first time, then in ${LANG_NAMES[lang]} if a common name exists.`
+          : 'Answer in the language the player wrote in (Spanish, English, German, Portuguese, Chinese, Vietnamese, Korean…); Spanish = rioplatense, informal "vos" (hacé, poné, tenés), never "tú". Unit names: use the name the player used; give the other language once if it helps.';
 
   const staticText = `You are an Age of Empires II: Definitive Edition coach next to the player during a ranked game — like a strong friend on Discord: direct, calm, specific. The player types short messages mid-game and reads the answer on a small overlay (it is also read aloud). They need decisions, not essays.
 
 TURN PROTOCOL (every message)
 1. The app has already extracted the match facts from the message into CURRENT MATCH STATE (below) and prefixed the message with the constraints to respect. Read them first. If the message corrects something the state got wrong ("no, I'm in Feudal"), call update_match_state with the correction.
-2. Call the data tools you need: find_counters for "what beats X", civ_info / civ_matchup for what a civ has and LACKS, eco_plan for villager numbers, lookup_unit / compare_units for stats, get_build_order for builds, search_notes for strategy reasoning. Numbers, costs, bonuses and availability NEVER come from memory — the game is patched often. If a tool errors, say what you could not verify.
+2. Call the data tools you need (skip the ones whose answer KEY DATA already contains: PRECOMPUTED COUNTERS / TEAM COUNTERS replace find_counters for those units; a civ profile already lists what the civ lacks): find_counters for "what beats X", civ_info / civ_matchup for what a civ has and LACKS, eco_plan for villager numbers, lookup_unit / compare_units for stats, get_build_order for builds, benchmarks for "am I slow / what time should I hit X", search_notes for strategy reasoning. Numbers, costs, bonuses and availability NEVER come from memory — the game is patched often. If a tool errors, say what you could not verify.
 3. Answer in TWO parts, always:
    First part (no label, no heading, nothing before it): exactly 3 lines, each starting with "• ", max ~14 words each, no intro before them: (1) the decision; (2) what to make/do, with numbers; (3) the key definition or fact that justifies it (the bonus, the counter relation, what they lack, the assumption).
    Then a line containing only ---
@@ -59,12 +64,14 @@ HARD RULES
 
 Data: SiegeEngineers aoe2techtree dataset (56 civs, current patch). Build orders: rtsbuilds (Hera, Morley Games, DauT, TaToH…) + player imports. Combat maths = stand-and-fight duel calculations; apply judgement for micro, numbers and terrain.`;
   const dynamic = `CURRENT MATCH STATE (maintained by the app from update_match_state; the player can also set it with commands)
-${stateLine(state) || '(empty — nothing registered yet)'}${state.source === 'detected' ? ' (source: detected automatically from the player\'s recent match history — confirm if the player contradicts)' : ''}
+${stateLine(state) || '(empty — nothing registered yet)'}${state.source === 'detected' ? " (source: detected automatically from the player's recent match history — confirm if the player contradicts)" : ''}
 ${state.keyFacts && state.keyFacts.length ? 'Last key facts: ' + state.keyFacts.join(' | ') : ''}
 ${patchInfo ? patchInfo + '\n' : ''}${dataVersion ? 'Data snapshot: ' + dataVersion + '\n' : ''}
 ${keyData ? 'KEY DATA (strategy profiles for this match — read before answering)\n' + keyData + '\n' : ''}`;
   return [staticText, dynamic];
 }
-function buildSystemPrompt(opts = {}) { return buildSystemBlocks(opts).join('\n\n'); }
+function buildSystemPrompt(opts = {}) {
+  return buildSystemBlocks(opts).join('\n\n');
+}
 
 module.exports = { buildSystemPrompt, buildSystemBlocks, stateLine, AGE_NAMES };
