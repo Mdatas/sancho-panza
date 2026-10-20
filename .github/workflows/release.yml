@@ -1,20 +1,35 @@
-# Push a tag like v0.17.0 → builds Windows + Mac packages and publishes a GitHub Release with them.
-# Release text: release-notes/<tag>.md (falls back to an auto-generated text).
+# Automatic releases: when package.json "version" changes on main (or this file changes), and no release
+# v<version> exists yet, this tests the app, builds Windows + Mac packages on GitHub's servers and publishes
+# the GitHub Release v<version> with them. Release text: release-notes/v<version>.md.
+# Can also be run by hand from the Actions tab (Run workflow).
 name: release
 on:
   push:
-    tags: ['v*']
+    branches: [main]
+    paths: ['package.json', '.github/workflows/release.yml', 'release-notes/**']
   workflow_dispatch:
-    inputs:
-      tag: { description: 'Existing tag to (re)publish, e.g. v0.16.0', required: true }
 permissions:
   contents: write
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      exists: ${{ steps.v.outputs.exists }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: v
+        env: { GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+        run: |
+          V=$(node -p "require('./package.json').version")
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          if gh release view "v$V" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then echo "exists=true" >> "$GITHUB_OUTPUT"; else echo "exists=false" >> "$GITHUB_OUTPUT"; fi
   test:
+    needs: check
+    if: needs.check.outputs.exists == 'false'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { ref: "${{ github.event.inputs.tag || github.ref }}" }
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - run: npm ci
@@ -26,7 +41,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { ref: "${{ github.event.inputs.tag || github.ref }}" }
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - run: npm ci
@@ -38,7 +52,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-        with: { ref: "${{ github.event.inputs.tag || github.ref }}" }
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - run: npm ci
@@ -47,19 +60,18 @@ jobs:
       - uses: actions/upload-artifact@v4
         with: { name: mac, path: out/*.zip }
   publish:
-    needs: [windows, mac]
+    needs: [check, windows, mac]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { ref: "${{ github.event.inputs.tag || github.ref }}" }
       - uses: actions/download-artifact@v4
         with: { path: assets, merge-multiple: true }
-      - name: Create or update the release
+      - name: Publish the release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG: ${{ github.event.inputs.tag || github.ref_name }}
+          TAG: v${{ needs.check.outputs.version }}
         run: |
           NOTES="release-notes/$TAG.md"; [ -f "$NOTES" ] || { echo "Sancho Panza · AOE2 Squier $TAG" > /tmp/notes.md; NOTES=/tmp/notes.md; }
           TITLE=$(head -1 "$NOTES" | sed 's/^#* *//')
-          if gh release view "$TAG" >/dev/null 2>&1; then gh release upload "$TAG" assets/*.zip --clobber; gh release edit "$TAG" --notes-file "$NOTES";
-          else gh release create "$TAG" assets/*.zip --title "$TITLE" --notes-file "$NOTES" --latest; fi
+          tail -n +2 "$NOTES" > /tmp/body.md
+          gh release create "$TAG" assets/*.zip --target "$GITHUB_SHA" --title "$TITLE" --notes-file /tmp/body.md --latest

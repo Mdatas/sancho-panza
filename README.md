@@ -156,7 +156,7 @@ bash scripts/package-mac.sh   # Mac packages → out/ (ad-hoc signed)
 npm run build:web        # web version → docs/ (GitHub Pages)
 ```
 
-**Releases are automatic:** pushing a tag like `v0.17.0` runs `.github/workflows/release.yml`, which tests, builds Windows and Mac on GitHub's servers and publishes the release with the text in `release-notes/<tag>.md`.
+**Releases are automatic:** when the `version` in `package.json` changes on `main`, `.github/workflows/release.yml` tests the app, builds Windows and Mac on GitHub's servers and publishes release `v<version>` with the text in `release-notes/v<version>.md`.
 
 Repository layout: `src/main` (engine, AI brain, voice, data sync), `src/renderer` (UI and translations), `data` (game data, build orders, knowledge notes, icons), `web` (browser version), `docs` (published web app), `installer` (Windows installer), `test`.
 
