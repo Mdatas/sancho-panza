@@ -1486,7 +1486,7 @@ async function renderCatalog(force = false) {
       .map((c) => civIcon(civKeyOf(c), 'cico sm'))
       .join(
         ''
-      )}${esc(e.title)}</div><div class="s">${e.kind === 'steps' ? `<span class="tag gold">${tr('bo.stepTag')}</span>` : ''}${e.tier !== 'meta' ? `<span class="tag ${e.tier === 'meme' ? 'bad' : 'warn'}">${TIER_LABEL[e.tier]}</span>` : ''}<span>${esc(e.civs.map((c) => (c === 'Any' ? tr('bo.anyCiv') : c)).join(', ') || tr('bo.anyCiv'))}</span>${e.types.length ? `<span class="muted">· ${esc(e.types.slice(0, 3).join(', '))}</span>` : ''}<span class="muted">· ${esc(e.author || '')}${e.date ? ' ' + esc(String(e.date).slice(0, 7)) : ''}${e.steps ? ` · ${e.steps} ${tr('bo.steps')}` : ''}</span></div></div>`;
+      )}${esc(e.title)}</div><div class="s">${e.kind === 'steps' ? `<span class="tag gold">${tr('bo.stepTag')}</span>${e.extracted ? `<span class="tag" title="${esc(tr('bo.extracted'))}">${esc(tr('bo.extractedTag'))}</span>` : ''}` : e.pasos ? `<span class="tag gold">${esc(tr('bo.hasSteps'))}</span>` : ''}${e.tier !== 'meta' ? `<span class="tag ${e.tier === 'meme' ? 'bad' : 'warn'}">${TIER_LABEL[e.tier]}</span>` : ''}<span>${esc(e.civs.map((c) => (c === 'Any' ? tr('bo.anyCiv') : c)).join(', ') || tr('bo.anyCiv'))}</span>${e.types.length ? `<span class="muted">· ${esc(e.types.slice(0, 3).join(', '))}</span>` : ''}<span class="muted">· ${esc(e.author || '')}${e.date ? ' ' + esc(String(e.date).slice(0, 7)) : ''}${e.steps ? ` · ${e.steps} ${tr('bo.steps')}` : ''}</span></div></div>`;
   $('#boList').innerHTML =
     (steps.length ? `<div class="grp">${tr('bo.grpSteps')}</div>${steps.map(card).join('')}` : '') +
       (notes.length
@@ -1505,12 +1505,23 @@ async function openCatalogEntry(id) {
     return;
   }
   const t = await window.coach.bo.noteText({ file: e.file, stem: e.stem });
+  // condensed first ("en la partida": 3-6 lines), the full lessons folded underneath; a build extracted from the note loads into the panel
+  const gist =
+    t.resumen && t.resumen.length
+      ? `<div class="gist"><div class="gh">${esc(tr('bo.gist'))}</div><ul>${t.resumen.map((x) => `<li>${md(x)}</li>`).join('')}</ul></div>`
+      : '';
   $('#boReader').innerHTML =
-    `<div class="rh"><b>${esc(t.title)}</b> <span class="muted small">${esc(e.author)} ${esc(e.date || '')}</span>${e.tier !== 'meta' ? ` <span class="tag ${e.tier === 'meme' ? 'bad' : 'warn'}">${TIER_LABEL[e.tier]}</span>` : ''}${(S.uiLanguage || 'es') !== 'es' ? `<button class="ghost small" id="boReaderTr">🌐 ${tr('g.translate')}</button>` : ''}<button class="ghost small" id="boReaderAsk">${tr('bo.ask')}</button><button class="ghost small" id="boReaderClose">✕</button></div>
-    <div class="rb">${md(t.lessons)}</div>${t.vigencia ? `<details open><summary>${tr('bo.vig')}</summary><div class="rb">${md(t.vigencia)}</div></details>` : ''}`;
+    `<div class="rh"><b>${esc(t.title)}</b> <span class="muted small">${esc(e.author)} ${esc(e.date || '')}</span>${e.tier !== 'meta' ? ` <span class="tag ${e.tier === 'meme' ? 'bad' : 'warn'}">${TIER_LABEL[e.tier]}</span>` : ''}${t.pasos ? `<button class="small" id="boReaderSteps" data-bo="${esc(t.pasos)}">${esc(tr('bo.loadSteps'))}</button>` : ''}${(S.uiLanguage || 'es') !== 'es' ? `<button class="ghost small" id="boReaderTr">🌐 ${tr('g.translate')}</button>` : ''}<button class="ghost small" id="boReaderAsk">${tr('bo.ask')}</button><button class="ghost small" id="boReaderClose">✕</button></div>
+    ${gist}${gist ? `<details><summary>${esc(tr('bo.full'))}</summary><div class="rb">${md(t.lessons)}</div></details>` : `<div class="rb">${md(t.lessons)}</div>`}${t.vigencia ? `<details ${gist ? '' : 'open'}><summary>${tr('bo.vig')}</summary><div class="rb">${md(t.vigencia)}</div></details>` : ''}`;
   $('#boReader').classList.remove('hidden');
   $('#boReader').scrollTop = 0;
   $('#boReaderClose').addEventListener('click', () => $('#boReader').classList.add('hidden'));
+  const stepsBtn = $('#boReaderSteps');
+  if (stepsBtn)
+    stepsBtn.addEventListener('click', async () => {
+      await selectBo(stepsBtn.dataset.bo);
+      $('#boStep').scrollIntoView({ block: 'nearest' });
+    });
   const trb = $('#boReaderTr');
   if (trb)
     trb.addEventListener('click', async () => {

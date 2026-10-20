@@ -55,6 +55,7 @@ contextBridge.exposeInMainWorld('coach', {
     noteText: (a) => ipcRenderer.invoke('guide:noteText', a),
     translate: (a) => ipcRenderer.invoke('guide:translate', a),
     tool: (name, input) => ipcRenderer.invoke('guide:tool', { name, input }),
+    themes: () => ipcRenderer.invoke('guide:themes'),
     onGoto: on('guide:goto'),
   },
   patch: { status: () => ipcRenderer.invoke('patch:status'), check: () => ipcRenderer.invoke('patch:check'), onStatus: on('patch:status') },

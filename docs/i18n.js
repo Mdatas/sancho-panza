@@ -396,6 +396,12 @@
   "bo.civNotes": "Con {civ}: {notes}",
   "set.about": "Acerca de",
   "about.text": "Proyecto de fans, de código abierto y sin fines comerciales, hecho por curiosidad sobre lo que se puede construir con IA. Código, versiones y explicación completa en github.com/Mdatas/sancho-panza (licencia no comercial, ver LICENSE). Datos del juego: SiegeEngineers/aoe2techtree (MIT). Build orders: CraftySalamander/rtsbuilds (GPL-3.0). Imágenes de mapas: wikis Liquipedia y Fandom.",
+  "bo.gist": "En la partida",
+  "bo.full": "Nota completa (lecciones del video)",
+  "bo.loadSteps": "▶ Cargar pasos (F7/F8)",
+  "bo.extracted": "pasos extraídos de la nota",
+  "bo.extractedTag": "extraído",
+  "bo.hasSteps": "con pasos",
   "g.h.button.1": "Civs",
   "g.h.button.2": "Mapas",
   "g.h.button.3": "Unidades y counters",
@@ -533,7 +539,10 @@
   "g.omniMaps": "Mapas",
   "g.omniUnits": "Unidades",
   "g.omniNotes": "Notas",
-  "g.omniNone": "Sin resultados"
+  "g.omniNone": "Sin resultados",
+  "g.h.button.6": "Temas",
+  "g.themesIntro": "Resúmenes por tema de todas las guías: lo esencial, cómo se hace, alternativas cuando las fuentes no coinciden, errores típicos. Cada línea cita la guía de donde sale.",
+  "g.themesNone": "Todavía no hay resúmenes por tema."
  },
  "en": {
   "state.empty": "Tell me your ELO, civ, opponent and map (or just ask)",
@@ -930,6 +939,12 @@
   "bo.civNotes": "With {civ}: {notes}",
   "set.about": "About",
   "about.text": "A non-commercial, open-source fan project, made out of curiosity about what can be built with AI. Code, releases and full explanation at github.com/Mdatas/sancho-panza (non-commercial license, see LICENSE). Game data: SiegeEngineers/aoe2techtree (MIT). Build orders: CraftySalamander/rtsbuilds (GPL-3.0). Map pictures: Liquipedia and Fandom wikis.",
+  "bo.gist": "In the game",
+  "bo.full": "Full note (lessons from the video)",
+  "bo.loadSteps": "▶ Load steps (F7/F8)",
+  "bo.extracted": "steps extracted from the note",
+  "bo.extractedTag": "extracted",
+  "bo.hasSteps": "with steps",
   "g.h.button.1": "Civs",
   "g.h.button.2": "Maps",
   "g.h.button.3": "Units & counters",
@@ -1067,7 +1082,10 @@
   "g.omniMaps": "Maps",
   "g.omniUnits": "Units",
   "g.omniNotes": "Notes",
-  "g.omniNone": "No results"
+  "g.omniNone": "No results",
+  "g.h.button.6": "Topics",
+  "g.themesIntro": "Per-topic summaries of all the guides: the essentials, how it is done, alternatives where the sources disagree, typical mistakes. Every line cites the guide it comes from.",
+  "g.themesNone": "No topic summaries yet."
  },
  "de": {
   "state.empty": "Sag mir dein ELO, deine Civ, deinen Gegner und die Map (oder frag einfach direkt)",
@@ -1464,6 +1482,12 @@
   "bo.civNotes": "Mit {civ}: {notes}",
   "set.about": "Über",
   "about.text": "Ein nichtkommerzielles Open-Source-Fanprojekt, aus Neugier darauf, was sich mit KI bauen lässt. Code, Versionen und vollständige Erklärung auf github.com/Mdatas/sancho-panza (nichtkommerzielle Lizenz, siehe LICENSE). Spieldaten: SiegeEngineers/aoe2techtree (MIT). Build Orders: CraftySalamander/rtsbuilds (GPL-3.0). Kartenbilder: Liquipedia- und Fandom-Wikis.",
+  "bo.gist": "In der Partie",
+  "bo.full": "Vollständige Notiz (Lektionen aus dem Video)",
+  "bo.loadSteps": "▶ Schritte laden (F7/F8)",
+  "bo.extracted": "Schritte aus der Notiz extrahiert",
+  "bo.extractedTag": "extrahiert",
+  "bo.hasSteps": "mit Schritten",
   "g.h.button.1": "Civs",
   "g.h.button.2": "Karten",
   "g.h.button.3": "Einheiten & Counter",
@@ -1601,7 +1625,10 @@
   "g.omniMaps": "Karten",
   "g.omniUnits": "Einheiten",
   "g.omniNotes": "Notizen",
-  "g.omniNone": "Keine Treffer"
+  "g.omniNone": "Keine Treffer",
+  "g.h.button.6": "Themen",
+  "g.themesIntro": "Zusammenfassungen aller Guides nach Thema: das Wesentliche, wie es geht, Alternativen, wo die Quellen abweichen, typische Fehler. Jede Zeile nennt den Guide, aus dem sie stammt.",
+  "g.themesNone": "Noch keine Themen-Zusammenfassungen."
  },
  "pt": {
   "state.empty": "Me diga seu ELO, civ, adversário e mapa (ou pergunte direto)",
@@ -1998,6 +2025,12 @@
   "bo.civNotes": "Com {civ}: {notes}",
   "set.about": "Sobre",
   "about.text": "Projeto de fãs, de código aberto e sem fins comerciais, feito por curiosidade sobre o que dá para construir com IA. Código, versões e explicação completa em github.com/Mdatas/sancho-panza (licença não comercial, veja LICENSE). Dados do jogo: SiegeEngineers/aoe2techtree (MIT). Build orders: CraftySalamander/rtsbuilds (GPL-3.0). Imagens de mapas: wikis Liquipedia e Fandom.",
+  "bo.gist": "Na partida",
+  "bo.full": "Nota completa (lições do vídeo)",
+  "bo.loadSteps": "▶ Carregar passos (F7/F8)",
+  "bo.extracted": "passos extraídos da nota",
+  "bo.extractedTag": "extraído",
+  "bo.hasSteps": "com passos",
   "g.h.button.1": "Civs",
   "g.h.button.2": "Mapas",
   "g.h.button.3": "Unidades e counters",
@@ -2135,7 +2168,10 @@
   "g.omniMaps": "Mapas",
   "g.omniUnits": "Unidades",
   "g.omniNotes": "Notas",
-  "g.omniNone": "Sem resultados"
+  "g.omniNone": "Sem resultados",
+  "g.h.button.6": "Temas",
+  "g.themesIntro": "Resumos por tema de todos os guias: o essencial, como se faz, alternativas quando as fontes divergem, erros típicos. Cada linha cita o guia de onde vem.",
+  "g.themesNone": "Ainda não há resumos por tema."
  },
  "zh": {
   "state.empty": "告诉我你的 ELO、文明、对手和地图（或者直接提问）",
@@ -2532,6 +2568,12 @@
   "bo.civNotes": "使用{civ}时：{notes}",
   "set.about": "关于",
   "about.text": "非商业的开源粉丝项目，源于对 AI 能构建什么的好奇。代码、版本和完整说明见 github.com/Mdatas/sancho-panza（非商业许可，见 LICENSE）。游戏数据：SiegeEngineers/aoe2techtree（MIT）。建造顺序：CraftySalamander/rtsbuilds（GPL-3.0）。地图图片：Liquipedia 与 Fandom 维基。",
+  "bo.gist": "对局中",
+  "bo.full": "完整笔记（视频中的要点）",
+  "bo.loadSteps": "▶ 加载步骤（F7/F8）",
+  "bo.extracted": "从笔记提取的步骤",
+  "bo.extractedTag": "提取",
+  "bo.hasSteps": "含步骤",
   "g.h.button.1": "Civs",
   "g.h.button.2": "地图",
   "g.h.button.3": "单位与克制",
@@ -2669,7 +2711,10 @@
   "g.omniMaps": "地图",
   "g.omniUnits": "单位",
   "g.omniNotes": "笔记",
-  "g.omniNone": "无结果"
+  "g.omniNone": "无结果",
+  "g.h.button.6": "主题",
+  "g.themesIntro": "按主题汇总所有攻略：要点、做法、来源不一致时的替代方案、常见错误。每一行都注明出处。",
+  "g.themesNone": "暂无主题摘要。"
  },
  "vi": {
   "state.empty": "Cho mình biết ELO, civ, đối thủ và bản đồ của bạn (hoặc hỏi luôn)",
@@ -3066,6 +3111,12 @@
   "bo.civNotes": "Với {civ}: {notes}",
   "set.about": "Giới thiệu",
   "about.text": "Dự án của người hâm mộ, mã nguồn mở, phi thương mại, làm vì tò mò xem có thể xây dựng gì với AI. Mã nguồn, các phiên bản và giải thích đầy đủ tại github.com/Mdatas/sancho-panza (giấy phép phi thương mại, xem LICENSE). Dữ liệu game: SiegeEngineers/aoe2techtree (MIT). Build order: CraftySalamander/rtsbuilds (GPL-3.0). Hình bản đồ: wiki Liquipedia và Fandom.",
+  "bo.gist": "Trong trận",
+  "bo.full": "Ghi chú đầy đủ (bài học từ video)",
+  "bo.loadSteps": "▶ Tải các bước (F7/F8)",
+  "bo.extracted": "các bước trích từ ghi chú",
+  "bo.extractedTag": "trích xuất",
+  "bo.hasSteps": "có các bước",
   "g.h.button.1": "Civs",
   "g.h.button.2": "Bản đồ",
   "g.h.button.3": "Đơn vị & khắc chế",
@@ -3203,7 +3254,10 @@
   "g.omniMaps": "Bản đồ",
   "g.omniUnits": "Đơn vị",
   "g.omniNotes": "Ghi chú",
-  "g.omniNone": "Không có kết quả"
+  "g.omniNone": "Không có kết quả",
+  "g.h.button.6": "Chủ đề",
+  "g.themesIntro": "Tóm tắt theo chủ đề từ tất cả hướng dẫn: điều cốt lõi, cách làm, lựa chọn thay thế khi các nguồn khác nhau, lỗi thường gặp. Mỗi dòng ghi nguồn hướng dẫn.",
+  "g.themesNone": "Chưa có tóm tắt theo chủ đề."
  },
  "ko": {
   "state.empty": "ELO, 문명, 상대, 맵을 알려 주세요 (또는 바로 질문하세요)",
@@ -3600,6 +3654,12 @@
   "bo.civNotes": "{civ} 사용 시: {notes}",
   "set.about": "정보",
   "about.text": "AI로 무엇을 만들 수 있는지 궁금해서 만든 비상업적 오픈소스 팬 프로젝트입니다. 코드, 릴리스, 전체 설명은 github.com/Mdatas/sancho-panza (비상업 라이선스, LICENSE 참고). 게임 데이터: SiegeEngineers/aoe2techtree (MIT). 빌드 오더: CraftySalamander/rtsbuilds (GPL-3.0). 지도 이미지: Liquipedia 및 Fandom 위키.",
+  "bo.gist": "경기 중",
+  "bo.full": "전체 노트 (영상의 교훈)",
+  "bo.loadSteps": "▶ 단계 불러오기 (F7/F8)",
+  "bo.extracted": "노트에서 추출한 단계",
+  "bo.extractedTag": "추출",
+  "bo.hasSteps": "단계 있음",
   "g.h.button.1": "Civs",
   "g.h.button.2": "맵",
   "g.h.button.3": "유닛 & 카운터",
@@ -3737,6 +3797,9 @@
   "g.omniMaps": "지도",
   "g.omniUnits": "유닛",
   "g.omniNotes": "노트",
-  "g.omniNone": "결과 없음"
+  "g.omniNone": "결과 없음",
+  "g.h.button.6": "주제",
+  "g.themesIntro": "모든 가이드를 주제별로 요약: 핵심, 실행 방법, 출처가 다를 때의 대안, 흔한 실수. 각 줄에 출처 가이드를 표시합니다.",
+  "g.themesNone": "아직 주제 요약이 없습니다."
  }
 });

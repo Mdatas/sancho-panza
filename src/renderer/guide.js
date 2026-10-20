@@ -168,6 +168,29 @@ function showTab(name) {
   $$('.tab').forEach((t) => t.classList.toggle('active', t.id === 'tab-' + name));
   if (name === 'meta') renderMeta();
   if (name === 'notes' && !$('#noteList').children.length) renderNoteList();
+  if (name === 'themes' && !$('#themeList').children.length) renderThemes();
+}
+let THEMES = null,
+  curTheme = '';
+async function renderThemes() {
+  if (!THEMES) THEMES = await window.coach.guide.themes();
+  const list = $('#themeList');
+  list.innerHTML = THEMES.map(
+    (t) =>
+      `<div class="item ${t.id === curTheme ? 'sel' : ''}" data-id="${esc(t.id)}"><span>${esc(t.name)}</span><span class="sub">${t.sections.length}</span></div>`
+  ).join('');
+  $$('#themeList .item').forEach((el) => el.addEventListener('click', () => openTheme(el.dataset.id)));
+  if (!THEMES.length) $('#themeView').innerHTML = `<p class="muted pad">${esc(G('g.themesNone'))}</p>`;
+  else if (!curTheme) openTheme(THEMES[0].id);
+}
+function openTheme(id) {
+  const t = (THEMES || []).find((x) => x.id === id);
+  if (!t) return;
+  curTheme = id;
+  $$('#themeList .item').forEach((el) => el.classList.toggle('sel', el.dataset.id === id));
+  $('#themeView').innerHTML =
+    `<div class="head"><h2>${esc(t.name)}</h2></div>${t.intro ? `<p class="muted small pad">${md(t.intro)}</p>` : ''}${ES() ? '' : `<p class="muted small trnote">${esc(G('g.esNote'))}</p>`}${sections(t.sections, 2)}`;
+  $('#themeView').scrollTop = 0;
 }
 $$('#tabs button').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
 

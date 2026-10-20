@@ -1,0 +1,134 @@
+{
+ "name": "Scouts 21 pop",
+ "civilization": "Generic",
+ "author": "Pros",
+ "source": "https://aoecompanion.com/build-guides/scout-rush",
+ "description": "Pasos extraídos por IA de la nota «1. Scouts: 21 pop [CIC] https://johsaoe2debuildorderreference.site44.com/21-pop-scouts.html» (Pros); cada paso cita la frase de la nota que lo respalda. Tier: meta.",
+ "extracted_from": {
+  "file": "builds_pros_referencia.md",
+  "stem": "1. Scouts: 21 pop [CIC] https://johsaoe2debuildorderreference.site44.com/21-pop-scouts.html",
+  "tier": "meta",
+  "date": ""
+ },
+ "build_order": [
+  {
+   "villager_count": 9,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "6 a ovejas",
+    "3 a madera"
+   ],
+   "evidencia": "| 3 wood | 3 | 6 | |"
+  },
+  {
+   "villager_count": 11,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 8,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Atraé el jabalí con 1 aldeano",
+    "Sumá 1 a ovejas"
+   ],
+   "evidencia": "| Lure boar with 1, +1 sheep | 3 | 8 | |"
+  },
+  {
+   "villager_count": 15,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 12,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "4 a bayas"
+   ],
+   "evidencia": "| 4 berries | 3 | 12 | |"
+  },
+  {
+   "villager_count": 17,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 14,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "2 más al jabalí",
+    "Después 2 a granjas"
+   ],
+   "evidencia": "| +2 boar, then 2 to farms | 3 | 14 | |"
+  },
+  {
+   "villager_count": 20,
+   "age": 1,
+   "resources": {
+    "wood": 6,
+    "food": 14,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "El resto a madera",
+    "Segundo campamento maderero"
+   ],
+   "evidencia": "| Rest to wood (2nd lumber camp) | 6 | 14 | |"
+  },
+  {
+   "villager_count": 20,
+   "age": 1,
+   "resources": {
+    "wood": 10,
+    "food": 10,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Telar y clic en Feudal",
+    "Madera a 10 y cuartel"
+   ],
+   "evidencia": "Raise wood to 10 on the way up, build barracks"
+  },
+  {
+   "villager_count": 28,
+   "age": 2,
+   "resources": {
+    "wood": 10,
+    "food": 18,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Establo y escuteros",
+    "Hacha doble y Collera; granjas a 14"
+   ],
+   "evidencia": "Feudal: stable, scouts; Double-Bit Axe + Horse Collar"
+  },
+  {
+   "villager_count": 33,
+   "age": 2,
+   "resources": {
+    "wood": 10,
+    "food": 18,
+    "gold": 5,
+    "stone": 0
+   },
+   "notes": [
+    "5 a oro, 2 de bayas a granjas",
+    "Carretilla y herrería"
+   ],
+   "evidencia": "5 to gold, 2 berry villagers → farms; Wheelbarrow, blacksmith"
+  }
+ ]
+}

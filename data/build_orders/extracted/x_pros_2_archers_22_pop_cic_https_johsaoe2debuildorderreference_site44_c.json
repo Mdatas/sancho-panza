@@ -1,0 +1,90 @@
+{
+ "name": "Arqueros 22 pop",
+ "civilization": "Generic",
+ "author": "Pros",
+ "source": "https://aoecompanion.com/build-guides/archer-rush",
+ "description": "Pasos extraídos por IA de la nota «2. Archers: 22 pop [CIC] https://johsaoe2debuildorderreference.site44.com/22-pop-archers.html» (Pros); cada paso cita la frase de la nota que lo respalda. Tier: meta.",
+ "extracted_from": {
+  "file": "builds_pros_referencia.md",
+  "stem": "2. Archers: 22 pop [CIC] https://johsaoe2debuildorderreference.site44.com/22-pop-archers.html",
+  "tier": "meta",
+  "date": ""
+ },
+ "build_order": [
+  {
+   "villager_count": 17,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 13,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "6 a ovejas, 4 a madera, 1 atrae jabalí, 4 a bayas.",
+    "Sumá 2 más al jabalí."
+   ],
+   "evidencia": "6 sheep / 4 wood / 1 lures boar / 4 berries / +2 boar"
+  },
+  {
+   "villager_count": 21,
+   "age": 1,
+   "resources": {
+    "wood": 8,
+    "food": 13,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "El resto a madera.",
+    "Hacé el segundo campamento maderero."
+   ],
+   "evidencia": "Rest to wood (2nd lumber camp)"
+  },
+  {
+   "villager_count": 21,
+   "age": 1,
+   "resources": {
+    "wood": 11,
+    "food": 7,
+    "gold": 3,
+    "stone": 0
+   },
+   "notes": [
+    "Loom y click a Feudal.",
+    "Subiendo: madera a 11, 3 a oro y cuartel."
+   ],
+   "evidencia": "Loom → Feudal. On the way up: wood to 11, 3 to gold, barracks"
+  },
+  {
+   "villager_count": 26,
+   "age": 2,
+   "resources": {
+    "wood": 11,
+    "food": 7,
+    "gold": 8,
+    "stone": 0
+   },
+   "notes": [
+    "2 arquerías y arqueros; Double-Bit Axe.",
+    "Oro a 8 aldeanos."
+   ],
+   "evidencia": "Feudal: 2 ranges, archers; Double-Bit Axe; gold to 8"
+  },
+  {
+   "villager_count": 38,
+   "age": 2,
+   "resources": {
+    "wood": 14,
+    "food": 16,
+    "gold": 8,
+    "stone": 0
+   },
+   "notes": [
+    "Herrería y Fletching.",
+    "Granjas y Wheelbarrow."
+   ],
+   "evidencia": "Blacksmith + Fletching; farms; Wheelbarrow"
+  }
+ ]
+}

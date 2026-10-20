@@ -191,3 +191,9 @@ body.full .tbhint.off, .tbhint.off { display: none !important; }
 @media (max-width: 560px) { #tabs button svg { display: none; } #tabs button { font-size: 12px; } }
 #boClock.on { color: var(--gilt); border-color: var(--gilt-dim); }
 #boCivNotes { padding: 0 2px; color: var(--ash); }
+/* condensed note ("en la partida") in the build-order reader */
+#boReader .gist { margin: 6px 0 8px; padding: 8px 12px; border: 1px solid var(--gilt-dim); border-left: 3px solid var(--gilt); background: #19140f; border-radius: 4px; }
+#boReader .gist .gh { font-family: var(--display); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gilt); margin-bottom: 4px; }
+#boReader .gist ul { margin: 0; padding-left: 18px; }
+#boReader .gist li { margin: 3px 0; font-size: 14px; line-height: 1.4; }
+#boReader details > summary { cursor: pointer; color: var(--ash); }

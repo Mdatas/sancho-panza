@@ -180,7 +180,12 @@ function loadData() {
   const dir = datasync.chooseDataDir(cacheDir, path.join(BUNDLED_DATA, 'game'));
   gd = new GameData(dir).load();
   for (const d of ['build_orders', path.join('build_orders', 'rtsbuilds'), 'knowledge', 'logs']) fs.mkdirSync(userPath(d), { recursive: true });
-  buildOrders = new BuildOrders([path.join(BUNDLED_DATA, 'build_orders', 'rtsbuilds'), userPath('build_orders', 'rtsbuilds'), userPath('build_orders')]).load();
+  buildOrders = new BuildOrders([
+    path.join(BUNDLED_DATA, 'build_orders', 'rtsbuilds'),
+    path.join(BUNDLED_DATA, 'build_orders', 'extracted'), // step-by-step builds extracted from the video notes (tools/condense.js)
+    userPath('build_orders', 'rtsbuilds'),
+    userPath('build_orders'),
+  ]).load();
   knowledge = new Knowledge([path.join(BUNDLED_DATA, 'knowledge'), userPath('knowledge')]).load();
   strategy = new Strategy([path.join(BUNDLED_DATA, 'knowledge'), userPath('knowledge')]).load();
   if (brain) {
@@ -610,6 +615,7 @@ function registerIpc() {
   ipcMain.handle('guide:noteList', () => core.guideNoteList());
   ipcMain.handle('guide:noteText', (_e, a) => core.guideNoteText(a || {}));
   ipcMain.handle('guide:tool', (_e, a) => core.guideTool(a || {}));
+  ipcMain.handle('guide:themes', () => core.guideThemes());
   // ---- patches and match detection
   ipcMain.handle('patch:status', () => ({ ...patchState, line: patchInfoLine() }));
   ipcMain.handle('patch:check', () => checkPatches(true));

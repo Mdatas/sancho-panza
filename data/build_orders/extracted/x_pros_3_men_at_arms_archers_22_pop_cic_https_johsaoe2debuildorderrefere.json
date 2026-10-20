@@ -1,0 +1,90 @@
+{
+ "name": "Hombres de armas → Arqueros (22 pop)",
+ "civilization": "Generic",
+ "author": "Pros",
+ "source": "https://forums.ageofempires.com/t/balance-patch-22-09-2026-update-185872/289855",
+ "description": "Pasos extraídos por IA de la nota «3. Men-at-Arms → Archers: 22 pop [CIC] https://johsaoe2debuildorderreference.site44.com/22-pop-men-at-arms-archers.html» (Pros); cada paso cita la frase de la nota que lo respalda. Tier: meta.",
+ "extracted_from": {
+  "file": "builds_pros_referencia.md",
+  "stem": "3. Men-at-Arms → Archers: 22 pop [CIC] https://johsaoe2debuildorderreference.site44.com/22-pop-men-at-arms-archers.html",
+  "tier": "meta",
+  "date": ""
+ },
+ "build_order": [
+  {
+   "villager_count": 18,
+   "age": 1,
+   "resources": {
+    "wood": 5,
+    "food": 13,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "6 a ovejas, 4 a madera, 1 atrae jabalí, 4 a bayas",
+    "+2 a jabalí, +1 a madera"
+   ],
+   "evidencia": "6 sheep / 4 wood / 1 lures boar / 4 berries"
+  },
+  {
+   "villager_count": 20,
+   "age": 1,
+   "resources": {
+    "wood": 5,
+    "food": 13,
+    "gold": 2,
+    "stone": 0
+   },
+   "notes": [
+    "1 construye el cuartel",
+    "2 van a oro"
+   ],
+   "evidencia": "1 builds barracks; 2 to gold"
+  },
+  {
+   "villager_count": 21,
+   "age": 1,
+   "resources": {
+    "wood": 8,
+    "food": 11,
+    "gold": 2,
+    "stone": 0
+   },
+   "notes": [
+    "Loom y clic a Feudal",
+    "+3 madera (2º campamento), 3 milicias, +2 granjas"
+   ],
+   "evidencia": "+3 wood (2nd lumber camp, 8), 3 militia, +2 farms"
+  },
+  {
+   "villager_count": 25,
+   "age": 2,
+   "resources": {
+    "wood": 10,
+    "food": 10,
+    "gold": 5,
+    "stone": 0
+   },
+   "notes": [
+    "Oro a 5, granjas a 6",
+    "Herrería + Fletching"
+   ],
+   "evidencia": "Gold to 5, farms to 6, blacksmith + Fletching"
+  },
+  {
+   "villager_count": 36,
+   "age": 2,
+   "resources": {
+    "wood": 12,
+    "food": 16,
+    "gold": 8,
+    "stone": 0
+   },
+   "notes": [
+    "Carretilla, +3 a oro",
+    "Segunda galería de tiro"
+   ],
+   "evidencia": "Wheelbarrow, +3 gold (8), 2nd range"
+  }
+ ]
+}

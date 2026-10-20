@@ -98,7 +98,7 @@ const ready = (async () => {
   IMG.base = 'img/';
   vfs._load(LS.get('sp.userFiles', {})); // user-imported builds
   gd = new GameData('/data/game').load();
-  buildOrders = new BuildOrders(['/data/build_orders/rtsbuilds', '/user/build_orders']).load();
+  buildOrders = new BuildOrders(['/data/build_orders/rtsbuilds', '/data/build_orders/extracted', '/user/build_orders']).load();
   knowledge = new Knowledge(['/data/knowledge']).load(); // the notes arrive separately (see readyNotes)
   strategy = new Strategy(['/data/knowledge']).load();
   for (const c of Object.values(gd.civs)) IMG.civs[c.key] = 'Civs/' + c.key.toLowerCase() + '.png';
@@ -291,6 +291,7 @@ window.coach = {
     noteList: RN(() => core.guideNoteList()),
     noteText: RN((a) => core.guideNoteText(a || {})),
     translate: R((a) => core.guideTranslate(a || {})),
+    themes: RN(() => core.guideThemes()),
     tool: R((name, input) => core.guideTool({ name, input })),
     onGoto: (cb) => {
       const off = on('guide:goto')(cb);

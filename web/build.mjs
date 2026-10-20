@@ -36,6 +36,16 @@ walk(path.join(data, 'knowledge', 'civs'), '/data/knowledge/civs');
 walk(path.join(data, 'knowledge', 'maps'), '/data/knowledge/maps');
 const builds = {};
 walk(path.join(data, 'build_orders', 'rtsbuilds'), '/data/build_orders/rtsbuilds', builds);
+try {
+  walk(path.join(data, 'build_orders', 'extracted'), '/data/build_orders/extracted');
+} catch {
+  /* none yet */
+}
+try {
+  files['/data/knowledge/resumen_guias.json'] = JSON.stringify(JSON.parse(fs.readFileSync(path.join(data, 'knowledge', 'resumen_guias.json'), 'utf8')));
+} catch {
+  /* none yet */
+}
 files['/data/build_orders/benchmarks.json'] = JSON.stringify(JSON.parse(fs.readFileSync(path.join(data, 'build_orders', 'benchmarks.json'), 'utf8')));
 const notes = {};
 for (const f of fs.readdirSync(path.join(data, 'knowledge'))) {

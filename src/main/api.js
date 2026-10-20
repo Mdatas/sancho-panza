@@ -189,6 +189,22 @@ function createCore({ ctx, userBuildDir, knowledgeDirs, uiLanguage = () => 'es',
     guideNoteText({ file, title }) {
       return guideData.noteText({ knowledge: ctx().knowledge, file, title });
     },
+    /** Topic summaries (data/knowledge/temas_*.md, written by tools/themes.js): [{ id, name, intro, sections:[{name,text}] }]. */
+    guideThemes() {
+      const { knowledge } = ctx();
+      const byFile = new Map();
+      for (const sec of knowledge.sections || []) {
+        if (!/^temas_/.test(sec.file)) continue;
+        let t = byFile.get(sec.file);
+        if (!t) byFile.set(sec.file, (t = { id: sec.file, name: sec.file.replace(/^temas_|\.md$/g, ''), intro: '', sections: [] }));
+        const m = sec.title.match(/^Tema:\s*(.+)$/);
+        if (m) {
+          t.name = m[1].trim();
+          t.intro = sec.body;
+        } else t.sections.push({ name: sec.title.replace(/^.*? — /, ''), text: sec.body });
+      }
+      return [...byFile.values()].sort((a, b) => a.name.localeCompare(b.name));
+    },
     guideTool({ name, input }) {
       if (!GUIDE_TOOLS.includes(name)) return { error: 'not allowed' };
       const { gd, buildOrders, knowledge, strategy, brain } = ctx();

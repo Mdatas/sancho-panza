@@ -32,6 +32,21 @@ const SOURCE_FILES = [
   [/^respuestas_a_aperturas/, 'Respuestas'],
 ];
 const tierOfFile = (f) => (/^poop_lord_/.test(f) ? 'meme' : /^break_the_meta/.test(f) ? 'anti-meta' : 'meta');
+const fs = require('fs');
+const path = require('path');
+/** data/knowledge/resumen_guias.json: per-note "en la partida" summary + the id of the step-by-step build extracted from it (tools/condense.js). */
+function loadCondensed(knowledge) {
+  const out = {};
+  for (const dir of knowledge.dirs || []) {
+    try {
+      const j = JSON.parse(fs.readFileSync(path.join(dir, 'resumen_guias.json'), 'utf8'));
+      Object.assign(out, j);
+    } catch {
+      /* none in this dir */
+    }
+  }
+  return out;
+}
 const BUILDY = /\b\d{1,2}\s*(pop|aldeanos|vills?)\b|\bbuild\b|apertura|\brush\b|fast castle|\bfc\b|drush|scouts|arquer|archer|castle drop|tc drop|boom/i;
 
 function typesOf(text) {
@@ -54,13 +69,16 @@ function cleanTitle(stem) {
     .replace(/^Build de principiante:\s*/i, '');
   t = t.replace(/^[:\s—-]+/, '').replace(/^Build( de principiante)?:\s*/i, '');
   t = t
+    .replace(/\s*\[[A-Z]{2,4}\]\s*https?:\/\/\S+/g, '') // "Scouts: 21 pop [CIC] https://…" (reference builds)
+    .replace(/^\d{1,2}\.\s+/, '');
+  t = t
     .replace(/\s*\|\s*AoE2.*$/i, '')
     .replace(/[!?]{2,}/g, '!')
     .trim();
   return { title: t.charAt(0).toUpperCase() + t.slice(1), date, code };
 }
 
-function noteEntries(knowledge, gdCivNames = []) {
+function noteEntries(knowledge, gdCivNames = [], condensed = {}) {
   const groups = new Map();
   for (const s of knowledge.sections || []) {
     const src = SOURCE_FILES.find(([re]) => re.test(s.file));
@@ -97,6 +115,8 @@ function noteEntries(knowledge, gdCivNames = []) {
       file: g.file,
       stem: g.stem,
       hasVigencia: /VIGENCIA/.test(g.text),
+      pasos: (condensed[g.file + '|' + g.stem] || {}).pasos || null,
+      gist: !!(condensed[g.file + '|' + g.stem] || {}).resumen,
     });
   }
   return out;
@@ -121,11 +141,13 @@ function structuredEntries(buildOrders) {
         const tt = typesOf(bo.name);
         return tt.length ? tt : typesOf(notes).slice(0, 2);
       })(),
-      tier: 'meta',
+      tier: (bo.extracted_from && bo.extracted_from.tier) || 'meta',
       steps: (bo.build_order || []).length,
       upTo: lastAge,
       feudalPop: pop ? pop.villager_count : null,
       source: bo.source || '',
+      extracted: !!bo.extracted_from,
+      fromNote: bo.extracted_from ? bo.extracted_from.file + '|' + bo.extracted_from.stem : '',
     };
   });
 }
@@ -136,8 +158,9 @@ function catalog({ buildOrders, knowledge, gd }) {
         .flatMap((c) => [c.name_en, c.name_es])
         .filter(Boolean)
     : [];
+  const condensed = loadCondensed(knowledge);
   const steps = structuredEntries(buildOrders);
-  const notes = noteEntries(knowledge, civNames);
+  const notes = noteEntries(knowledge, civNames, condensed);
   const types = TYPES.map(([t]) => t).filter((t) => steps.some((e) => e.types.includes(t)) || notes.some((e) => e.types.includes(t)));
   return { steps, notes, types, counts: { steps: steps.length, notes: notes.length } };
 }
@@ -149,7 +172,14 @@ function noteText(knowledge, file, stem) {
   );
   const vig = secs.filter((s) => /VIGENCIA hoy/.test(s.title)),
     les = secs.filter((s) => !/VIGENCIA hoy/.test(s.title));
-  return { title: cleanTitle(stem).title, lessons: les.map((s) => s.body).join('\n'), vigencia: vig.map((s) => s.body).join('\n') };
+  const c = loadCondensed(knowledge)[file + '|' + stem] || {};
+  return {
+    title: cleanTitle(stem).title,
+    lessons: les.map((s) => s.body).join('\n'),
+    vigencia: vig.map((s) => s.body).join('\n'),
+    resumen: c.resumen || null,
+    pasos: c.pasos || null,
+  };
 }
 
 module.exports = { catalog, noteText, cleanTitle, typesOf };
