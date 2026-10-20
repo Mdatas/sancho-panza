@@ -96,8 +96,11 @@ tr.click { cursor: pointer; } tr.click:hover td { background: var(--panel2); }
 /* map icons */
 .mapThumb { object-fit: contain; border-radius: 4px; background: rgba(0,0,0,.25); box-shadow: 0 0 0 1px rgba(202,162,76,.35); }
 .mapEmblem.big { width: 72px; height: 72px; }
-.mapThumb.big { width: 168px; height: 92px; align-self: center; padding: 3px; box-sizing: border-box; }
-.item .mapThumb { width: 40px; height: 24px; flex: 0 0 auto; }
+.mapThumb.big { width: min(100%, 380px); height: auto; max-height: 260px; align-self: flex-start; padding: 4px; box-sizing: border-box; cursor: zoom-in; }
+.mapThumb.big.zoom { width: min(100%, 760px); max-height: none; cursor: zoom-out; }
+.mapPicWrap { flex: 1 1 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.mapPicWrap .picNote { font-size: 11px; color: var(--muted); }
+.item .mapThumb { width: 56px; height: 30px; flex: 0 0 auto; }
 #tabs button { display: inline-flex; align-items: center; gap: 6px; }
 #tabs button svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .lu b { display: flex; align-items: center; gap: 4px; }

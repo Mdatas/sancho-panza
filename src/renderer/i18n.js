@@ -470,7 +470,8 @@ window.I18N = {
   "g.esNote": "Los perfiles y notas están en castellano: tocá 🌐 Traducir en cada sección para traducirla con tu IA.",
   "g.techsHead": "Tecnologías únicas",
   "g.mineBadge": "tuya",
-  "g.oppBadge": "rival"
+  "g.oppBadge": "rival",
+  "g.mapZoom": "Clic en la imagen para agrandarla o achicarla"
  },
  "en": {
   "state.empty": "Tell me your ELO, civ, opponent and map (or just ask)",
@@ -942,7 +943,8 @@ window.I18N = {
   "g.esNote": "Profiles and notes are written in Spanish: press 🌐 Translate on any section to translate it with your AI.",
   "g.techsHead": "Unique technologies",
   "g.mineBadge": "yours",
-  "g.oppBadge": "enemy"
+  "g.oppBadge": "enemy",
+  "g.mapZoom": "Click the picture to enlarge or shrink it"
  },
  "de": {
   "state.empty": "Sag mir dein ELO, deine Civ, deinen Gegner und die Map (oder frag einfach direkt)",
@@ -1414,7 +1416,8 @@ window.I18N = {
   "g.esNote": "Profile und Notizen sind auf Spanisch: Tipp in jedem Abschnitt auf 🌐 Übersetzen, um ihn mit deiner KI zu übersetzen.",
   "g.techsHead": "Einzigartige Technologien",
   "g.mineBadge": "deine",
-  "g.oppBadge": "Gegner"
+  "g.oppBadge": "Gegner",
+  "g.mapZoom": "Klick auf das Bild zum Vergrößern oder Verkleinern"
  },
  "pt": {
   "state.empty": "Me diga seu ELO, civ, adversário e mapa (ou pergunte direto)",
@@ -1886,7 +1889,8 @@ window.I18N = {
   "g.esNote": "Os perfis e notas estão em espanhol: toque em 🌐 Traduzir em cada seção para traduzi-la com sua IA.",
   "g.techsHead": "Tecnologias únicas",
   "g.mineBadge": "sua",
-  "g.oppBadge": "rival"
+  "g.oppBadge": "rival",
+  "g.mapZoom": "Clique na imagem para ampliar ou reduzir"
  },
  "zh": {
   "state.empty": "告诉我你的 ELO、文明、对手和地图（或者直接提问）",
@@ -2358,7 +2362,8 @@ window.I18N = {
   "g.esNote": "档案和笔记为西班牙语：在各节点击 🌐 翻译，即可用你的 AI 翻译。",
   "g.techsHead": "独特科技",
   "g.mineBadge": "你的",
-  "g.oppBadge": "对手"
+  "g.oppBadge": "对手",
+  "g.mapZoom": "点击图片可放大或缩小"
  },
  "vi": {
   "state.empty": "Cho mình biết ELO, civ, đối thủ và bản đồ của bạn (hoặc hỏi luôn)",
@@ -2830,7 +2835,8 @@ window.I18N = {
   "g.esNote": "Hồ sơ và ghi chú viết bằng tiếng Tây Ban Nha: bấm 🌐 Dịch ở mỗi mục để dịch bằng AI của bạn.",
   "g.techsHead": "Công nghệ độc nhất",
   "g.mineBadge": "của bạn",
-  "g.oppBadge": "đối thủ"
+  "g.oppBadge": "đối thủ",
+  "g.mapZoom": "Nhấn vào hình để phóng to hoặc thu nhỏ"
  },
  "ko": {
   "state.empty": "ELO, 문명, 상대, 맵을 알려 주세요 (또는 바로 질문하세요)",
@@ -3302,6 +3308,7 @@ window.I18N = {
   "g.esNote": "프로필과 노트는 스페인어로 되어 있습니다: 각 섹션의 🌐 번역을 눌러 AI로 번역하세요.",
   "g.techsHead": "고유 기술",
   "g.mineBadge": "내 문명",
-  "g.oppBadge": "상대"
+  "g.oppBadge": "상대",
+  "g.mapZoom": "이미지를 클릭하면 확대 또는 축소됩니다"
  }
 };

@@ -144,9 +144,11 @@ function renderMapList() {
 async function openMap(key) {
   const v = await window.coach.guide.map(key); if (!v) return;
   curMap = v.name; renderMapList(); showTab('maps');
-  $('#mapView').innerHTML = `<div class="head">${mapPic(v, 'mapEmblem big')}<h2>${esc(v.name)}</h2>${v.type ? `<span class="tag gold">${esc(G('g.mtype.' + v.type, {}, v.type))}</span>` : ''}</div>
+  const pic = mapPic(v, 'mapEmblem big');
+  $('#mapView').innerHTML = `<div class="head"><h2>${esc(v.name)}</h2>${v.type ? `<span class="tag gold">${esc(G('g.mtype.' + v.type, {}, v.type))}</span>` : ''}${pic.includes('mapThumb') ? `<div class="mapPicWrap">${pic}<span class="picNote">${esc(G('g.mapZoom'))}</span></div>` : pic}</div>
     <div class="actions"><button class="small" data-act="set">${esc(G('g.playingMap'))}</button></div>${ES() ? '' : `<p class="muted small trnote">${esc(G('g.esNote'))}</p>`}${sections(v.sections, 4)}`;
   $('#mapView [data-act]').addEventListener('click', async () => { const r = await window.coach.state.set({ map: v.name }); STATE = r.state || STATE; ctxLine(); renderMapList(); });
+  const big = $('#mapView .mapThumb.big'); if (big) { big.title = G('g.mapZoom'); big.addEventListener('click', () => big.classList.toggle('zoom')); }
 }
 
 /* ------------------------------------------------------------ units & counters */
