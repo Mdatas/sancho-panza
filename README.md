@@ -17,8 +17,11 @@ Read this in: **English** · [Español](README.es.md)
 
 ## Screenshots
 
+<p align="center"><img src="screenshots/ficha.png" width="62%" alt="The match sheet: counters to the units the rival makes, my civ, the rival civ, the map and the suggested builds, all from the data"></p>
+<p align="center"><em>The <strong>match sheet</strong> (default answer mode): what the rival makes and what beats it, the two civs, the map and the builds that fit — built from the data, no AI writing</em></p>
+
 <p align="center"><img src="screenshots/chat.png" width="31%" alt="Chat: the coach answers with a 3-line summary and the detail"> <img src="screenshots/team-counters.png" width="31%" alt="4 v 4 team bar with the counters to each enemy civ"> <img src="screenshots/build-reader.png" width="31%" alt="A guide condensed for the game, with its extracted build"></p>
-<p align="center"><em>Chat with the 3-line summary · the 4 v 4 bar and its counters · a guide condensed “for the game” with “Load steps”</em></p>
+<p align="center"><em>Free chat with the 3-line summary · the 4 v 4 bar and its counters · a guide condensed “for the game” with “Load steps”</em></p>
 
 <p align="center"><img src="screenshots/overlay-compact.png" width="60%" alt="Compact overlay on top of the game: build step, answer, question line"></p>
 <p align="center"><em>The compact overlay (470 × 262) that stays on top of the game: current build step, last answer, question line</em></p>
@@ -50,11 +53,18 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 
 ## How it works
 
+Two answer modes, switched in Settings → Brain (or `/mode`):
+
 ```
- you ──(text or voice)──► app ──► 1. extracts the match facts (civs, age, map, armies, constraints)
-                                  2. picks the relevant knowledge (civ & map profiles, notes, team counters)
-                                  3. asks the AI with tools: counters, civ info, unit stats, eco plan, build orders, note search
-                                  4. answer = 3-line summary + short detail, read aloud
+ Sheet (default) ─ you ──► app ──► 1. reads the match facts from your message (the AI parses it when there is a key; keywords otherwise)
+                                   2. builds the sheet from the data: counters to what they make, your civ, the rival civ, the map, the builds that fit
+                                   3. nothing is written by a model: every line comes from the tech tree, the profiles, the duel maths or the catalogue
+                                   4. "Ask the AI for advice" turns the sheet into a concrete plan when you want one
+
+ Free ─ you ──(text or voice)──► app ──► 1. extracts the match facts (civs, age, map, armies, constraints)
+                                         2. picks the relevant knowledge (civ & map profiles, notes, team counters)
+                                         3. asks the AI with tools: counters, civ info, unit stats, eco plan, build orders, note search
+                                         4. answer = 3-line summary + short detail, read aloud
 ```
 
 * **Game data** (all civs, units, techs, bonuses, costs, armour classes) comes from the official game files as published by [SiegeEngineers/aoe2techtree](https://github.com/SiegeEngineers/aoe2techtree), updated every patch. The AI is told never to quote numbers from memory: it must ask the tools.
@@ -65,7 +75,12 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 
 ## Features
 
-**Chat coach**
+**Match sheet** (default answer mode, v0.22)
+* Every message gets a **sheet built only from the data**: counters to the units named (or to the rival's registered army, or to the rival civ's typical units), **your civ** (strength by age, bonuses, unique unit and techs, what it lacks, the profile's opening for this kind of map), **the rival civ** (the same plus "how to play against it"), **the map** (what wins there, standard openings, timings, the line about your rival's civ) and **suggested builds**: 3 meta step-by-step builds that fit your civ, the map type and the profile's opening — one click loads them into the build panel — plus anti-meta guides for your civ.
+* Deterministic and cheap: with an API key the AI only parses your message (Haiku, ~US$0.0005); without a key a keyword parser does it, so the sheet also works on the web with no key at all.
+* It never ventures a concrete plan by itself: **"Ask the AI for advice"** (or `/advice`) asks the free coach for one, with the sheet in its prompt so the advice cites it instead of starting over. `/sheet` shows the sheet for the current match; it is also posted when a match is detected.
+
+**Chat coach** (free mode)
 * Compact overlay that stays on top of the game (borderless window), or a full window.
 * Answers start with a **3-line summary** (decision · what to make, with numbers · the key fact), then a short detail. The answer is **streamed** while the model writes it, and the summary is read aloud as soon as it is complete.
 * Before the model answers, the app pre-computes the counters to the army you registered ("me tira mangudai") and the team counters, so most questions need fewer tool rounds; the match-fact extraction runs in parallel with the answer.
@@ -99,6 +114,9 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 **Optional match detection**
 * Off by default. If you set your public AoE2 profile, it reads your current match (civs, map, teams) from the community service aoe2companion and fills what you have not typed. Your own input always wins.
 
+**Optional screen reading (OCR, desktop, experimental)**
+* Off by default. Every 10–60 s it captures the game's **resource bar** (wood, food, gold, stone, villagers on each, population, idle villagers, age, game clock), sends only that crop to your AI provider's vision model (Claude Haiku: ~US$0.0003 per reading, about US$0.07 per hour at 15 s) and shows the numbers under the state line. The loaded build's step compares its villager allocation with what the bar says ("+2 🪵 for the step"), the **build clock syncs itself to the game clock**, the age registered moves forward when the bar shows a new one, and the coach gets the fresh numbers in its prompt. *Calibrate* finds the bar on your screen once; readings are skipped while the picture does not change and the loop backs off when the game is not on screen. Needs the game in borderless window and the app visible; on Mac, screen-recording permission.
+
 **Your choice of AI**
 * Claude (Anthropic) by default — the one it was built and tested with.
 * Also OpenAI, Google Gemini, Groq, OpenRouter, NVIDIA NIM, local models (Ollama / LM Studio / llama.cpp / Hermes) or any OpenAI-compatible endpoint. Some have free tiers.
@@ -124,7 +142,7 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 | Update | run the new `Instalar.bat`: it replaces the previous version (settings, key and logs stay) | drag the new app over the old one | automatic on the next load |
 | Uninstall | Settings → Data → *Uninstall…*, or Windows → Installed apps, or `Desinstalar.bat` (asks whether to delete your settings and key too) | Settings → Data → *Uninstall…* shows the app to drag to the Trash and can delete your data | remove the icon; site data in the browser |
 
-**Commands** (or just say it in your question): `/civ franks` · `/vs mongols` · `/age castle` · `/map arabia` · `/elo 1100` · `/allies mayans, britons` · `/enemies mongols, aztecs` · `/counters` · `/bo scouts` · `/n` `/p` · `/guide` · `/repeat` · `/match` · `/patch` · `/new` · `/help`
+**Commands** (or just say it in your question): `/civ franks` · `/vs mongols` · `/age castle` · `/map arabia` · `/elo 1100` · `/allies mayans, britons` · `/enemies mongols, aztecs` · `/counters` · `/sheet` · `/advice` · `/mode sheet|free` · `/bo scouts` · `/n` `/p` · `/guide` · `/repeat` · `/match` · `/patch` · `/new` · `/help`
 
 ---
 

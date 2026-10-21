@@ -30,8 +30,17 @@ se borra de esta lista y queda en las notas de la versión.
   completa cuesta ~US$8–9 en API, así que conviene correrlos por lotes (`--only`, `--tier`).
 
 ## Interfaz
-- **Respuesta estructurada** (resumen de 3 líneas + detalle como campos de una herramienta en vez de texto con `---`):
-  más robusto que el parser actual, pero cambia un flujo que hoy funciona; evaluar con pruebas reales antes.
+- **Respuesta libre como campos de una herramienta** (resumen de 3 líneas + detalle estructurados en vez de texto con `---`):
+  más robusto que el parser actual, pero cambia un flujo que hoy funciona; evaluar con pruebas reales antes. (La **ficha de
+  partida** de la v0.22 ya cubre el caso determinista; esto es para el modo libre.)
+- **Entrada por voz** (hablarle al coach en vez de escribir): hotkey push-to-talk → Groq Whisper (gratis, ~1 s) o Whisper
+  local; el texto reconocido entra como un mensaje más. Pendiente de decidir el proveedor y la privacidad del audio.
+- **Lectura de pantalla (v0.22) — siguientes pasos**: probarla en partidas reales con la UI del juego en 1080p/1440p y
+  escala de HUD distinta de 100 %; leer también la barra de edad/tiempo cuando está separada; detectar el panel de
+  aldeanos ociosos; versión web con `getDisplayMedia`; cortar el ciclo cuando la app está en segundo plano mucho tiempo.
+- **Ficha de partida (v0.22) — siguientes pasos**: mostrar la ficha en la pestaña Guía (hoy vive en el chat); builds
+  sugeridos por rival (hoy: civ + mapa + apertura del perfil); más builds paso a paso de agua, Nomad e híbridos en el
+  catálogo (hoy hay pocos y la ficha cae en guías); contraste de la ficha con el replay cuando exista el lector de replays.
 - **Atajos por defecto**: F10 es el menú del juego en AoE2 DE. Hoy se avisa del choque en Ajustes; cambiar los valores
   por defecto afectaría la costumbre de quien ya los usa.
 - **Claves i18n semánticas** (`g.h.p.6` → `guide.pickCiv`): 418 claves × 7 idiomas; mucho riesgo de romper textos para

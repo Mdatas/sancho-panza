@@ -134,15 +134,37 @@ try {
     check((await frame.locator('#themeList .item').count()) === 24, `${label}: 24 topics listed`);
     check((await frame.locator('#themeView h2').textContent()).length > 3, `${label}: first topic opened`);
     check((await frame.locator('#themeView details.card').count()) >= 5, `${label}: topic shows its sections`);
-    // asking without a key explains what is missing (no network)
+    // ficha mode (default): a question without a key gets the structured sheet from the data, no network
+    await page.click('#tabs button[data-tab="chat"]');
+    await page.fill('#cmd', 'me tira arqueros, estoy en feudal');
+    await page.press('#cmd', 'Enter');
+    await page.waitForSelector('#messages .sheetMsg .sheet', { timeout: 10000 });
+    check((await page.locator('#messages .sheetMsg details.shd.counters').count()) === 1, `${label}: sheet shows the counters block`);
+    check((await page.locator('#messages .sheetMsg details.shd.me').count()) === 1, `${label}: sheet shows my civ block`);
+    check((await page.locator('#messages .sheetMsg [data-shbo]').count()) >= 1, `${label}: sheet offers loadable builds`);
+    check(/Feudal|feudal/.test(await page.textContent('#stateLine')), `${label}: keyword parse set the age`);
+    await page.locator('#messages .sheetMsg details.shd.builds').last().evaluate((d) => (d.open = true)); // folded block: open it like a reader would
+    await page.locator('#messages .sheetMsg [data-shbo]').last().click();
+    await page.waitForTimeout(600);
+    check(/1\//.test(await page.textContent('#boPos')), `${label}: a suggested build loads into the panel`);
+    await page.click('#tabs button[data-tab="chat"]');
+    // free mode: asking without a key explains what is missing (no network)
+    await page.click('#tabs button[data-tab="settings"]');
+    await page.click('#setAnswerMode button[data-v="libre"]');
+    await page.waitForTimeout(200);
     await page.click('#tabs button[data-tab="chat"]');
     await page.fill('#cmd', 'hola');
     await page.press('#cmd', 'Enter');
     await page.waitForTimeout(500);
-    check(/API key/i.test(await page.textContent('#answer')), `${label}: missing-key explanation`);
-    // settings: streaming toggle present and on by default, advanced folded
+    check(/API key/i.test(await page.textContent('#answer')), `${label}: missing-key explanation in free mode`);
+    await page.fill('#cmd', '/modo ficha');
+    await page.press('#cmd', 'Enter');
+    await page.waitForTimeout(300);
+    // settings: streaming toggle present and on by default, advanced folded, sheet mode marked, screen reading hidden on the web
     await page.click('#tabs button[data-tab="settings"]');
     check(await page.$eval('#setStreaming', (e) => e.checked), `${label}: streaming on by default`);
+    check(await page.$eval('#setAnswerMode button[data-v="ficha"]', (b) => b.classList.contains('on')), `${label}: sheet mode marked in settings`);
+    check(!(await page.$eval('#screenBox', (e) => e.offsetParent !== null)), `${label}: screen reading section hidden on the web`);
     check(!(await page.$eval('#advanced', (e) => e.open)), `${label}: advanced section folded`);
     // appearance: taverna by default; the picker switches the page and the guide iframe, and the choice survives a reload
     check((await page.$eval('html', (h) => h.dataset.theme)) === 'taverna', `${label}: tavern theme by default`);

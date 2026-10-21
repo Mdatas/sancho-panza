@@ -1,4 +1,4 @@
-Sancho Panza - Age of Empires 2 Fan Companion v0.21.1 - Mac
+Sancho Panza - Age of Empires 2 Fan Companion v0.22.0 - Mac
 ======================================
 
 Cual bajar: Mac con chip Apple (M1, M2, M3, M4...) -> "mac-arm64". Mac con Intel -> "mac-x64".
@@ -17,3 +17,5 @@ Cual bajar: Mac con chip Apple (M1, M2, M3, M4...) -> "mac-arm64". Mac con Intel
 Tus datos: ~/Library/Application Support/AoE2 Coach (ajustes, logs, builds importados, notas propias).
 La app NO trae ninguna API key: cada usuario pone la suya.
 Codigo, novedades y version web: https://github.com/Mdatas/sancho-panza
+
+Nuevo en v0.22: (1) Ficha de partida, el nuevo modo de respuesta por defecto: cada mensaje recibe una ficha armada solo con los datos (ningun modelo escribe nada): counters a las unidades que nombras (o al ejercito rival registrado, o a las unidades tipicas de la civ rival), tu civ (fuerza por edad, bonos, unidad y tecnologias unicas, lo que no tiene, la apertura del perfil para ese tipo de mapa), la civ rival (lo mismo mas "como se le juega"), el mapa (que gana ahi, aperturas, timings) y builds sugeridos (3 builds meta paso a paso que encajan con tu civ, el mapa y la apertura del perfil, con boton Cargar; mas guias anti-meta de tu civ). Con API key la IA solo interpreta tu mensaje (Haiku, centavos); sin key lo hace un lector de palabras clave. (2) Boton "Pedir consejo a la IA" (o /consejo): el coach libre responde como antes pero con la ficha en el prompt. (3) Ajustes -> Cerebro -> Respuestas del chat: Ficha (datos) / Libre (IA); tambien /modo. (4) Lectura de pantalla (OCR, experimental, apagada por defecto) en Ajustes -> Avanzado: cada 10-60 s lee la barra de recursos del juego con el modelo de vision de tu proveedor (solo sale ese recorte; ~US$0,0003 por lectura con Haiku) y muestra madera/comida/oro/piedra, aldeanos en cada uno, poblacion, ociosos, edad y reloj; el reloj del build se sincroniza solo con el del juego y el paso cargado te dice cuantos aldeanos faltan; "Calibrar" encuentra la barra una vez. Necesita el juego en ventana sin bordes y la app visible. En Mac la lectura de pantalla pide el permiso de Grabacion de pantalla (Ajustes del Sistema -> Privacidad y seguridad).

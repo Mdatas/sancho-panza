@@ -4,7 +4,7 @@
  * Loads the real UI, pokes the renderer and the guide window, checks key handling, prints SMOKE {...} and SMOKE_ERRORS [...], exits 0/1.
  * Lives in test/ (not shipped in the packaged app); main.js requires it only with --smoke.
  */
-async function run({ win, guideWin: getGuideWin, openGuide, brain, settings, getSettings, decryptSecret, log }) {
+async function run({ win, guideWin: getGuideWin, openGuide, brain, settings, getSettings, decryptSecret, log, send = () => {} }) {
   const { app } = require('electron');
   const fs = require('fs');
   const path = require('path');
@@ -73,6 +73,12 @@ async function run({ win, guideWin: getGuideWin, openGuide, brain, settings, get
     await type('qué hago contra mangudai');
     await new Promise((r) => setTimeout(r, 1500));
     probe.answer = await js(`document.getElementById('answer').textContent.slice(0, 160)`);
+    // v0.22: default answer mode is the sheet (ficha) built from the data: blocks, counters for the unit asked, loadable builds
+    probe.sheet = await js(
+      `document.querySelectorAll('#answer .sheet details.shd').length + ' blocks | counters ' + document.querySelectorAll('#answer .sheet details.shd.counters .shc').length + ' | builds ' + document.querySelectorAll('#answer .sheet [data-shbo]').length + ' | ' + (document.querySelector('#answer .sheet .shh') || {}).textContent`
+    );
+    if (!/^[3-6] blocks \| counters [1-9]/.test(probe.sheet)) errors.push('sheet: ' + probe.sheet);
+    await shot('sheet-compact');
     await type('/ayuda');
     probe.help = (await js(`document.getElementById('answer').textContent`)).length;
     await type('/full');
@@ -104,6 +110,9 @@ async function run({ win, guideWin: getGuideWin, openGuide, brain, settings, get
     await new Promise((r) => setTimeout(r, 600));
     probe.stepsLoaded = await js(`document.getElementById('boStep').textContent.slice(0, 80)`);
     await js(`document.querySelector('#tabs button[data-tab="settings"]').click()`);
+    probe.settingsNew = await js(
+      `(document.querySelector('#setAnswerMode button.on') || {}).dataset?.v + ' | screen ' + !!document.getElementById('setScreenRead') + ' ' + document.getElementById('setScreenRead').checked`
+    );
     await shot('settings');
     await js(`(() => { const s = document.getElementById('setProvider'); s.value = 'groq'; s.dispatchEvent(new Event('change')); })()`);
     await new Promise((r) => setTimeout(r, 600));
@@ -119,10 +128,37 @@ async function run({ win, guideWin: getGuideWin, openGuide, brain, settings, get
     probe.navFromCompact = await js(`document.body.classList.contains('full') + ' ' + document.querySelector('#tabs button.active').dataset.tab`);
     await type('/compact');
     await new Promise((r) => setTimeout(r, 300));
+    await type('/modo libre');
     probe.errText = await js(
       `(() => { document.getElementById('cmd').value = 'hola'; document.getElementById('cmd').dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' })); return new Promise(r => setTimeout(() => r(document.getElementById('answer').textContent.slice(0, 120)), 600)); })()`
     );
+    if (!/API key/i.test(probe.errText)) errors.push('free mode without a key must explain the missing key: ' + probe.errText);
     await shot('nokey');
+    await type('/modo ficha');
+    probe.answerMode = settings.get().answerMode;
+    // screen reader: without a key the manual read fails cleanly (the capture itself runs); a reading paints the HUD line and syncs the build clock
+    probe.screenTest = JSON.stringify(await js('window.coach.screen.test()'));
+    if (!/"ok":false/.test(probe.screenTest) || !/key/i.test(probe.screenTest)) errors.push('screen test without key: ' + probe.screenTest);
+    brain.setLive({
+      food: 420,
+      wood: 310,
+      gold: 120,
+      stone: 200,
+      pop: '34/40',
+      idle: 2,
+      villagers: { food: 12, wood: 6, gold: 4, stone: 0 },
+      age: 3,
+      time: '12:30',
+    });
+    send('screen:reading', { reading: brain.live, state: brain.state, line: brain.stateLine(), ageChanged: false });
+    await new Promise((r) => setTimeout(r, 400));
+    probe.hudLine = await js(
+      `document.getElementById('hudLine').classList.contains('hidden') + ' | ' + document.getElementById('hudLine').textContent + ' | clock ' + document.getElementById('boClock').textContent`
+    );
+    if (!/^false \| .*420.*34\/40.*12:30/.test(probe.hudLine) || !/clock ❚❚ 12:3/.test(probe.hudLine)) errors.push('hud line: ' + probe.hudLine);
+    await shot('hud');
+    await js('clockToggle()'); // stop the clock the reading started
+    brain.live = null;
     // visual guide
     openGuide({ civ: 'Franks' });
     await new Promise((r) => setTimeout(r, 2500));

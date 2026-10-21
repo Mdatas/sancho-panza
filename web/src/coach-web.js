@@ -216,6 +216,8 @@ window.coach = {
   },
   chat: {
     ask: RN((text) => core.ask(text, (ev) => emit('chat:event', ev))),
+    advise: RN((text) => core.advise(text, (ev) => emit('chat:event', ev))),
+    sheet: RN((question) => core.sheet(question || '')),
     reset: R(() => core.reset()),
     newGame: R(() => core.newGame()),
     flag: R((c) => core.flag(c)),
@@ -335,6 +337,12 @@ window.coach = {
     onDetected: on('match:detected'),
   },
   logs: { clear: async () => true },
+  screen: {
+    test: async () => ({ ok: false, error: tw('screen.webOnly') }),
+    calibrate: async () => ({ ok: false, error: tw('screen.webOnly') }),
+    status: async () => null,
+    onReading: on('screen:reading'),
+  },
   onHotkey: on('hotkey'),
   onToast: on('toast'),
   onMode: on('mode'),
@@ -365,6 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (el) el.classList.add('desktopOnly');
   };
   ['set.hotkeys', 'set.hkHelp', 'set.window'].forEach((k) => hide(document.querySelector(`[data-i18n="${k}"]`)));
+  hide(document.querySelector('#screenBox'));
   ['#hkAsk', '#setFocusReturn', '#setOpacity', '#setOnTop'].forEach((sel) => {
     const el = document.querySelector(sel);
     hide(el && (el.closest('.grid2') || el.closest('label')));

@@ -6,6 +6,7 @@ const assert = require('assert');
 const { GameData } = require('../src/main/engine/gamedata');
 const { BuildOrders } = require('../src/main/engine/buildorders');
 const { Knowledge } = require('../src/main/engine/knowledge');
+const { Strategy } = require('../src/main/engine/strategy');
 const { Brain } = require('../src/main/brain/brain');
 
 const root = path.join(__dirname, '..', 'data');
@@ -122,6 +123,7 @@ const mockO = http.createServer(async (req, res) => {
     anthropicBaseUrl: `http://127.0.0.1:${mockA.address().port}`,
     anthropicModel: 'claude-sonnet-5-5',
     language: 'auto',
+    answerMode: 'libre', // the free coach answer (the default 'ficha' mode is tested at the end)
     match: {},
   };
   const logs = [];
@@ -204,6 +206,55 @@ const mockO = http.createServer(async (req, res) => {
   brain.newGame();
   assert.strictEqual(brain.state.myCiv, '');
   assert.strictEqual(brain.history.length, 0);
+
+  // ---- v0.22 ficha mode: the structured sheet from the data; the model only parses the message (one extraction call, no answer call)
+  settings.provider = 'anthropic';
+  settings.answerMode = 'ficha';
+  brain.strategy = new Strategy([path.join(root, 'knowledge')]).load();
+  seen.anthropic.length = 0;
+  const f1 = await brain.ask('soy francos vs mongoles en castillos, me tira mangudai', { onEvent: (e) => events.push(e) });
+  assert.strictEqual(f1.kind, 'sheet');
+  assert.strictEqual(seen.anthropic.length, 1, 'ficha: only the extraction call goes to the API');
+  assert.strictEqual(f1.state.myCiv, 'Franks');
+  assert.strictEqual(f1.state.oppCiv, 'Mongols');
+  assert.strictEqual(f1.state.age, 3);
+  assert.strictEqual(f1.sheet.me.name, 'Francos');
+  assert.ok(f1.sheet.opp.against.length > 20, 'opponent block carries "Jugando CONTRA esta civ"');
+  assert.strictEqual(f1.sheet.counters.rows[0].unit_en, 'Mangudai');
+  assert.ok(f1.sheet.counters.rows[0].options.some((o) => o.unit_en === 'Elite Skirmisher'), JSON.stringify(f1.sheet.counters.rows[0].options));
+  assert.ok(f1.text.includes('## Mi civ') && f1.spoken.length > 10);
+  assert.ok(/^ficha\+claude-haiku/.test(f1.model), f1.model);
+  assert.ok(f1.cost > 0, 'the extraction cost is reported');
+  assert.strictEqual(logs[logs.length - 1].type, 'sheet');
+  // without a key the keyword parse fills the state (no API call at all)
+  settings.anthropicApiKey = '';
+  brain.newGame();
+  seen.anthropic.length = 0;
+  const f2 = await brain.ask('britanos contra mayas en arena, estoy en feudal');
+  assert.strictEqual(f2.kind, 'sheet');
+  assert.strictEqual(seen.anthropic.length, 0);
+  assert.deepStrictEqual([f2.state.myCiv, f2.state.oppCiv, f2.state.map, f2.state.age], ['Britons', 'Mayans', 'Arena', 2]);
+  assert.strictEqual(f2.model, 'ficha');
+  assert.strictEqual(f2.sheet.map.type, 'cerrado');
+  assert.ok(f2.sheet.me.openingHere.includes('Arena'), 'the opening line for closed maps');
+  // "pedir consejo": the free answer carries the sheet in its prompt
+  settings.anthropicApiKey = 'sk-test';
+  brain.newGame();
+  await brain.ask('soy francos vs mongoles en castillos, me tira mangudai');
+  seen.anthropic.length = 0;
+  const f3 = await brain.ask('qué hago?', { mode: 'libre', withSheet: true });
+  assert.strictEqual(f3.kind, 'answer');
+  assert.ok(f3.text.includes('Top counter'), f3.text);
+  assert.ok(JSON.stringify(seen.anthropic[1].system).includes('## FICHA'), 'the advice prompt carries the sheet');
+  // live HUD readings: the age only moves forward, the line reaches the prompt while fresh
+  brain.setState({ age: 2 });
+  assert.strictEqual(brain.setLive({ food: 420, wood: 310, gold: 120, stone: 200, pop: '34/40', idle: 2, age: 3, time: '12:30' }), true);
+  assert.strictEqual(brain.state.age, 3);
+  assert.strictEqual(brain.setLive({ food: 500, wood: 300, gold: 100, stone: 200, age: 2, time: '12:45' }), false);
+  assert.strictEqual(brain.state.age, 3);
+  assert.ok(brain.keyData('x').startsWith('LIVE HUD'));
+  brain.live.at -= 10 * 60 * 1000;
+  assert.ok(!brain.keyData('x').includes('LIVE HUD'), 'a stale reading is not shown to the model');
   console.log('brain tests passed');
   mockA.close();
   mockO.close();

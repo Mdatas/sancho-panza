@@ -11,6 +11,8 @@ contextBridge.exposeInMainWorld('coach', {
   settings: { get: () => ipcRenderer.invoke('settings:get'), set: (patch) => ipcRenderer.invoke('settings:set', patch), onChange: on('settings:changed') },
   chat: {
     ask: (text) => ipcRenderer.invoke('chat:ask', { text }),
+    advise: (text) => ipcRenderer.invoke('chat:advise', { text }),
+    sheet: (question) => ipcRenderer.invoke('chat:sheet', { question }),
     reset: () => ipcRenderer.invoke('chat:reset'),
     newGame: () => ipcRenderer.invoke('chat:newGame'),
     flag: (comment) => ipcRenderer.invoke('chat:flag', comment),
@@ -67,6 +69,12 @@ contextBridge.exposeInMainWorld('coach', {
     onDetected: on('match:detected'),
   },
   logs: { clear: () => ipcRenderer.invoke('logs:clear') },
+  screen: {
+    test: () => ipcRenderer.invoke('screen:test'),
+    calibrate: () => ipcRenderer.invoke('screen:calibrate'),
+    status: () => ipcRenderer.invoke('screen:status'),
+    onReading: on('screen:reading'),
+  },
   onHotkey: on('hotkey'),
   onToast: on('toast'),
   onMode: on('mode'),

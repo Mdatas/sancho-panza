@@ -473,3 +473,10 @@ html[data-theme="taverna-night"] body { color: #e8d5aa; }
 html[data-theme="taverna-night"] .messages, html[data-theme="taverna-night"] .answer, html[data-theme="taverna-night"] .bostep, html[data-theme="taverna-night"] .boreader, html[data-theme="taverna-night"] .card, html[data-theme="taverna-night"] .lu, html[data-theme="taverna-night"] .ucard, html[data-theme="taverna-night"] .modal .mbox, html[data-theme="taverna-night"] .civPick, html[data-theme="taverna-night"] .toast, html[data-theme="taverna-night"] #inputRow, html[data-theme="taverna-night"] .bocard, html[data-theme="taverna-night"] .banner, html[data-theme="taverna-night"] .tbhint, html[data-theme="taverna-night"] .tcPanel, html[data-theme="taverna-night"] .omniOut, html[data-theme="taverna-night"] #tab-settings, html[data-theme="taverna-night"] #tab-bo, html[data-theme="taverna-night"] .view, html[data-theme="taverna-night"] .pad { color: var(--text); }
 html[data-theme="taverna-night"] #tab-settings, html[data-theme="taverna-night"] #tab-bo, html[data-theme="taverna-night"] .view, html[data-theme="taverna-night"] .tab.pad { background: var(--parch), var(--panel); }
 html[data-theme="taverna-night"] body.full #tab-settings, html[data-theme="taverna-night"] body.full #tab-bo { margin: 0 10px 10px; border: 1px solid var(--border2); border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35), var(--shadow); }
+
+/* v0.22: ficha cards follow the theme's card surfaces */
+.sheet details.shd { background: var(--card2, var(--panel)); border-color: var(--border2); }
+html[data-theme^="taverna"] .sheet details.shd { border-radius: 3px; box-shadow: 0 2px 5px rgba(40,25,10,.15); }
+html[data-theme^="taverna"] .sheet details.shd > summary { font-family: var(--display); letter-spacing: .02em; }
+html[data-theme^="taverna"] .sheet .shtag { background: var(--gold-soft); color: var(--strong, var(--gold)); }
+html[data-theme="taverna-night"] .hudLine { color: var(--text); }

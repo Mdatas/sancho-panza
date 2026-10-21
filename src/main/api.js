@@ -23,7 +23,25 @@ function createCore({ ctx, userBuildDir, knowledgeDirs, uiLanguage = () => 'es',
       .map((c) => ({ key: c.key, name_en: c.name_en, name_es: c.name_es }))
       .sort((a, b) => a.name_en.localeCompare(b.name_en));
 
-  return {
+  /** Lazy data for the sheet (ficha): the build catalog and the civ stats, both cached. */
+  const sheetArgs = () => ({ getCatalog: () => api.boCatalog(), getStats: () => civStats() });
+  const packAnswer = (r, t0) => ({
+    ok: true,
+    kind: r.kind || 'answer',
+    id: r.id,
+    text: r.text,
+    sheet: r.sheet || null,
+    spoken: r.spoken || '',
+    model: r.model,
+    cost: r.cost,
+    totals: r.totals,
+    tools: (r.toolLog || []).map((t) => t.name),
+    state: r.state,
+    stateLine: r.stateLine,
+    ms: Date.now() - t0,
+  });
+
+  const api = {
     /** Drop everything derived from the data (after a dataset sync, a new patch note or a build import). */
     invalidate() {
       civStatsCache = null;
@@ -31,25 +49,36 @@ function createCore({ ctx, userBuildDir, knowledgeDirs, uiLanguage = () => 'es',
     },
 
     // ---- chat
-    async ask(text, onEvent) {
+    /** One message → the sheet (answerMode 'ficha', default) or the coach answer ('libre'); opts.mode forces one. */
+    async ask(text, onEvent, opts = {}) {
       const { brain } = ctx();
       const t0 = Date.now();
       try {
-        const r = await brain.ask(text, { onEvent });
-        return {
-          ok: true,
-          id: r.id,
-          text: r.text,
-          model: r.model,
-          cost: r.cost,
-          totals: r.totals,
-          tools: r.toolLog.map((t) => t.name),
-          state: r.state,
-          stateLine: r.stateLine,
-          ms: Date.now() - t0,
-        };
+        const r = await brain.ask(text, { onEvent, ...sheetArgs(), ...opts });
+        return packAnswer(r, t0);
       } catch (e) {
         log('ask error', e.message);
+        return { ok: false, error: e.message };
+      }
+    },
+    /** "Pedir consejo": the free coach answer, built on the sheet the player just saw (needs an AI provider). */
+    advise(text, onEvent) {
+      const { brain } = ctx();
+      const s = brain.getSettings();
+      const q =
+        (text && String(text).trim()) ||
+        ((s.language && s.language !== 'auto' ? s.language : s.uiLanguage) === 'es'
+          ? 'Dame un consejo concreto para esta partida a partir de la ficha: qué hacer en los próximos 2 minutos.'
+          : 'Give me concrete advice for this match from the sheet: what to do in the next 2 minutes.');
+      return api.ask(q, onEvent, { mode: 'libre', withSheet: true });
+    },
+    /** The sheet for the current state without a question (new game, detected match, /ficha). */
+    sheet(question = '') {
+      const { brain } = ctx();
+      try {
+        return { ok: true, ...brain.sheetNow({ question, ...sheetArgs() }) };
+      } catch (e) {
+        log('sheet error', e.message);
         return { ok: false, error: e.message };
       }
     },
@@ -223,6 +252,7 @@ function createCore({ ctx, userBuildDir, knowledgeDirs, uiLanguage = () => 'es',
       return { ok: true, filled, state: brain.state, line: brain.stateLine() };
     },
   };
+  return api;
 }
 
 module.exports = { createCore, GUIDE_TOOLS };

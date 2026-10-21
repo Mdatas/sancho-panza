@@ -195,6 +195,7 @@ function addMsg(kind, text, meta) {
 /** Buttons for the things people do most, shown with the welcome and after /nueva (they cost no permanent space in the overlay). */
 function quickChips() {
   const items = [
+    ['sheet', 'chip.sheet'],
     ['counters', 'chip.counters'],
     ['bo', 'chip.bo'],
     ['guide', 'chip.guide'],
@@ -512,8 +513,33 @@ async function runCommand(line) {
     case 'ayuda':
     case 'help':
     case '?':
-      sysNotice(L.help.replace(/\n/g, '<br>'));
+      sysNotice(L.help.replace(/\n/g, '<br>') + '<br>' + tr('help.sheet'));
       return true;
+    case 'ficha':
+    case 'sheet': {
+      const r = await window.coach.chat.sheet(arg);
+      if (!r.ok) {
+        toast(r.error, 'err');
+        return true;
+      }
+      state = r.state;
+      renderState();
+      showSheet(arg || tr('sheet.title'), r);
+      return true;
+    }
+    case 'consejo':
+    case 'advice':
+    case 'advise':
+      await ask(arg, { advise: true });
+      return true;
+    case 'modo':
+    case 'mode': {
+      const v = /^(libre|free|ia|ai)$/i.test(arg) ? 'libre' : /^(ficha|sheet|datos|data)$/i.test(arg) ? 'ficha' : sheetMode() ? 'libre' : 'ficha';
+      await save({ answerMode: v });
+      renderAnswerMode();
+      ok(tr('mode.changed', { mode: tr(v === 'ficha' ? 'mode.ficha' : 'mode.libre') }));
+      return true;
+    }
     case 'log':
     case 'logs':
       window.coach.app.openLogs();
@@ -577,23 +603,275 @@ async function runCommand(line) {
   }
 }
 
+/* ----------------------------------------------------------------- ficha (structured answer built from the data) */
+const RES_ICON = { food: '🍖', wood: '🪵', gold: '🪙', stone: '🪨' };
+const SHEETS = new Map(); // sheet id → sheet data (the buttons inside a rendered sheet look their data up here)
+let sheetSeq = 0;
+const sheetMode = () => (S.answerMode || 'ficha') === 'ficha';
+/** Spanish profile text gets a marker so one click can translate every such span in a sheet (guide.translate). */
+const shtr = (text) => `<span class="shtr">${md(text)}</span>`;
+function sheetCivHtml(c, sh) {
+  const uiEs = (S.uiLanguage || 'es') === 'es';
+  const rows = [];
+  const row = (label, body) => body && rows.push(`<div class="shl"><b>${esc(label)}:</b> ${body}</div>`);
+  row(tr('sheet.strength'), c.strength ? shtr(c.strength) : '');
+  if (c.bonuses.length) row(tr('sheet.bonuses'), `<ul>${c.bonuses.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>`);
+  row(tr('sheet.teamBonus'), c.teamBonus ? esc(c.teamBonus) : '');
+  if (c.uniqueUnits.length)
+    row(
+      tr('sheet.uu'),
+      c.uniqueUnits
+        .map(
+          (u) =>
+            `${unitIcon(u.en)} <b>${esc(u.name)}</b>${
+              u.cost
+                ? ` <span class="muted small">${esc(
+                    Object.entries(u.cost)
+                      .map(([k, v]) => `${v}${RES_ICON[k.toLowerCase()] || k[0]}`)
+                      .join(' ')
+                  )}</span>`
+                : ''
+            }`
+        )
+        .join(', ') + (c.uniqueUnitText ? ' — ' + shtr(c.uniqueUnitText) : '')
+    );
+  if (c.uniqueTechs.length)
+    row(
+      tr('sheet.ut'),
+      c.uniqueTechs
+        .map((t) => `<b>${esc(t.name)}</b>${t.text ? ` <span class="muted">(${esc(t.text.replace(/^[^(]*\((.*)\)$/, '$1'))})</span>` : ''}`)
+        .join(' · ')
+    );
+  const miss = [...c.missingUnits.map((x) => (uiEs ? x : x.replace(/\s*\(.*\)$/, ''))), ...c.missingTechs];
+  if (miss.length) row(tr('sheet.missing'), esc(miss.slice(0, 10).join(', ')) + (miss.length > 10 ? ` <span class="muted">+${miss.length - 10}</span>` : ''));
+  if (c.openingHere) row(tr('sheet.opening'), shtr(c.openingHere));
+  else if (c.openings.length) row(tr('sheet.opening'), `<ul>${c.openings.map((o) => `<li>${shtr(o)}</li>`).join('')}</ul>`);
+  if (c.role === 'opp' && c.against) row(tr('sheet.against'), shtr(c.against));
+  const more = [];
+  const mrow = (label, body) => body && more.push(`<div class="shl"><b>${esc(label)}:</b> ${shtr(body)}</div>`);
+  if (c.role !== 'opp') {
+    mrow(tr('sheet.compositions'), c.compositions);
+    mrow(tr('sheet.castle'), c.castlePlan);
+    mrow(tr('sheet.imperial'), c.imperialPlan);
+  } else mrow(tr('sheet.compositions'), c.compositions);
+  mrow(tr('sheet.mistakes'), c.mistakes);
+  const lineup = Object.entries(c.lineup || {})
+    .map(([b, us]) => `<li><b>${esc(b)}</b>: ${us.map((u) => `${unitIcon(u.en)}${esc(u.name)}`).join(', ')}</li>`)
+    .join('');
+  if (lineup) more.push(`<div class="shl"><b>${esc(tr('sheet.lineup'))}:</b><ul>${lineup}</ul></div>`);
+  const stats = c.stats ? ` <span class="muted small">· ${esc(tr('sheet.stats', { wr: c.stats.wr, tier: c.stats.tier }))}</span>` : '';
+  const title = `${civIcon(c.key)} ${esc(tr('sheet.' + (c.role === 'subject' ? 'civ' : c.role)))}: <b>${esc(c.name)}</b>${c.style ? ` <i class="muted">(${esc(c.style)})</i>` : ''}${stats}`;
+  return {
+    title,
+    body:
+      rows.join('') +
+      (c.derived ? `<div class="muted small">${esc(tr('sheet.derived'))}</div>` : '') +
+      (more.length ? `<details class="shm"><summary>${esc(tr('sheet.more'))}</summary>${more.join('')}</details>` : ''),
+  };
+}
+function sheetMapHtml(m, sh) {
+  const rows = [];
+  const row = (label, body) => body && rows.push(`<div class="shl"><b>${esc(label)}:</b> ${shtr(body)}</div>`);
+  row(tr('sheet.mapWins'), m.wins);
+  row(tr('sheet.mapOpenings'), m.openings);
+  row(tr('sheet.mapTimings'), m.timings);
+  if (m.vsLine && sh.opp) row(tr('sheet.mapVs', { civ: sh.opp.name }), m.vsLine);
+  const more = [];
+  const mrow = (label, body) => body && more.push(`<div class="shl"><b>${esc(label)}:</b> ${shtr(body)}</div>`);
+  mrow(tr('sheet.mapWalls'), m.walls);
+  mrow(tr('sheet.mapRes'), m.resources);
+  mrow(tr('sheet.mapCivs'), m.civs);
+  mrow(tr('sheet.mistakes'), m.mistakes);
+  if (!m.vsLine) mrow(tr('sheet.mapVs', { civ: '…' }).replace(' …', ''), m.vsCiv);
+  const pic = IMG.maps && IMG.maps[m.name] ? `<img class="shmap" src="${esc(IMG.base + IMG.maps[m.name])}" alt="">` : '';
+  return {
+    title: `${esc(tr('sheet.map'))}: <b>${esc(m.name)}</b>${m.type ? ` <i class="muted">(${esc(m.type)})</i>` : ''}`,
+    body: pic + rows.join('') + (more.length ? `<details class="shm"><summary>${esc(tr('sheet.more'))}</summary>${more.join('')}</details>` : ''),
+  };
+}
+function sheetCountersHtml(c, sh) {
+  const src = c.from === 'threats' && sh.opp ? tr('sheet.fromThreats', { civ: sh.opp.name }) : c.from === 'army' ? tr('sheet.fromArmy') : '';
+  const note = [src, c.ageAssumed ? tr('sheet.ageAssumed', { age: L.ages[c.age] }) : L.ages[c.age]].filter(Boolean).join(' · ');
+  const rows = c.rows
+    .map(
+      (r) =>
+        `<div class="shc">${esc(tr('sheet.vs', {}, 'vs'))} ${unitIcon(r.unit_en)}<b>${esc(r.unit)}</b> → ${
+          r.noCiv
+            ? `<span class="muted">${esc(tr('sheet.noCiv'))}</span>`
+            : r.options.length
+              ? r.options
+                  .map(
+                    (o) =>
+                      `<span class="opt" title="${esc(o.note || '')}${o.kited ? ' (kited)' : ''}">${unitIcon(o.unit_en)}${esc(o.unit)} <i>${o.score}</i>${o.note ? `<small>${esc(o.note)}</small>` : ''}</span>`
+                  )
+                  .join(' · ')
+              : `<span class="muted">${esc(tr('sheet.noAnswer'))}</span>`
+        }</div>`
+    )
+    .join('');
+  return { title: `${esc(tr('sheet.counters'))} <span class="muted small">· ${esc(note)}</span>`, body: rows };
+}
+function sheetBuildsHtml(b, sh) {
+  const civKeyOf = (n) => {
+    const c = civs.find((x) => x.name_en === n || x.name_es === n || x.key === n);
+    return c ? c.key : '';
+  };
+  const why = (x) =>
+    x.why.length
+      ? x.why
+          .map((w) => tr(w === 'civ' ? 'sheet.whyCiv' : w === 'map' ? 'sheet.whyMap' : 'sheet.whyOpening'))
+          .filter((v, i, a) => a.indexOf(v) === i)
+          .join(', ')
+      : tr('sheet.generic');
+  const card = (x) =>
+    `<div class="shb tier-${esc(x.tier)}"><div class="t">${x.civs
+      .filter((c) => c !== 'Any')
+      .slice(0, 2)
+      .map((c) => civIcon(civKeyOf(c), 'cico sm'))
+      .join(
+        ''
+      )}${esc(x.title)}${x.tier !== 'meta' ? ` <span class="tag ${x.tier === 'meme' ? 'bad' : 'warn'}">${TIER_LABEL[x.tier]}</span>` : ''}</div><div class="s"><span class="muted">${esc(
+      [x.types.slice(0, 2).join(', '), x.author, x.feudalPop ? `${x.feudalPop} pop` : x.steps ? `${x.steps} ${tr('bo.steps')}` : ''].filter(Boolean).join(' · ')
+    )} · <i>${esc(why(x))}</i></span>${
+      x.kind === 'steps'
+        ? `<button class="small" data-shbo="${esc(x.id)}">${esc(tr('sheet.load'))}</button>`
+        : `<button class="ghost small" data-shguide="${esc(x.id)}">${esc(tr('sheet.open'))}</button>`
+    }</div></div>`;
+  return {
+    title: esc(tr('sheet.builds')),
+    body: b.steps.map(card).join('') + (b.guides.length ? `<div class="shg">${esc(tr('sheet.guides'))}</div>${b.guides.map(card).join('')}` : ''),
+  };
+}
+function sheetHtml(sh, { compact = false, extracted = false } = {}) {
+  const id = 's' + ++sheetSeq;
+  SHEETS.set(id, sh);
+  if (SHEETS.size > 30) SHEETS.delete(SHEETS.keys().next().value);
+  const head = [];
+  if (sh.me) head.push(`${civIcon(sh.me.key)}${esc(sh.me.name)}`);
+  if (sh.opp) head.push(`vs ${civIcon(sh.opp.key)}${esc(sh.opp.name)}`);
+  if (sh.map) head.push(esc(sh.map.name));
+  if (sh.state.age) head.push(esc(L.ages[sh.state.age] || ''));
+  if (sh.state.elo) head.push('ELO ' + esc(sh.state.elo));
+  const missing = sh.missing.filter((k) => k !== 'elo' || !sh.me).map((k) => tr('sheet.missing.' + k));
+  const blocks = [];
+  const add = (key, b) => b && blocks.push({ key, ...b });
+  const order =
+    sh.focus === 'counters'
+      ? ['counters', 'subject', 'opp', 'me', 'map', 'builds']
+      : sh.focus === 'opp'
+        ? ['opp', 'counters', 'me', 'map', 'builds']
+        : sh.focus === 'map'
+          ? ['map', 'me', 'opp', 'counters', 'builds']
+          : sh.focus === 'builds'
+            ? ['builds', 'me', 'map', 'opp', 'counters']
+            : sh.subject
+              ? ['subject', 'me', 'opp', 'map', 'counters', 'builds']
+              : ['me', 'opp', 'map', 'counters', 'builds'];
+  for (const k of order) {
+    if (k === 'me' && sh.me) add('me', sheetCivHtml(sh.me, sh));
+    if (k === 'opp' && sh.opp) add('opp', sheetCivHtml(sh.opp, sh));
+    if (k === 'subject' && sh.subject) add('subject', sheetCivHtml(sh.subject, sh));
+    if (k === 'map' && sh.map) add('map', sheetMapHtml(sh.map, sh));
+    if (k === 'counters' && sh.counters && sh.counters.rows.length) add('counters', sheetCountersHtml(sh.counters, sh));
+    if (k === 'builds' && sh.builds && !sh.builds.none) add('builds', sheetBuildsHtml(sh.builds, sh));
+  }
+  const canAdvise = hasKey();
+  const canTranslate = (S.uiLanguage || 'es') !== 'es' && hasKey();
+  return (
+    `<div class="sheet" data-sheet="${id}">` +
+    `<div class="shh"><span class="shtag">${esc(tr('sheet.title'))}</span> ${head.join(' · ') || `<span class="muted">${esc(tr('sheet.hint'))}</span>`}${
+      missing.length && head.length ? ` <span class="muted small">· ${esc(tr('sheet.missingState', { list: missing.join(', ') }))}</span>` : ''
+    }</div>` +
+    blocks
+      .map(
+        (b, i) =>
+          `<details class="shd ${b.key}"${i === 0 || (!compact && i === 1) ? ' open' : ''}><summary>${b.title}</summary><div class="shb-body">${b.body}</div></details>`
+      )
+      .join('') +
+    `<div class="shf">${canAdvise ? `<button class="small" data-shadvise="${id}">💡 ${esc(tr('sheet.advise'))}</button>` : `<span class="muted small">${esc(tr('sheet.adviseNoKey'))}</span>`}${
+      canTranslate ? `<button class="ghost small" data-shtr="${id}">🌐 ${esc(tr('g.translate'))}</button>` : ''
+    }<span class="muted small shmode">${esc(extracted ? tr('sheet.extracted') : tr('sheet.mode'))}</span></div></div>`
+  );
+}
+/** Show a sheet as the answer to `q` (compact box + chat history) and read its summary aloud. */
+function showSheet(q, r, meta = '') {
+  lastAnswerText = r.spoken || '';
+  const extracted = /^ficha\+/.test(r.model || '');
+  showAnswer({ q, html: sheetHtml(r.sheet, { compact: true, extracted }), cls: 'a', meta, speakText: r.spoken || '' });
+  const el = document.createElement('div');
+  el.className = 'msg assistant sheetMsg';
+  el.innerHTML = (r.spoken ? replayBtn(r.spoken) : '') + sheetHtml(r.sheet, { extracted });
+  if (meta) {
+    const m = document.createElement('span');
+    m.className = 'meta';
+    m.textContent = meta;
+    el.appendChild(m);
+  }
+  const box = $('#messages');
+  box.appendChild(el);
+  box.scrollTop = box.scrollHeight;
+  if (r.spoken && S.voiceOut !== false && S.ttsEngine !== 'off') speak(r.spoken);
+}
+// buttons inside a sheet: load a build into the panel, open a guide in the catalog, ask the AI, translate the Spanish bits
+document.addEventListener('click', async (e) => {
+  const t = e.target.closest && e.target.closest('[data-shbo],[data-shguide],[data-shadvise],[data-shtr]');
+  if (!t) return;
+  e.preventDefault();
+  if (t.dataset.shbo) {
+    await selectBo(t.dataset.shbo);
+    if (document.body.classList.contains('full')) {
+      showTab('bo');
+      $('#boStep').scrollIntoView({ block: 'nearest' });
+    }
+  } else if (t.dataset.shguide) {
+    setMode(false);
+    showTab('bo');
+    await renderCatalog();
+    openCatalogEntry(t.dataset.shguide);
+    const r = $('#boReader');
+    if (r) r.scrollIntoView({ block: 'nearest' });
+  } else if (t.dataset.shadvise) {
+    ask('', { advise: true });
+  } else if (t.dataset.shtr) {
+    const root = t.closest('.sheet');
+    const spans = [...root.querySelectorAll('.shtr')];
+    if (!spans.length) return;
+    t.disabled = true;
+    t.textContent = '… ' + tr('g.translating');
+    const SEP = '\n@@@\n';
+    const r = await window.coach.guide.translate({ text: spans.map((s) => s.textContent).join(SEP), lang: S.uiLanguage || 'en' });
+    const parts = r && r.ok ? r.text.split(/\n?@@@\n?/) : [];
+    if (parts.length === spans.length) {
+      spans.forEach((s, i) => (s.innerHTML = md(parts[i].trim())));
+      t.remove();
+    } else {
+      t.disabled = false;
+      t.textContent = '⚠ ' + tr('g.trFail');
+      t.title = (r && r.error) || '';
+    }
+  }
+});
+
 /* ----------------------------------------------------------------- ask */
-async function ask(text) {
+/** One message to the coach. opts.advise: "pedir consejo" (free answer built on the sheet, needs an AI provider). */
+async function ask(text, { advise = false } = {}) {
   text = (text || '').trim();
-  if (!text || busy) return;
-  if (text.startsWith('/')) {
+  if ((!text && !advise) || busy) return;
+  if (!advise && text.startsWith('/')) {
     await runCommand(text);
     return;
   }
-  if (S.provider === 'anthropic' && !S.anthropicApiKey) {
+  const ficha = !advise && sheetMode();
+  if (!ficha && S.provider === 'anthropic' && !S.anthropicApiKey) {
     showAnswer({ q: text, html: explainError('No Claude API key set'), cls: 'err' });
     wireLinks($('#answer'));
     return;
   }
+  const shown = advise ? '💡 ' + (text || tr('sheet.consejoQ')) : text;
   busy = true;
   stopSpeaking();
-  showAnswer({ q: text, html: `<span class="muted">${esc(L.busy.thinking)}</span>`, cls: 'a' });
-  addMsg('user', text);
+  showAnswer({ q: shown, html: `<span class="muted">${esc(L.busy.thinking)}</span>`, cls: 'a' });
+  addMsg('user', shown);
   setBusy(L.busy.thinking);
   // live view: the answer is shown (and the 3-line summary read aloud) while the model is still writing the detail
   let live = '';
@@ -601,7 +879,7 @@ async function ask(text) {
   let liveEl = null;
   const paintLive = () => {
     const html = answerHtml(live);
-    showAnswer({ q: text, html, cls: 'a' });
+    showAnswer({ q: shown, html, cls: 'a' });
     if (document.body.classList.contains('full')) {
       if (!liveEl) {
         liveEl = document.createElement('div');
@@ -617,7 +895,7 @@ async function ask(text) {
     }
   };
   const off = window.coach.chat.onEvent((ev) => {
-    if (ev.type === 'tool') setBusy((L.tool[ev.name] || ev.name) + '…');
+    if (ev.type === 'tool') setBusy((L.tool[ev.name] || tr('tool.' + ev.name, {}, ev.name)) + '…');
     if (ev.type === 'round') {
       live = ''; // a new round starts (tool results are in): whatever text the model wrote before was not the answer
     }
@@ -631,20 +909,18 @@ async function ask(text) {
       renderState();
     }
   });
-  const r = await window.coach.chat.ask(text);
+  const r = advise ? await window.coach.chat.advise(text) : await window.coach.chat.ask(text);
   off();
   if (liveEl) liveEl.remove();
   setBusy('');
   busy = false;
   if (!r.ok) {
     const h = explainError(r.error);
-    showAnswer({ q: text, html: h, cls: 'err' });
+    showAnswer({ q: shown, html: h, cls: 'err' });
     wireLinks($('#answer'));
     addMsg('error', r.error);
     return;
   }
-  if (!S.keyOk) save({ keyOk: true });
-  lastAnswerText = r.text || '';
   state = r.state;
   renderState();
   const tools = (r.tools || [])
@@ -653,7 +929,14 @@ async function ask(text) {
     .filter((v, i, a) => a.indexOf(v) === i)
     .join(', ');
   const meta = `${tools ? tools + ' · ' : ''}${(r.ms / 1000).toFixed(1)}s${r.cost ? ` · $${r.cost.toFixed(3)} (${tr('session')} $${r.totals.cost.toFixed(2)})` : ''}`;
-  showAnswer({ q: text, html: answerHtml(r.text || '…'), meta, speakText: r.text || '' });
+  if (r.kind === 'sheet') {
+    if (r.cost && !S.keyOk) save({ keyOk: true }); // the extraction worked: the key is good
+    showSheet(shown, r, meta);
+    return;
+  }
+  if (!S.keyOk) save({ keyOk: true });
+  lastAnswerText = r.text || '';
+  showAnswer({ q: shown, html: answerHtml(r.text || '…'), meta, speakText: r.text || '' });
   addMsg('assistant', r.text || '…', meta);
   if (!spokeEarly && S.voiceOut !== false && S.ttsEngine !== 'off') speak(spokenText(r.text));
 }
@@ -1048,6 +1331,11 @@ async function loadSettings() {
   $('#setExpPrivacy').checked = S.experimentalPrivacy === true;
   $('#setExpCache').checked = S.experimentalCache !== false;
   $('#setStreaming').checked = S.streaming !== false;
+  renderAnswerMode();
+  if ($('#setScreenRead')) {
+    $('#setScreenRead').checked = S.screenRead === true;
+    $('#setScreenInterval').value = String(Number(S.screenReadInterval) || 15);
+  }
   $('#expPrivacyBox').classList.toggle('hidden', S.experimentalPrivacy !== true);
   $('#setMatchDetect').checked = S.matchDetect === true;
   $('#setPatchWatch').checked = S.patchWatch !== false;
@@ -1060,6 +1348,10 @@ async function loadSettings() {
 async function save(patch) {
   S = await window.coach.settings.set(patch);
   return S;
+}
+function renderAnswerMode() {
+  const mode = S.answerMode || 'ficha';
+  $$('#setAnswerMode button').forEach((b) => b.classList.toggle('on', b.dataset.v === mode));
 }
 function onProviderChange() {
   renderProvInfo();
@@ -1123,6 +1415,12 @@ function bindSettings() {
     b.addEventListener('click', async () => {
       await save({ theme: b.dataset.v });
       applyTheme(S.theme);
+    })
+  );
+  $$('#setAnswerMode button').forEach((b) =>
+    b.addEventListener('click', async () => {
+      await save({ answerMode: b.dataset.v });
+      renderAnswerMode();
     })
   );
   bind('#setTtsEngine', 'ttsEngine');
@@ -1252,8 +1550,103 @@ function renderHkWarn() {
   el.textContent = msgs.join(' ');
   el.classList.toggle('hidden', !msgs.length);
 }
+/* ----------------------------------------------------------------- live HUD (screen reader, desktop opt-in) */
+let hud = null;
+function hudText(r) {
+  const n = (v) => (v == null ? '?' : v);
+  const parts = [`🍖${n(r.food)}`, `🪵${n(r.wood)}`, `🪙${n(r.gold)}`, `🪨${n(r.stone)}`];
+  if (r.pop) parts.push(`👤${r.pop}`);
+  if (r.idle) parts.push(tr('hud.idle', { n: r.idle }));
+  if (r.age) parts.push(L.ages[r.age] || '');
+  if (r.time) parts.push('⏱' + r.time);
+  return parts.filter(Boolean).join(' · ');
+}
+function renderHud() {
+  const el = $('#hudLine');
+  if (!el) return;
+  if (!hud || Date.now() - hud.at > 120000) {
+    el.classList.add('hidden');
+    return;
+  }
+  const n = (v) => (v == null ? '?' : v);
+  const parts = ['food', 'wood', 'gold', 'stone'].map(
+    (k) =>
+      `<span>${RES_ICON[k]}<b>${n(hud[k])}</b>${hud.villagers && hud.villagers[k] != null ? `<small class="muted">·${hud.villagers[k]}</small>` : ''}</span>`
+  );
+  if (hud.pop) parts.push(`<span>👤<b>${esc(hud.pop)}</b></span>`);
+  if (hud.idle) parts.push(`<span class="idle">${esc(tr('hud.idle', { n: hud.idle }))}</span>`);
+  // the loaded build's current step: villagers per resource still missing (rtsbuilds "resources" = villagers on each resource)
+  if (bo.current && hud.villagers) {
+    const r = bo.current.build_order[bo.step].resources || {};
+    const need = ['food', 'wood', 'gold', 'stone']
+      .filter((k) => Number(r[k]) > 0 && hud.villagers[k] != null && Number(r[k]) > hud.villagers[k])
+      .map((k) => `+${Number(r[k]) - hud.villagers[k]}${RES_ICON[k]}`);
+    parts.push(`<span class="need">${esc(need.length ? tr('hud.needs', { list: need.join(' ') }) : tr('hud.onTrack'))}</span>`);
+  }
+  if (hud.age) parts.push(`<span>${esc(L.ages[hud.age] || '')}</span>`);
+  if (hud.time) parts.push(`<span>⏱<b>${esc(hud.time)}</b></span>`);
+  el.innerHTML = parts.join('');
+  el.title = tr('hud.title', { s: Math.round((Date.now() - hud.at) / 1000) });
+  el.classList.remove('hidden');
+}
+/** The game clock read from the HUD drives the build clock: start it (or re-sync it) at that time. */
+function syncClockTo(timeStr, at) {
+  const sec = parseTime(timeStr);
+  if (sec == null || !bo.current) return;
+  const now = sec + (Date.now() - at) / 1000;
+  const drift = Math.abs(clockElapsed() - now);
+  if (clock.running && drift < 4) return;
+  clock.base = now;
+  clock.startedAt = Date.now();
+  if (!clock.running) {
+    clock.running = true;
+    clock.timer = setInterval(clockTick, 500);
+  }
+  renderClock();
+}
+setInterval(renderHud, 15000);
+
 function bindExtras() {
   $('#setMatchDetect').addEventListener('change', (e) => save({ matchDetect: e.target.checked }));
+  if ($('#setScreenRead')) {
+    $('#setScreenRead').addEventListener('change', async (e) => {
+      await save({ screenRead: e.target.checked });
+      if (e.target.checked && !hasKey()) toast(tr('screen.noKey'), 'warn');
+      else toast(e.target.checked ? tr('screen.on', { n: Number(S.screenReadInterval) || 15 }) : tr('screen.off'));
+    });
+    $('#setScreenInterval').addEventListener('change', (e) => save({ screenReadInterval: Number(e.target.value) || 15 }));
+    const screenRun = async (fn) => {
+      const out = $('#screenTestOut'),
+        prev = $('#screenPreview');
+      out.textContent = tr('screen.reading');
+      prev.classList.add('hidden');
+      $('#btnScreenTest').disabled = $('#btnScreenCalibrate').disabled = true;
+      const r = await fn();
+      $('#btnScreenTest').disabled = $('#btnScreenCalibrate').disabled = false;
+      if (r && r.crop) {
+        prev.innerHTML = `<img src="data:image/jpeg;base64,${r.crop}" alt="">`;
+        prev.classList.remove('hidden');
+      }
+      if (!r || !r.ok) {
+        out.textContent = '✗ ' + (r && r.notHud ? tr('screen.notHud') : r && r.notFound ? tr('screen.notHud') : (r && r.error) || '?');
+        return;
+      }
+      const line = hudText(r.reading);
+      out.textContent = r.region ? tr('screen.calibrated', { w: r.rect.width, h: r.rect.height, line }) : '✓ ' + line;
+    };
+    $('#btnScreenTest').addEventListener('click', () => screenRun(() => window.coach.screen.test()));
+    $('#btnScreenCalibrate').addEventListener('click', () => screenRun(() => window.coach.screen.calibrate()));
+    if (window.coach.screen && window.coach.screen.onReading)
+      window.coach.screen.onReading((ev) => {
+        hud = ev.reading;
+        if (ev.state) {
+          state = ev.state;
+          renderState();
+        }
+        renderHud();
+        if (hud && hud.time && S.boTimer !== false) syncClockTo(hud.time, hud.at);
+      });
+  }
   $('#setExpPrivacy').addEventListener('change', async (e) => {
     await save({ experimentalPrivacy: e.target.checked });
     loadSettings();
@@ -1300,10 +1693,14 @@ function bindExtras() {
     renderPatch();
   });
   window.coach.patch.onStatus(() => renderPatch());
-  window.coach.match.onDetected((ev) => {
+  window.coach.match.onDetected(async (ev) => {
     state = ev.state;
     renderState();
     sysNotice(`<b>${tr('match.detected')}:</b> ${esc(ev.text)}${ev.filled.length ? '' : ` <span class="muted">${tr('match.kept')}</span>`}`);
+    if (ev.filled.length && sheetMode()) {
+      const r = await window.coach.chat.sheet('');
+      if (r.ok) showSheet(tr('sheet.title'), r);
+    }
   });
 }
 async function renderPatch() {
@@ -1680,6 +2077,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (!b) return;
     const act = b.dataset.act;
     if (act === 'counters') runCommand('/counters');
+    else if (act === 'sheet') runCommand('/ficha');
     else if (act === 'bo') {
       setMode(false);
       showTab('bo');

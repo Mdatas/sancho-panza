@@ -1,5 +1,19 @@
 'use strict';
-const { app, BrowserWindow, Tray, Menu, globalShortcut, ipcMain, shell, nativeImage, dialog, screen, safeStorage } = require('electron');
+const {
+  app,
+  BrowserWindow,
+  Tray,
+  Menu,
+  globalShortcut,
+  ipcMain,
+  shell,
+  nativeImage,
+  dialog,
+  screen,
+  safeStorage,
+  desktopCapturer,
+  systemPreferences,
+} = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -14,6 +28,7 @@ const { createCore } = require('./api');
 const tts = require('./voice/tts');
 const patchwatch = require('./patchwatch');
 const matchwatch = require('./matchwatch');
+const screenread = require('./screenread');
 const { pathToFileURL } = require('url');
 const pkg = require('../../package.json');
 const I18N = require('../renderer/i18n.js');
@@ -43,7 +58,8 @@ const FULL_SIZE = { width: 470, height: 680 };
 let win = null,
   tray = null,
   guideWin = null,
-  matchPoller = null;
+  matchPoller = null,
+  screenReader = null;
 let patchState = { reviewed: '', latest: '', seen: {}, lastCheck: null, error: null, newBuilds: [] };
 let settings, gd, buildOrders, knowledge, strategy, brain, core;
 let dataInfo = { dir: null, syncStatus: 'idle', lastSync: null, message: '' };
@@ -319,6 +335,30 @@ function setupMatchWatch() {
   matchPoller.start();
 }
 
+/* ----------------------------------------------------------------- screen reader (optional, the game's resource bar via the vision model) */
+function setupScreenReader() {
+  screenReader = screenread.createScreenReader({
+    electron: { desktopCapturer, screen, systemPreferences },
+    getSettings,
+    providerArgs: (s) => brain._providerArgs(s, { extraction: true }), // the cheap model (Haiku) reads the bar
+    enabled: () => settings.get().screenRead === true && !!win && win.isVisible(),
+    getDisplay: () => {
+      try {
+        return win ? screen.getDisplayMatching(win.getBounds()) : screen.getPrimaryDisplay();
+      } catch {
+        return screen.getPrimaryDisplay();
+      }
+    },
+    onReading: (r) => {
+      const ageChanged = brain.setLive(r);
+      send('screen:reading', { reading: r, state: brain.state, line: brain.stateLine(), ageChanged });
+    },
+    saveRegion: (reg) => settings.set({ screenReadRegion: reg }),
+    log,
+  });
+  screenReader.start();
+}
+
 /* ----------------------------------------------------------------- window */
 function createWindow() {
   const s = settings.get();
@@ -549,10 +589,30 @@ function registerIpc() {
       }
     }
     if ('theme' in patch && guideWin && !guideWin.isDestroyed()) guideWin.webContents.send('settings:changed', { theme: after.theme });
+    if (('screenRead' in patch || 'screenReadInterval' in patch || 'screenReadRegion' in patch) && screenReader) screenReader.poke();
     return after;
   });
+  // ---- screen reader (HUD OCR)
+  const screenCall = async (fn) => {
+    if (!screenReader) return { ok: false, error: 'screen reader not available' };
+    try {
+      return await fn();
+    } catch (e) {
+      log('screen', e.message);
+      return {
+        ok: false,
+        error: e.code === 'mac-permission' ? mt('screen.macPerm') : e.code === 'no-key' ? mt('screen.noKey') : e.message,
+        code: e.code || '',
+      };
+    }
+  };
+  ipcMain.handle('screen:test', () => screenCall(() => screenReader.readOnce({ manual: true })));
+  ipcMain.handle('screen:calibrate', () => screenCall(() => screenReader.calibrate()));
+  ipcMain.handle('screen:status', () => (screenReader ? screenReader.status() : null));
 
   ipcMain.handle('chat:ask', (_e, { text }) => core.ask(text, (ev) => send('chat:event', ev)));
+  ipcMain.handle('chat:advise', (_e, { text } = {}) => core.advise(text, (ev) => send('chat:event', ev)));
+  ipcMain.handle('chat:sheet', (_e, { question } = {}) => core.sheet(question || ''));
   ipcMain.handle('chat:reset', () => core.reset());
   ipcMain.handle('chat:newGame', () => core.newGame());
   ipcMain.handle('chat:flag', (_e, comment) => core.flag(comment));
@@ -810,6 +870,7 @@ app.whenReady().then(async () => {
   pruneLogs(Number(settings.get().logRetentionDays) || 0);
   const smoke = process.argv.includes('--smoke');
   if (settings.get().dataAutoSync !== false && !smoke) setTimeout(() => syncData(false), STARTUP.dataSyncMs);
+  setupScreenReader(); // idle unless Settings → screenRead is on (and a key is set)
   if (!smoke) {
     setTimeout(() => checkPatches(false).catch((e) => log('patch check', e.message)), STARTUP.patchCheckMs);
     setupMatchWatch();
@@ -817,7 +878,7 @@ app.whenReady().then(async () => {
   if (smoke) {
     // the headless self-check is a dev/CI tool: it lives in test/ (not shipped inside the packaged app)
     try {
-      require('../../test/smoke').run({ win, guideWin: () => guideWin, openGuide, brain, settings, getSettings, decryptSecret, log });
+      require('../../test/smoke').run({ win, guideWin: () => guideWin, openGuide, brain, settings, getSettings, decryptSecret, log, send });
     } catch (e) {
       console.log('SMOKE_ERRORS', JSON.stringify(['smoke runner not available: ' + e.message]));
       app.isQuiting = true;

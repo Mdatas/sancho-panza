@@ -14,6 +14,10 @@ const DEFAULTS = {
   extractState: true, // extract match facts from each message (runs in parallel with the answer)
   extractModel: 'claude-haiku-5-5', // cheap model for that extraction step (Claude provider only)
   streaming: true, // stream the answer while the model writes it (falls back to one block when the server cannot)
+  answerMode: 'ficha', // 'ficha' = structured sheet from the data (tech tree, profiles, counters, builds); 'libre' = the free coach answer
+  screenRead: false, // opt-in (desktop): read the game's resource bar from the screen with the AI provider's vision model
+  screenReadInterval: 15, // seconds between readings while the game is on screen
+  screenReadRegion: null, // { x, y, w, h } as fractions of the screen; null = default top strip until "Calibrar" finds the bar
   language: 'auto', // answer language: 'auto' | 'es' | 'en'
   uiLanguage: 'es', // interface language
   theme: 'taverna', // 'taverna' | 'taverna-night' | 'classic-dark' | 'classic-light'
@@ -61,6 +65,12 @@ const T = {
         ? { x: Math.round(v.x), y: Math.round(v.y), width: Math.round(v.width), height: Math.round(v.height) }
         : undefined,
   obj: (v) => (v && typeof v === 'object' && !Array.isArray(v) ? v : undefined),
+  region: (v) =>
+    v === null
+      ? null
+      : v && typeof v === 'object' && ['x', 'y', 'w', 'h'].every((k) => Number.isFinite(v[k]) && v[k] >= 0 && v[k] <= 1) && v.w > 0 && v.h > 0
+        ? { x: v.x, y: v.y, w: v.w, h: v.h }
+        : undefined,
   hotkeys: (v) => {
     if (!v || typeof v !== 'object') return undefined;
     const out = {};
@@ -80,6 +90,10 @@ const SCHEMA = {
   extractState: T.bool,
   extractModel: T.str,
   streaming: T.bool,
+  answerMode: T.enumOf(['ficha', 'libre']),
+  screenRead: T.bool,
+  screenReadInterval: T.num(5, 120),
+  screenReadRegion: T.region,
   language: T.str,
   uiLanguage: T.enumOf(['es', 'en', 'de', 'pt', 'zh', 'vi', 'ko']),
   theme: T.enumOf(['taverna', 'taverna-night', 'classic-dark', 'classic-light']),

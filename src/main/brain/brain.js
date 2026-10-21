@@ -6,9 +6,13 @@ const { buildSystemBlocks, buildSystemPrompt, stateLine, AGE_NAMES } = require('
 const { complete, plainComplete } = require('./providers');
 const { teamCounters, teamCountersText } = require('../engine/teamcounters');
 const combat = require('../engine/combat');
+const { buildSheet, parseMessage, sheetText, sheetSpoken } = require('../engine/sheet');
 
 const MAX_HISTORY = 6; // exchanges kept (text only): enough context for follow-ups, not a transcript re-sent every question
 const EXTRACT_BUDGET_MS = 2500; // how long the answer waits for the (parallel) fact extraction before building the prompt without it
+const SHEET_EXTRACT_MS = 8000; // ficha mode: the extraction is the only model call, so it may take a little longer before the keyword parse takes over
+const SHEET_HISTORY_CHARS = 1500; // how much of a shown sheet is kept in the conversation history (context for a later "consejo")
+const LIVE_MAX_AGE_MS = 90 * 1000; // a HUD reading older than this is not shown to the model
 const RESTORE_MAX_AGE_MS = 3 * 3600 * 1000; // a match saved less than this long ago is restored at launch (same game, app restarted)
 const EXCERPT = { mine: 3400, opp: 2200, map: 2200 }; // chars of each strategy profile injected per question
 const NOTE_WINDOW = 1800; // chars of a note section injected into the prompt (sections are split at load so nothing is cut mid-note)
@@ -44,10 +48,35 @@ class Brain {
   constructor({ gd, buildOrders, knowledge, strategy = null, getSettings, saveState = () => {}, log = () => {} }) {
     Object.assign(this, { gd, buildOrders, knowledge, strategy, getSettings, saveState, log });
     this.state = { ...EMPTY_STATE }; // starts blank unless restoreState() finds a recent match: the player tells the coach civ, ELO, map…
+    this.live = null; // last HUD reading from the screen reader ({ food, wood, gold, stone, pop, idle, age, time, at }), desktop only
     this.history = [];
     this.totals = { cost: 0, input: 0, output: 0, calls: 0 };
     this.lastAnswerId = 0;
     this._queue = Promise.resolve(); // asks run one at a time (history and state are shared)
+  }
+
+  /** Screen reader (OCR) result: kept apart from the match state (it changes every few seconds and is never typed by the player). */
+  setLive(reading) {
+    this.live = reading ? { ...reading, at: reading.at || Date.now() } : null;
+    // the age read on the HUD only ever moves the registered age forward (a misread must not send the player back to Feudal)
+    if (this.live && this.live.age && Number(this.live.age) > (Number(this.state.age) || 0)) {
+      this.state.age = Number(this.live.age);
+      this.saveState(this.state);
+      return true;
+    }
+    return false;
+  }
+  liveLine() {
+    const l = this.live;
+    if (!l || Date.now() - l.at > LIVE_MAX_AGE_MS) return '';
+    const n = (v) => (v == null || v === '' ? '?' : v);
+    const parts = [`food ${n(l.food)}`, `wood ${n(l.wood)}`, `gold ${n(l.gold)}`, `stone ${n(l.stone)}`];
+    if (l.pop) parts.push(`pop ${l.pop}`);
+    if (l.idle != null) parts.push(`idle villagers ${l.idle}`);
+    if (l.villagers) parts.push(`villagers on food/wood/gold/stone ${['food', 'wood', 'gold', 'stone'].map((k) => n(l.villagers[k])).join('/')}`);
+    if (l.age) parts.push(`age ${AGE_NAMES[l.age] || l.age}`);
+    if (l.time) parts.push(`game time ${l.time}`);
+    return `LIVE HUD (read from the player's screen ${Math.round((Date.now() - l.at) / 1000)} s ago; trust these numbers over what the player remembers): ${parts.join(', ')}`;
   }
 
   /** Bring back the match saved by a previous run when it is recent (the app was restarted mid-game). Returns true when restored. */
@@ -196,15 +225,138 @@ class Brain {
     }
   }
 
-  /** One question → one answer. Serialised: a second ask waits for the first (same history/state). */
+  /**
+   * One question → one answer. Serialised: a second ask waits for the first (same history/state).
+   * opts: { onEvent, mode: 'ficha' | 'libre' (default: settings.answerMode), getCatalog, getStats, withSheet }
+   *  - ficha: the structured sheet built from the data (no model answer; the model only parses the message when there is a key)
+   *  - libre: the coach answer (v0.21 behaviour); withSheet adds the sheet the player just saw to the prompt ("consejo")
+   */
   ask(userText, opts = {}) {
     const run = this._queue.then(() => this._ask(userText, opts));
     this._queue = run.catch(() => {});
     return run;
   }
 
-  async _ask(userText, { onEvent } = {}) {
+  /** Language of the sheet's names/labels: the answer language when fixed, else the interface language. */
+  _sheetLang(s) {
+    const l = s.language && s.language !== 'auto' ? s.language : s.uiLanguage || 'es';
+    return l === 'es' ? 'es' : 'en';
+  }
+  _canExtract(s) {
+    const a = this._providerArgs(s, { extraction: true });
+    return s.extractState !== false && (a.provider === 'openai' || !!a.apiKey);
+  }
+
+  /** The sheet for the current state, without touching it (new game, match detected, /ficha). */
+  sheetNow({ question = '', getCatalog, getStats } = {}) {
     const s = this.getSettings();
+    const lang = this._sheetLang(s);
+    const safe = (f) => {
+      try {
+        return f ? f() : null;
+      } catch {
+        return null;
+      }
+    };
+    const sheet = buildSheet({ gd: this.gd, strategy: this.strategy, catalog: safe(getCatalog), state: this.state, stats: safe(getStats), lang, question });
+    return { kind: 'sheet', sheet, text: sheetText(sheet), spoken: sheetSpoken(sheet), state: { ...this.state }, stateLine: stateLine(this.state) };
+  }
+
+  /** Ficha mode: parse the message into the state (model when there is a key, keywords otherwise) and build the sheet. */
+  async _askSheet(userText, { onEvent, getCatalog, getStats, s }) {
+    const t0 = Date.now();
+    const stateBefore = { ...this.state };
+    onEvent && onEvent({ type: 'tool', name: 'update_match_state' });
+    const parsed = parseMessage({ gd: this.gd, strategy: this.strategy, text: userText, state: this.state });
+    let ex = { ok: false, skipped: true };
+    if (this._canExtract(s)) {
+      let timer = null;
+      ex = await Promise.race([this.extract(userText, s), new Promise((r) => (timer = setTimeout(() => r({ ok: false, timeout: true }), SHEET_EXTRACT_MS)))]);
+      clearTimeout(timer);
+    }
+    // the keyword parse fills what the model did not (or everything, without a key); it never overwrites a value the model set
+    const local = { ...parsed.patch };
+    if (ex.ok) {
+      const has = (k) => (Array.isArray(this.state[k]) ? this.state[k].length : !!this.state[k]);
+      for (const [k, sk] of [
+        ['my_civ', 'myCiv'],
+        ['opp_civ', 'oppCiv'],
+        ['map', 'map'],
+        ['age', 'age'],
+        ['elo', 'elo'],
+        ['their_army', 'theirArmy'],
+      ])
+        if (has(sk)) delete local[k];
+      if (!stateBefore.oppCiv && this.state.oppCiv) delete local.enemies;
+    }
+    if (Object.keys(local).length) {
+      if (local.map && this.strategy) {
+        const mp = this.strategy.findMap(local.map);
+        if (mp) local.map = mp.meta.map || mp.title;
+      }
+      applyStatePatch(this.gd, this.state, local);
+      this.saveState(this.state);
+    }
+    onEvent && onEvent({ type: 'state', state: this.state, line: stateLine(this.state) });
+    const r = this.sheetNow({ question: userText, getCatalog, getStats });
+    // re-parse units against the (possibly new) rival civ so the counters block uses the right roster
+    if (parsed.units.length && this.state.oppCiv !== stateBefore.oppCiv) {
+      const p2 = parseMessage({ gd: this.gd, strategy: this.strategy, text: userText, state: this.state });
+      const lang = this._sheetLang(s);
+      const safe = (f) => {
+        try {
+          return f ? f() : null;
+        } catch {
+          return null;
+        }
+      };
+      r.sheet = buildSheet({
+        gd: this.gd,
+        strategy: this.strategy,
+        catalog: safe(getCatalog),
+        state: this.state,
+        stats: safe(getStats),
+        lang,
+        question: userText,
+        parsed: p2,
+      });
+      r.text = sheetText(r.sheet);
+      r.spoken = sheetSpoken(r.sheet);
+    }
+    this.history.push(
+      { role: 'user', content: userText },
+      { role: 'assistant', content: `[ficha shown to the player]\n${r.text.slice(0, SHEET_HISTORY_CHARS)}` }
+    );
+    if (this.history.length > MAX_HISTORY * 2) this.history = this.history.slice(-MAX_HISTORY * 2);
+    const id = ++this.lastAnswerId;
+    const cost = (ex && ex.cost) || 0; // extract() already added it to the session total
+    this.log({
+      type: 'sheet',
+      id,
+      q: userText,
+      stateBefore,
+      extraction: ex,
+      parsed: r.sheet.parsed,
+      focus: r.sheet.focus,
+      stateAfter: { ...this.state },
+      cost,
+      ms: Date.now() - t0,
+    });
+    return {
+      ...r,
+      id,
+      toolLog: [],
+      usage: (ex && ex.usage) || {},
+      cost,
+      model: ex.ok ? 'ficha+' + this._providerArgs(s, { extraction: true }).model : 'ficha',
+      totals: { ...this.totals, cost: +this.totals.cost.toFixed(4) },
+    };
+  }
+
+  async _ask(userText, { onEvent, mode, getCatalog, getStats, withSheet = false } = {}) {
+    const s = this.getSettings();
+    const answerMode = mode || s.answerMode || 'ficha';
+    if (answerMode === 'ficha') return this._askSheet(userText, { onEvent, getCatalog, getStats, s });
     const lang = s.language || 'auto';
     const t0 = Date.now();
     const stateBefore = { ...this.state };
@@ -273,11 +425,19 @@ class Brain {
             .slice(0, 8)
             .join(' ')
         : '';
+    let keyData = this.keyData(extraTerms ? `${userText} ${extraTerms}` : userText);
+    if (withSheet) {
+      // "consejo" after a sheet: the model builds on what the player already saw (same data), it does not start over
+      const sh = this.sheetNow({ question: userText, getCatalog, getStats });
+      keyData =
+        `## FICHA (the structured sheet the app already showed the player for this match — built from the same data. Your advice must follow from it and cite it: name the bonus, the missing tech, the map property or the counter you rely on. Never contradict it; if it lacks something you need, say so.)\n${sheetText(sh.sheet, { full: true }).slice(0, 7000)}\n\n` +
+        keyData;
+    }
     const promptArgs = {
       state: this.state,
       lang,
       dataVersion: this.gd.sourceCommit.slice(0, 7),
-      keyData: this.keyData(extraTerms ? `${userText} ${extraTerms}` : userText),
+      keyData,
       patchInfo: this.patchInfo || '',
     };
     // default: [static, dynamic] blocks with separate cache breakpoints (rules cached across questions, notes across the tool rounds);
@@ -323,6 +483,7 @@ class Brain {
     });
     return {
       ...res,
+      kind: 'answer',
       cost: cost || res.cost,
       id,
       state: { ...this.state },
@@ -334,7 +495,9 @@ class Brain {
   /** Strategy profiles relevant to the current state: my civ (full), opponent civ (how to play against), map. */
   keyData(question = '') {
     const parts = [];
-    if (!this.strategy) return this.relevantNotes(question);
+    const live = this.liveLine();
+    if (live) parts.push(live);
+    if (!this.strategy) return [...parts, this.relevantNotes(question)].filter(Boolean).join('\n\n');
     const mine = this.state.myCiv && this.strategy.civ(this.state.myCiv);
     if (mine) parts.push(`## MY CIV — ${this.state.myCiv}\n` + this.strategy.excerpt(mine, null, EXCERPT.mine));
     const opp = this.state.oppCiv && this.strategy.civ(this.state.oppCiv);

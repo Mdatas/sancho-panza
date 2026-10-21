@@ -17,8 +17,11 @@ Leelo en: [English](README.md) · **Español**
 
 ## Capturas
 
+<p align="center"><img src="screenshots/ficha.png" width="62%" alt="La ficha de partida: counters a las unidades que hace el rival, mi civ, la civ rival, el mapa y los builds sugeridos, todo desde los datos"></p>
+<p align="center"><em>La <strong>ficha de partida</strong> (modo de respuesta por defecto): qué hace el rival y con qué se le contesta, las dos civs, el mapa y los builds que encajan — armada con los datos, sin que la IA escriba nada</em></p>
+
 <p align="center"><img src="screenshots/chat.png" width="31%" alt="Chat: el coach responde con un resumen de 3 líneas y el detalle"> <img src="screenshots/team-counters.png" width="31%" alt="Barra 4 vs 4 con los counters a cada civ rival"> <img src="screenshots/build-reader.png" width="31%" alt="Una guía condensada para la partida, con su build extraído"></p>
-<p align="center"><em>Chat con el resumen de 3 líneas · la barra 4 vs 4 y sus counters · una guía condensada «en la partida» con «Cargar pasos»</em></p>
+<p align="center"><em>Chat libre con el resumen de 3 líneas · la barra 4 vs 4 y sus counters · una guía condensada «en la partida» con «Cargar pasos»</em></p>
 
 <p align="center"><img src="screenshots/overlay-compact.png" width="60%" alt="Overlay compacto sobre el juego: paso del build, respuesta, línea de pregunta"></p>
 <p align="center"><em>El overlay compacto (470 × 262) que queda arriba del juego: paso actual del build, última respuesta, línea de pregunta</em></p>
@@ -50,11 +53,18 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 
 ## Cómo funciona
 
+Dos modos de respuesta, se cambian en Ajustes → Cerebro (o con `/modo`):
+
 ```
- you ──(text or voice)──► app ──► 1. extracts the match facts (civs, age, map, armies, constraints)
-                                  2. picks the relevant knowledge (civ & map profiles, notes, team counters)
-                                  3. asks the AI with tools: counters, civ info, unit stats, eco plan, build orders, note search
-                                  4. answer = 3-line summary + short detail, read aloud
+ Ficha (por defecto) ─ vos ──► app ──► 1. lee los datos de la partida en tu mensaje (la IA lo interpreta si hay key; palabras clave si no)
+                                       2. arma la ficha con los datos: counters a lo que te hacen, tu civ, la civ rival, el mapa, los builds que encajan
+                                       3. ningún modelo escribe nada: cada línea sale del árbol tecnológico, los perfiles, el cálculo de duelos o el catálogo
+                                       4. «Pedir consejo a la IA» convierte la ficha en un plan concreto cuando vos lo pedís
+
+ Libre ─ vos ──(texto o voz)──► app ──► 1. extrae los datos de la partida (civs, edad, mapa, ejércitos, restricciones)
+                                        2. elige el conocimiento relevante (perfiles de civ y mapa, notas, counters de equipo)
+                                        3. le pregunta a la IA con herramientas: counters, info de civ, stats, plan de eco, builds, búsqueda de notas
+                                        4. respuesta = resumen de 3 líneas + detalle corto, leída en voz alta
 ```
 
 * **Datos del juego** (todas las civs, unidades, tecnologías, bonus, costos, clases de armadura) salen de los archivos oficiales del juego tal como los publica [SiegeEngineers/aoe2techtree](https://github.com/SiegeEngineers/aoe2techtree), actualizados en cada parche. A la IA se le indica que nunca cite números de memoria: tiene que consultar las herramientas.
@@ -65,7 +75,12 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 
 ## Funciones
 
-**Coach por chat**
+**Ficha de partida** (modo de respuesta por defecto, v0.22)
+* Cada mensaje recibe una **ficha armada sólo con los datos**: counters a las unidades que nombrás (o al ejército rival que registraste, o a las unidades típicas de la civ rival), **tu civ** (fuerza por edad, bonos, unidad y tecnologías únicas, lo que no tiene, la apertura del perfil para este tipo de mapa), **la civ rival** (lo mismo más «cómo se le juega»), **el mapa** (qué gana ahí, aperturas estándar, timings, la línea sobre la civ de tu rival) y **builds sugeridos**: 3 builds meta paso a paso que encajan con tu civ, el tipo de mapa y la apertura del perfil — un clic los carga en el panel — más guías anti-meta para tu civ.
+* Determinista y barato: con API key la IA sólo interpreta tu mensaje (Haiku, ~US$0,0005); sin key lo hace un lector de palabras clave, así que la ficha funciona también en la web sin ninguna key.
+* No aventura un plan concreto por su cuenta: **«Pedir consejo a la IA»** (o `/consejo`) se lo pide al coach libre con la ficha en el prompt, para que el consejo la cite en vez de arrancar de cero. `/ficha` muestra la ficha de la partida actual; también aparece cuando se detecta una partida.
+
+**Coach por chat** (modo libre)
 * Overlay compacto que queda arriba del juego (ventana sin bordes), o ventana completa.
 * Las respuestas arrancan con un **resumen de 3 líneas** (decisión · qué hacer, con números · el dato clave), y después un detalle corto. La respuesta se muestra **mientras el modelo la escribe** (streaming) y el resumen se lee en voz alta apenas está completo.
 * Antes de que el modelo responda, la app precalcula los counters al ejército que registraste ("me tira mangudai") y los counters por equipo, así la mayoría de las preguntas necesitan menos rondas de herramientas; la extracción de datos de la partida corre en paralelo con la respuesta.
@@ -99,6 +114,9 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 **Detección de partida opcional**
 * Desactivada por defecto. Si configurás tu perfil público de AoE2, lee tu partida actual (civs, mapa, equipos) desde el servicio comunitario aoe2companion y completa lo que no escribiste. Lo que vos ingresás siempre tiene prioridad.
 
+**Lectura de pantalla opcional (OCR, escritorio, experimental)**
+* Apagada por defecto. Cada 10–60 s captura la **barra de recursos** del juego (madera, comida, oro, piedra, aldeanos en cada uno, población, ociosos, edad, reloj), manda sólo ese recorte al modelo de visión de tu proveedor de IA (Claude Haiku: ~US$0,0003 por lectura, unos US$0,07 por hora cada 15 s) y muestra los números debajo de la línea de estado. El paso del build cargado compara su reparto de aldeanos con lo que dice la barra («+2 🪵 para el paso»), el **reloj del build se sincroniza solo con el reloj del juego**, la edad registrada avanza cuando la barra muestra una nueva, y el coach recibe los números frescos en su prompt. *Calibrar* encuentra la barra en tu pantalla una vez; las lecturas se saltean mientras la imagen no cambia y el ciclo se frena cuando el juego no está en pantalla. Necesita el juego en ventana sin bordes y la app visible; en Mac, permiso de grabación de pantalla.
+
 **La IA que elijas**
 * Claude (Anthropic) por defecto — con la que se construyó y se probó.
 * También OpenAI, Google Gemini, Groq, OpenRouter, NVIDIA NIM, modelos locales (Ollama / LM Studio / llama.cpp / Hermes) o cualquier endpoint compatible con OpenAI. Algunos tienen planes gratuitos.
@@ -124,7 +142,7 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 | Actualizar | correr el nuevo `Instalar.bat`: reemplaza la versión anterior (ajustes, key y logs quedan) | arrastrar la app nueva sobre la vieja | automático en la próxima carga |
 | Desinstalar | Ajustes → Datos → *Desinstalar…*, o Windows → Aplicaciones instaladas, o `Desinstalar.bat` (pregunta si borrar también tus ajustes y la key) | Ajustes → Datos → *Desinstalar…* muestra la app para arrastrarla a la Papelera y puede borrar tus datos | quitar el ícono; los datos quedan en el navegador |
 
-**Comandos** (o simplemente decilo en tu pregunta): `/civ franks` · `/vs mongols` · `/age castle` · `/map arabia` · `/elo 1100` · `/allies mayans, britons` · `/enemies mongols, aztecs` · `/counters` · `/bo scouts` · `/n` `/p` · `/guide` · `/repeat` · `/match` · `/patch` · `/new` · `/help`
+**Comandos** (o simplemente decilo en tu pregunta): `/civ franks` · `/vs mongols` · `/age castle` · `/map arabia` · `/elo 1100` · `/allies mayans, britons` · `/enemies mongols, aztecs` · `/counters` · `/ficha` · `/consejo` · `/modo ficha|libre` · `/bo scouts` · `/n` `/p` · `/guide` · `/repeat` · `/match` · `/patch` · `/new` · `/help`
 (en castellano también: `/civ francos` · `/vs mongoles` · `/edad castillos` · `/mapa arabia` · `/aliados` · `/rivales` · `/repetir` · `/partida` · `/parche` · `/nueva` · `/ayuda`)
 
 ---
