@@ -104,7 +104,7 @@ try {
     await page.click('#tabs button[data-tab="bo"]');
     await page.waitForSelector('#boList .bocard', { timeout: 20000 });
     check((await page.$$eval('#boList .bocard', (x) => x.length)) > 100, `${label}: catalog cards`);
-    await page.click('#boList .bocard.steps');
+    await page.click('#boList .bocard.steps:not(:has(.cico))'); // a generic build (civ-specific ones sort first once a civ is registered)
     await page.waitForTimeout(600);
     check(/1\//.test(await page.textContent('#boPos')), `${label}: step 1 loaded`);
     await page.click('#boClock');
@@ -112,6 +112,28 @@ try {
     check(/❚❚ 0:0[1-3]/.test(await page.textContent('#boClock')), `${label}: clock running (${await page.textContent('#boClock')})`);
     await page.click('#boClock');
     check((await page.textContent('#boCivNotes')).length > 10, `${label}: civ start notes next to a generic build`);
+    // a condensed note: "En la partida" gist, the full note folded, and "Cargar pasos" when a build was extracted from it
+    await page.fill('#boSearch', 'fast castle 24+2');
+    await page.waitForTimeout(500);
+    const noteCard = page.locator('#boList .bocard.note').first();
+    check((await noteCard.count()) === 1, `${label}: note card found by search`);
+    await noteCard.click();
+    await page.waitForTimeout(600);
+    check((await page.locator('#boReader .gist li').count()) >= 3, `${label}: note opens with the "En la partida" gist`);
+    check((await page.locator('#boReader details summary').count()) >= 1, `${label}: full note folded under the gist`);
+    if ((await page.locator('#boReaderSteps').count()) === 1) {
+      await page.click('#boReaderSteps');
+      await page.waitForTimeout(600);
+      check(/1\//.test(await page.textContent('#boPos')), `${label}: extracted build loaded from the note`);
+    } else check(false, `${label}: "Cargar pasos" shown for a note with an extracted build`);
+    await page.fill('#boSearch', '');
+    // guide → Temas: the 24 topic summaries, the first one open with its sections
+    await page.click('#btnGuide');
+    await frame.locator('#tabs button[data-tab="themes"]').click();
+    await frame.locator('#themeList .item').first().waitFor({ timeout: 20000 });
+    check((await frame.locator('#themeList .item').count()) === 24, `${label}: 24 topics listed`);
+    check((await frame.locator('#themeView h2').textContent()).length > 3, `${label}: first topic opened`);
+    check((await frame.locator('#themeView details.card').count()) >= 5, `${label}: topic shows its sections`);
     // asking without a key explains what is missing (no network)
     await page.click('#tabs button[data-tab="chat"]');
     await page.fill('#cmd', 'hola');

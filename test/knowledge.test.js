@@ -55,4 +55,44 @@ for (const f of fs.readdirSync(bdir).filter((x) => x.endsWith('.json'))) {
   const errs = validate(JSON.parse(fs.readFileSync(path.join(bdir, f), 'utf8')));
   assert.deepStrictEqual(errs, [], f);
 }
+// condensed guides + extracted builds (tools/condense.js): every referenced build exists, validates and points back to a real note
+const sumFile = path.join(KDIR, 'resumen_guias.json');
+if (fs.existsSync(sumFile)) {
+  const sums = JSON.parse(fs.readFileSync(sumFile, 'utf8'));
+  const xdir = path.join(__dirname, '..', 'data', 'build_orders', 'extracted');
+  const stems = new Set(k.sections.map((s) => s.file + '|' + s.title.replace(/: (lecciones|VIGENCIA hoy).*$/, '').replace(/ \(\d+\/\d+\)$/, '')));
+  for (const [key, v] of Object.entries(sums)) {
+    assert.ok(stems.has(key), 'condensed entry without a note: ' + key);
+    assert.ok(Array.isArray(v.resumen) && v.resumen.length >= 1 && v.resumen.length <= 6, 'summary size: ' + key);
+    if (v.pasos) {
+      const f = path.join(xdir, v.pasos + '.json');
+      assert.ok(fs.existsSync(f), 'missing extracted build ' + v.pasos);
+      const bo = JSON.parse(fs.readFileSync(f, 'utf8'));
+      assert.deepStrictEqual(validate(bo), [], v.pasos);
+      assert.ok(bo.extracted_from && bo.extracted_from.file + '|' + bo.extracted_from.stem === key, 'extracted build points to its note: ' + v.pasos);
+      assert.ok(
+        bo.build_order.every((st) => st.evidencia && st.evidencia.length >= 15),
+        'every extracted step carries its quote: ' + v.pasos
+      );
+    }
+  }
+  if (fs.existsSync(xdir))
+    for (const f of fs.readdirSync(xdir).filter((x) => x.endsWith('.json')))
+      assert.ok(
+        Object.values(sums).some((v) => v.pasos === f.replace(/\.json$/, '')),
+        'orphan extracted build ' + f
+      );
+}
+// topic summaries (tools/themes.js): the five sections plus the sources list, every bullet cited
+for (const f of fs.readdirSync(KDIR).filter((x) => /^temas_.*\.md$/.test(x))) {
+  const t = fs.readFileSync(path.join(KDIR, f), 'utf8');
+  const name = (t.match(/^# Tema: (.+)$/m) || [])[1];
+  assert.ok(name, f + ': missing "# Tema:" heading');
+  for (const sec of ['Lo esencial', 'Cómo se hace', 'Variantes y alternativas', 'Errores típicos', 'Contra', 'Fuentes'])
+    assert.ok(t.includes(`## ${name} — ${sec}`), `${f}: missing section ${sec}`);
+  const bullets = t.split('\n').filter((l) => /^\s*[-*•]\s/.test(l) && !/^## /.test(l));
+  const body = t.slice(0, t.indexOf(`## ${name} — Fuentes`));
+  for (const l of body.split('\n').filter((l) => /^\s*[-*•]\s/.test(l))) assert.ok(/\[[^\]\n]{3,}\]/.test(l), `${f}: uncited bullet: ${l.slice(0, 80)}`);
+  assert.ok(bullets.length >= 10, f + ': too few bullets');
+}
 console.log(`knowledge tests passed: ${k.sections.length} sections, ${builds.length} patches, current ${CURRENT_PATCH}`);

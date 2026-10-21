@@ -1,0 +1,57 @@
+{
+ "name": "Scouts a 12 pop",
+ "civilization": "Malay",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=JkfUOr8xK-w",
+ "description": "Pasos extraídos por IA de la nota «5 Stupid Malay Meme Strategies for Multi Map Use. Malay Have Never Been this Fun in AOE2!» (Poop Lord, 2023-06-11); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_book_of_memes.md",
+  "stem": "Poop Lord (meme) BM39 — 5 Stupid Malay Meme Strategies for Multi Map Use. Malay Have Never Been this Fun in AOE2! (video publicado 2023-06-11)",
+  "tier": "meme",
+  "date": "2023-06-11"
+ },
+ "build_order": [
+  {
+   "villager_count": 9,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Mandá 6 aldeanos a comida y 3 a madera al arrancar."
+   ],
+   "evidencia": "6 a comida, 3 a madera, 2 más a comida"
+  },
+  {
+   "villager_count": 11,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 8,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Sumá 2 aldeanos más a comida y construí el telar."
+   ],
+   "evidencia": "2 más a comida, telar, idle hasta Feudal"
+  },
+  {
+   "villager_count": 11,
+   "age": 2,
+   "resources": {
+    "wood": 3,
+    "food": 8,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Quedate idle hasta llegar a Feudal."
+   ],
+   "evidencia": "telar, idle hasta Feudal"
+  }
+ ]
+}

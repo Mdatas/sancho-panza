@@ -1,0 +1,71 @@
+{
+ "name": "All-in Cumanos Ariete (Hideout)",
+ "civilization": "Generic",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=2nGNXQLmuvw",
+ "description": "Pasos extraídos por IA de la nota «All in Cuman Archer RAM RUSH on Hideout! Chat Pick Strat is Really Fun for me Thanks All» (Poop Lord, 2022-11-26); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_every_unique_strategy.md",
+  "stem": "Poop Lord (anti-meta/meme) EU178 — All in Cuman Archer RAM RUSH on Hideout! Chat Pick Strat is Really Fun for me Thanks All (video publicado 2022-11-26)",
+  "tier": "meme",
+  "date": "2022-11-26"
+ },
+ "build_order": [
+  {
+   "villager_count": 6,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Mandá los primeros 6 aldeanos a comida (ovejas, ciervos, jabalíes)."
+   ],
+   "evidencia": "6 comida → 3 madera → resto a comida"
+  },
+  {
+   "villager_count": 9,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Pasá 3 aldeanos a madera."
+   ],
+   "evidencia": "6 comida → 3 madera → resto a comida"
+  },
+  {
+   "villager_count": 20,
+   "age": 2,
+   "resources": {
+    "wood": 3,
+    "food": 17,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Construí Cuartel, el resto a comida, y hacé clic a Feudal con Telar al llegar a 20-21 de población."
+   ],
+   "evidencia": "clic a Feudal con 20-21 pop + Telar"
+  },
+  {
+   "villager_count": 20,
+   "age": 2,
+   "resources": {
+    "wood": 17,
+    "food": 0,
+    "gold": 3,
+    "stone": 0
+   },
+   "notes": [
+    "Armá el campamento minero con 2-3 en oro y pasá todos los demás a madera."
+   ],
+   "evidencia": "2-3 en oro y TODOS los demás a madera"
+  }
+ ]
+}

@@ -1,0 +1,88 @@
+{
+ "name": "Aztec Smush (Fast Castle)",
+ "civilization": "Aztecs",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=r892xrWcM5k",
+ "description": "Pasos extraídos por IA de la nota «Aztec Smush» (Poop Lord, 2022-07-27); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_book_of_memes.md",
+  "stem": "Poop Lord (meme) BM11 — Book of Memes Strategy Guide: Aztec Smush (video publicado 2022-07-27)",
+  "tier": "meme",
+  "date": "2022-07-27"
+ },
+ "build_order": [
+  {
+   "villager_count": 7,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 7,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Mandá 7 aldeanos a comida; el Eagle inicial busca reliquias."
+   ],
+   "evidencia": "7 a comida (el eagle inicial busca reliquias)"
+  },
+  {
+   "villager_count": 11,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 7,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Pasá 4 aldeanos a madera.",
+    "Empujá los ciervos apenas el cuarto esté en madera."
+   ],
+   "evidencia": "empujar los ciervos APENAS el 4º está en madera"
+  },
+  {
+   "villager_count": 19,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 15,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Sumá 8 aldeanos a comida.",
+    "Hacé force-drop seguido, los Aztecas cargan más."
+   ],
+   "evidencia": "8 a comida; 3 a madera (2º campamento maderero)"
+  },
+  {
+   "villager_count": 22,
+   "age": 1,
+   "resources": {
+    "wood": 7,
+    "food": 15,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Sumá 3 aldeanos a madera para el segundo campamento."
+   ],
+   "evidencia": "8 a comida; 3 a madera (2º campamento maderero)"
+  },
+  {
+   "villager_count": 24,
+   "age": 1,
+   "resources": {
+    "wood": 7,
+    "food": 15,
+    "gold": 2,
+    "stone": 0
+   },
+   "notes": [
+    "Mandá 2 aldeanos a oro y construí el molino.",
+    "Clickeá Feudal alrededor de 25 de población."
+   ],
+   "evidencia": "2 a oro; molino (casi sin uso)"
+  }
+ ]
+}

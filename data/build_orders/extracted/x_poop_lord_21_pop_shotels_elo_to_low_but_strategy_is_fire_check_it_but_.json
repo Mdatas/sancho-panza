@@ -1,0 +1,85 @@
+{
+ "name": "21 pop Castillos Etíopes (sin Loom)",
+ "civilization": "Ethiopians",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=7dEFhIu1QSQ",
+ "description": "Pasos extraídos por IA de la nota «21 Pop Shotels: Elo to Low but Strategy is Fire. Check it but you can Never Leave» (Poop Lord, 2023-03-10); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_every_unique_strategy.md",
+  "stem": "Poop Lord (anti-meta/meme) EU287 — 21 Pop Shotels: Elo to Low but Strategy is Fire. Check it but you can Never Leave (video publicado 2023-03-10)",
+  "tier": "meme",
+  "date": "2023-03-10"
+ },
+ "build_order": [
+  {
+   "villager_count": 7,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 7,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Empujá ciervos lo antes posible, con pocos aldeanos."
+   ],
+   "evidencia": "Build dictado: 7 a comida (empujar ciervos lo antes posible"
+  },
+  {
+   "villager_count": 10,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 7,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Pasá 3 aldeanos a madera."
+   ],
+   "evidencia": "3 a madera, 2 más a comida (ciervo)"
+  },
+  {
+   "villager_count": 12,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 9,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Sumá 2 aldeanos más a comida (ciervo)."
+   ],
+   "evidencia": "3 a madera, 2 más a comida (ciervo)"
+  },
+  {
+   "villager_count": 13,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 9,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Sumá 1 aldeano a madera y construí casa."
+   ],
+   "evidencia": "1 más a madera + casa, 6 a bayas"
+  },
+  {
+   "villager_count": 19,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 15,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Mandá 6 aldeanos a bayas; 4 en bayas es un número muy bueno."
+   ],
+   "evidencia": "6 a bayas (4 en bayas es"
+  }
+ ]
+}

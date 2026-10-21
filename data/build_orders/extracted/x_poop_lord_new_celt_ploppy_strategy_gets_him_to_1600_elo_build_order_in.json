@@ -1,0 +1,57 @@
+{
+ "name": "Corte en 22 + Hombres de Armas celtas",
+ "civilization": "Celts",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=1OdN6J5nfs0",
+ "description": "Pasos extraídos por IA de la nota «New Celt Ploppy Strategy Gets him to 1600 Elo! Build order in description!» (Poop Lord, 2022-04-17); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_every_unique_strategy.md",
+  "stem": "Poop Lord (anti-meta/meme) EU082 — New Celt Ploppy Strategy Gets him to 1600 Elo! Build order in description! (video publicado 2022-04-17)",
+  "tier": "meme",
+  "date": "2022-04-17"
+ },
+ "build_order": [
+  {
+   "villager_count": 11,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 7,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "6 a ovejas, 4 a madera, 1 al jabalí."
+   ],
+   "evidencia": "6 a comida (ovejas), 4 a madera, 1 lleva jabalí"
+  },
+  {
+   "villager_count": 15,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 11,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Un aldeano hace 2 casas y después va a bayas; sumá 3 más a bayas (4 en total)."
+   ],
+   "evidencia": "1 hace 2 casas y va a bayas, 3 más a bayas (4 total)"
+  },
+  {
+   "villager_count": 22,
+   "age": 2,
+   "resources": {
+    "wood": 4,
+    "food": 14,
+    "gold": 4,
+    "stone": 0
+   },
+   "notes": [
+    "Sumá 3 a comida del TC y 4 a oro; hacé Telar y subí a Feudal. No hagas más aldeanos."
+   ],
+   "evidencia": "3 más a comida del TC, 4 a oro, Telar, subir a Feudal en 22"
+  }
+ ]
+}

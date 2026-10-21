@@ -509,7 +509,7 @@ async function plainComplete(provider, { apiKey, model, baseUrl, system, user, m
     .map((b) => b.text)
     .join('\n')
     .trim();
-  return { text, usage: res.usage || {}, cost: estimateCost(model, res.usage) };
+  return { text, usage: res.usage || {}, cost: estimateCost(model, res.usage), stop: res.stop_reason || null, model: res.model || model };
 }
 
 function complete(provider, args) {

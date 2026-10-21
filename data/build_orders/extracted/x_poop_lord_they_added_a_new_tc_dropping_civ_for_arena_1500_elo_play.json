@@ -1,0 +1,57 @@
+{
+ "name": "TC drop en Feudal dravídico",
+ "civilization": "Dravidians",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=-dXJCk9FGxE",
+ "description": "Pasos extraídos por IA de la nota «They Added a New TC Dropping Civ for Arena! 1500 Elo play» (Poop Lord, 2022-05-01); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_every_unique_strategy.md",
+  "stem": "Poop Lord (anti-meta/meme) EU090 — They Added a New TC Dropping Civ for Arena! 1500 Elo play (video publicado 2022-05-01)",
+  "tier": "meme",
+  "date": "2022-05-01"
+ },
+ "build_order": [
+  {
+   "villager_count": 10,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Mandá 6 aldeanos a comida y 4 a madera."
+   ],
+   "evidencia": "6 a comida, 4 a madera, todo a comida hasta 20"
+  },
+  {
+   "villager_count": 20,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 16,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Todos los nuevos aldeanos a comida hasta 20 de población."
+   ],
+   "evidencia": "todo a comida hasta 20"
+  },
+  {
+   "villager_count": 20,
+   "age": 2,
+   "resources": {
+    "wood": 4,
+    "food": 16,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Subí a Feudal en 20 pop y mandá unos 14 aldeanos adelante."
+   ],
+   "evidencia": "subir en 20 pop"
+  }
+ ]
+}

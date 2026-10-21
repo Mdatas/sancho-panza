@@ -6,7 +6,7 @@
  * rtsbuilds format + provenance). Nothing is invented: every step carries a quote from the note, and a build is kept only when
  * every quote is found verbatim in the note; the model is told to return null when the note has no explicit sequence.
  *
- *   SP_KEY=sk-ant-... node tools/condense.js [--limit N] [--only "regex on title"] [--model claude-sonnet-5-5] [--force]
+ *   SP_KEY=sk-ant-... node tools/condense.js [--limit N] [--only "regex on title"] [--tier meta,anti-meta|meme] [--model claude-sonnet-5-5] [--force]
  *
  * Idempotent: notes already condensed (same text hash) are skipped unless --force.
  */
@@ -32,6 +32,7 @@ const LIMIT = Number(opt('--limit', 0)) || 0;
 const ONLY = opt('--only', '') ? new RegExp(opt('--only'), 'i') : null;
 const MODEL = opt('--model', 'claude-sonnet-5-5');
 const FORCE = args.includes('--force');
+const TIERS = opt('--tier', '') ? opt('--tier').split(',') : null; // e.g. --tier meta,anti-meta
 const KEY = process.env.SP_KEY;
 if (!KEY) {
   console.error('SP_KEY (Anthropic API key) is required in the environment; it is never written anywhere.');
@@ -91,7 +92,7 @@ async function main() {
     sums = {};
   }
   fs.mkdirSync(OUT_DIR, { recursive: true });
-  let notes = cat.notes.filter((n) => !ONLY || ONLY.test(n.title + ' ' + n.stem));
+  let notes = cat.notes.filter((n) => (!ONLY || ONLY.test(n.title + ' ' + n.stem)) && (!TIERS || TIERS.includes(n.tier)));
   // meta first (Hera, El Biry, TaToH, pros, responses), then anti-meta, then memes
   const rank = { meta: 0, 'anti-meta': 1, meme: 2 };
   notes.sort((a, b) => rank[a.tier] - rank[b.tier] || a.title.localeCompare(b.title));

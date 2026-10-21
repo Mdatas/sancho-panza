@@ -1,0 +1,85 @@
+{
+ "name": "Rush de aldeanos + arquería adelantada",
+ "civilization": "Vikings",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=0CbLbqYq1DM",
+ "description": "Pasos extraídos por IA de la nota «New Viking Vill Rush! New Biebz Strat» (Poop Lord, 2022-09-11); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_legend_of_the_game.md",
+  "stem": "Poop Lord (casteo) LG11 — New Viking Vill Rush?! New Biebz Strat (video publicado 2022-09-11)",
+  "tier": "meme",
+  "date": "2022-09-11"
+ },
+ "build_order": [
+  {
+   "villager_count": 6,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Aldeanos 1-6 a ovejas."
+   ],
+   "evidencia": "aldeanos 1-6 a ovejas; 7-8 a madera; 9-17 a comida; Loom."
+  },
+  {
+   "villager_count": 8,
+   "age": 1,
+   "resources": {
+    "wood": 2,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Aldeanos 7-8 a madera."
+   ],
+   "evidencia": "aldeanos 1-6 a ovejas; 7-8 a madera; 9-17 a comida; Loom."
+  },
+  {
+   "villager_count": 17,
+   "age": 1,
+   "resources": {
+    "wood": 2,
+    "food": 15,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Aldeanos 9-17 a comida; Loom. Cuartel en casa al llegar a 175 de comida."
+   ],
+   "evidencia": "aldeanos 1-6 a ovejas; 7-8 a madera; 9-17 a comida; Loom."
+  },
+  {
+   "villager_count": 17,
+   "age": 2,
+   "resources": {
+    "wood": 17,
+    "food": 0,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Al clickear Feudal, todos a madera (árboles sueltos)."
+   ],
+   "evidencia": "Al clickear Feudal, todos a madera (árboles sueltos)."
+  },
+  {
+   "villager_count": 17,
+   "age": 2,
+   "resources": {
+    "wood": 12,
+    "food": 0,
+    "gold": 5,
+    "stone": 0
+   },
+   "notes": [
+    "En casa, 4-5 a oro y el resto a madera."
+   ],
+   "evidencia": "En casa, 4-5 a oro y el resto a madera."
+  }
+ ]
+}

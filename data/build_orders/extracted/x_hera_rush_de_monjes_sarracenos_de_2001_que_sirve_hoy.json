@@ -1,0 +1,75 @@
+{
+ "name": "Rush de monjes con piedra y mercado",
+ "civilization": "Saracens",
+ "author": "Hera",
+ "source": "https://www.youtube.com/watch?v=apMmNDX7lOA",
+ "description": "Pasos extraídos por IA de la nota «Rush de monjes sarracenos de 2001 (qué sirve hoy)» (Hera, 2001); cada paso cita la frase de la nota que lo respalda. Tier: meta.",
+ "extracted_from": {
+  "file": "hera_builds.md",
+  "stem": "Hera (2001): Rush de monjes sarracenos de 2001 (qué sirve hoy)",
+  "tier": "meta",
+  "date": "2001"
+ },
+ "build_order": [
+  {
+   "villager_count": 6,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "El 1º aldeano hace casa y molino, y va a bayas.",
+    "Del 2 al 6 a ovejas (2-3 hacen casa)."
+   ],
+   "evidencia": "2-3 casa y ovejas; 4-6 ovejas"
+  },
+  {
+   "villager_count": 11,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 11,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "7 y 10 a bayas, 8-9 a ovejas.",
+    "El 11 hace casa y va a bayas."
+   ],
+   "evidencia": "7 a bayas, 8-9 a ovejas, 10 a bayas, 11 casa y bayas"
+  },
+  {
+   "villager_count": 14,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 11,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "12-14 a madera, a los árboles sueltos.",
+    "Sin ciervos. Atraé el jabalí tarde."
+   ],
+   "evidencia": "12-14 a madera (árboles sueltos al principio)"
+  },
+  {
+   "villager_count": 19,
+   "age": 2,
+   "resources": {
+    "wood": 6,
+    "food": 2,
+    "gold": 0,
+    "stone": 9
+   },
+   "notes": [
+    "Más 2 aldeanos forward. Vendé piedra para 2 monasterios.",
+    "No hacés casas ni aldeanos hasta que se acaben las bayas."
+   ],
+   "evidencia": "9 aldeanos a PIEDRA, 6 en madera, 2 en bayas y 2 aldeanos FORWARD"
+  }
+ ]
+}

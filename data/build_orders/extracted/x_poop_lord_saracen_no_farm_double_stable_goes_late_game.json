@@ -1,0 +1,58 @@
+{
+ "name": "No farm con 2 Establos y Mercado",
+ "civilization": "Saracens",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=VyioaIbX0SU",
+ "description": "Pasos extraídos por IA de la nota «Saracen No Farm Double Stable: Goes Late Game!» (Poop Lord, 2023-04-22); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_every_unique_strategy.md",
+  "stem": "Poop Lord (anti-meta/meme) EU259 — Saracen No Farm Double Stable: Goes Late Game!? (video publicado 2023-04-22)",
+  "tier": "meme",
+  "date": "2023-04-22"
+ },
+ "build_order": [
+  {
+   "villager_count": 9,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "6 aldeanos a comida y 3 a madera desde el inicio."
+   ],
+   "evidencia": "6 a comida → 3 a madera → todo a comida hasta 20 de población"
+  },
+  {
+   "villager_count": 20,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 17,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Todo a comida hasta 20 de población; Telar y clic a Feudal mientras sube el Cuartel."
+   ],
+   "evidencia": "6 a comida → 3 a madera → todo a comida hasta 20 de población"
+  },
+  {
+   "villager_count": 20,
+   "age": 2,
+   "resources": {
+    "wood": 13,
+    "food": 7,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Al subir a Feudal, pasá 10 aldeanos de comida a madera para 2 Establos y Mercado.",
+    "El resto va a oro para comprar comida."
+   ],
+   "evidencia": "PASAR 10 ALDEANOS DE COMIDA A MADERA para 2 Establos + Mercado"
+  }
+ ]
+}
