@@ -19,7 +19,21 @@ const knowledge = new Knowledge([path.join(root, 'knowledge')]).load();
 const strategy = new Strategy([path.join(root, 'knowledge')]).load();
 const cat = catalog({ buildOrders, knowledge, gd });
 const stats = parseCivStats([path.join(root, 'knowledge')]);
-const empty = () => ({ myCiv: '', oppCiv: '', allies: [], enemies: [], age: 0, oppAge: 0, map: '', elo: '', myArmy: '', theirArmy: '', myEco: '', keyFacts: [], notes: '' });
+const empty = () => ({
+  myCiv: '',
+  oppCiv: '',
+  allies: [],
+  enemies: [],
+  age: 0,
+  oppAge: 0,
+  map: '',
+  elo: '',
+  myArmy: '',
+  theirArmy: '',
+  myEco: '',
+  keyFacts: [],
+  notes: '',
+});
 
 // --- keyword parser (what runs without an API key)
 let p = sheet.parseMessage({ gd, strategy, text: 'soy francos contra mayas en arabia, 1100 elo', state: empty() });
@@ -43,6 +57,19 @@ assert.strictEqual(p.subjectCiv, 'Mongols', 'a civ asked about does not change t
 assert.deepStrictEqual(p.patch, {});
 p = sheet.parseMessage({ gd, strategy, text: 'wu vs tupi en nomad', state: empty() });
 assert.deepStrictEqual([p.patch.my_civ, p.patch.opp_civ, p.patch.map], ['Wu', 'Tupi', 'Nomad'], 'short civ names count when they are the full name');
+p = sheet.parseMessage({ gd, strategy, text: 'soy francos, aliados mayas y britanos, rivales mongoles, aztecas, gurjaras y teutones', state: empty() });
+assert.deepStrictEqual(
+  p.patch,
+  { my_civ: 'Franks', opp_civ: 'Mongols', enemies: ['Mongols', 'Aztecs', 'Gurjaras', 'Teutons'], allies: ['Mayans', 'Britons'] },
+  'team game: the role carries over "y" and commas'
+);
+p = sheet.parseMessage({ gd, strategy, text: 'my allies are britons and mayans, enemies huns and goths, I am franks', state: empty() });
+assert.deepStrictEqual(p.patch, { my_civ: 'Franks', opp_civ: 'Huns', enemies: ['Huns', 'Goths'], allies: ['Britons', 'Mayans'] });
+p = sheet.parseMessage({ gd, strategy, text: 'cuanta vida tiene el paladin', state: empty() });
+assert.strictEqual(p.patch.their_army, undefined, '"tiene" in a stats question is not the rival army');
+assert.strictEqual(p.focus, 'units');
+p = sheet.parseMessage({ gd, strategy, text: 'me tira caballeros y voy arqueros', state: empty() });
+assert.strictEqual(p.patch.their_army, 'caballeros', 'only their part of the sentence');
 p = sheet.parseMessage({ gd, strategy, text: 'con los malos monos', state: empty() });
 assert.deepStrictEqual(p.patch, {}, 'no civ from loose prefixes ("mal", "mon")');
 assert.deepStrictEqual(p.units, []);
@@ -78,7 +105,13 @@ assert.ok(sh.builds.steps[0].types.includes('Scouts') && sh.builds.steps[0].why.
 assert.ok(sh.builds.guides.every((g) => g.tier === 'anti-meta'));
 assert.deepStrictEqual(sh.missing, ['age']);
 const text = sheet.sheetText(sh);
-assert.ok(text.includes('## Mi civ: Francos') && text.includes('## Rival: Maya') && text.includes('## Mapa: Arabia') && text.includes('## Counters') && text.includes('## Builds sugeridos'));
+assert.ok(
+  text.includes('## Mi civ: Francos') &&
+    text.includes('## Rival: Maya') &&
+    text.includes('## Mapa: Arabia') &&
+    text.includes('## Counters') &&
+    text.includes('## Builds sugeridos')
+);
 const spoken = sheet.sheetSpoken(sh);
 assert.ok(/^vs Arquero: /.test(spoken) && spoken.length < 600, spoken);
 // english names / labels
@@ -96,17 +129,45 @@ sh = sheet.buildSheet({ gd, strategy, catalog: cat, state: empty(), stats, lang:
 assert.strictEqual(sh.me, null);
 assert.strictEqual(sh.counters, null);
 assert.deepStrictEqual(sh.missing, ['myCiv', 'oppCiv', 'map', 'age', 'elo']);
-assert.ok(sh.builds.steps.every((b) => b.civs.includes('Any')), 'no civ → only generic step builds');
-assert.ok(sh.builds.guides.every((g) => !g.civs.length || g.civs.includes('Any')), 'no civ → only civ-agnostic guides');
+assert.ok(
+  sh.builds.steps.every((b) => b.civs.includes('Any')),
+  'no civ → only generic step builds'
+);
+assert.ok(
+  sh.builds.guides.every((g) => !g.civs.length || g.civs.includes('Any')),
+  'no civ → only civ-agnostic guides'
+);
 // unit stats straight from the data when the question asks for them
-sh = sheet.buildSheet({ gd, strategy, catalog: cat, state: { ...empty(), myCiv: 'Franks', oppCiv: 'Mongols', age: 3 }, stats, lang: 'es', question: 'cuánta vida tiene el piquero' });
+sh = sheet.buildSheet({
+  gd,
+  strategy,
+  catalog: cat,
+  state: { ...empty(), myCiv: 'Franks', oppCiv: 'Mongols', age: 3 },
+  stats,
+  lang: 'es',
+  question: 'cuánta vida tiene el piquero',
+});
 assert.strictEqual(sh.focus, 'units');
 assert.strictEqual(sh.units.length, 1);
-assert.deepStrictEqual([sh.units[0].name, sh.units[0].hp, sh.units[0].attack, sh.units[0].armor, sh.units[0].cost, sh.units[0].age], ['Piquero', 55, 4, '0/0', { Food: 35, Wood: 25 }, 3]);
-assert.ok(/^\+25 vs Elephants/.test(sh.units[0].bonusDamage[0]) && /^\+22 vs Mounted/.test(sh.units[0].bonusDamage[1]), 'biggest bonus first: ' + sh.units[0].bonusDamage.join(', '));
+assert.deepStrictEqual(
+  [sh.units[0].name, sh.units[0].hp, sh.units[0].attack, sh.units[0].armor, sh.units[0].cost, sh.units[0].age],
+  ['Piquero', 55, 4, '0/0', { Food: 35, Wood: 25 }, 3]
+);
+assert.ok(
+  /^\+25 vs Elephants/.test(sh.units[0].bonusDamage[0]) && /^\+22 vs Mounted/.test(sh.units[0].bonusDamage[1]),
+  'biggest bonus first: ' + sh.units[0].bonusDamage.join(', ')
+);
 assert.strictEqual(sh.units[0].mineCan, true);
 assert.ok(sheet.sheetText(sh).includes('## Unidades') && /^Piquero: 55 HP/.test(sheet.sheetSpoken(sh)));
-sh = sheet.buildSheet({ gd, strategy, catalog: cat, state: { ...empty(), myCiv: 'Franks', oppCiv: 'Mongols' }, stats, lang: 'en', question: 'what does the mangudai cost' });
+sh = sheet.buildSheet({
+  gd,
+  strategy,
+  catalog: cat,
+  state: { ...empty(), myCiv: 'Franks', oppCiv: 'Mongols' },
+  stats,
+  lang: 'en',
+  question: 'what does the mangudai cost',
+});
 assert.strictEqual(sh.units[0].mineCan, false, 'Franks cannot make Mangudai');
 assert.strictEqual(sh.units[0].theirsCan, true);
 // opponent's typical units when nothing else is known; counters need my civ
@@ -115,7 +176,10 @@ assert.strictEqual(sh.counters.from, 'threats');
 assert.ok(sh.counters.rows.length >= 2 && sh.counters.rows.every((r) => r.noCiv));
 // closed map → fast castle builds; feudal openings sink once in Castle Age
 sh = sheet.buildSheet({ gd, strategy, catalog: cat, state: { ...empty(), myCiv: 'Franks', map: 'Arena', age: 3 }, stats, lang: 'es' });
-assert.ok(sh.builds.steps.some((b) => b.types.includes('Fast Castle') || b.types.includes('Boom')), JSON.stringify(sh.builds.steps.map((b) => b.title)));
+assert.ok(
+  sh.builds.steps.some((b) => b.types.includes('Fast Castle') || b.types.includes('Boom')),
+  JSON.stringify(sh.builds.steps.map((b) => b.title))
+);
 assert.ok(!sh.builds.steps.some((b) => b.types.includes('Drush')));
 // memes only on request
 sh = sheet.buildSheet({ gd, strategy, catalog: cat, state: { ...empty(), myCiv: 'Franks', map: 'Arabia' }, stats, lang: 'es', question: 'dame un meme' });
@@ -128,8 +192,13 @@ for (const key of Object.keys(gd.civs)) {
 }
 
 // --- screen reader: tolerant JSON parsing with sanity checks
-let r = parseReading('Sure: {"hud": true, "food": "1,204", "wood": 310, "gold": 120, "stone": 200, "pop": "34 / 40", "idle": 2, "villagers": {"food": 12, "wood": 9, "gold": 4, "stone": null}, "age": "Feudal", "time": "12:30", "confidence": 0.9}');
-assert.deepStrictEqual([r.hud, r.food, r.wood, r.pop, r.idle, r.villagers.wood, r.villagers.stone, r.age, r.time], [true, 1204, 310, '34/40', 2, 9, null, 2, '12:30']);
+let r = parseReading(
+  'Sure: {"hud": true, "food": "1,204", "wood": 310, "gold": 120, "stone": 200, "pop": "34 / 40", "idle": 2, "villagers": {"food": 12, "wood": 9, "gold": 4, "stone": null}, "age": "Feudal", "time": "12:30", "confidence": 0.9}'
+);
+assert.deepStrictEqual(
+  [r.hud, r.food, r.wood, r.pop, r.idle, r.villagers.wood, r.villagers.stone, r.age, r.time],
+  [true, 1204, 310, '34/40', 2, 9, null, 2, '12:30']
+);
 assert.deepStrictEqual(parseReading('{"hud": false}'), { hud: false });
 assert.strictEqual(parseReading('no json here'), null);
 assert.strictEqual(parseReading('{"hud": true, "food": null, "wood": null, "gold": null, "stone": null}').hud, false, 'no numbers at all is not a HUD');

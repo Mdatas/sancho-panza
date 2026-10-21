@@ -118,27 +118,41 @@ function parseMessage({ gd, strategy, text, state = {} }) {
       }
     }
   }
-  // who is who: markers before the civ word decide; two bare civs = me then rival (only onto an empty state)
+  // who is who: markers before the civ word decide; "rivales hunos y mayas" carries the role over the "y"; two bare civs = me then rival (only onto an empty state)
   const MINE = /\b(soy|yo|juego|jugando|tengo|elegi|elijo|me toco|me tocaron|i am|i m|im|playing|i play|me|my civ|as)$/;
-  const OPP = /\b(vs|versus|contra|rival|rivales|enemigo|enemigos|oponente|against|opp|opponent|enemy|enemies|they are|he is|es|son)$/;
+  const OPP = /\b(vs|versus|contra|rival|rivales|enemigo|enemigos|oponente|oponentes|against|opp|opponent|opponents|enemy|enemies|they are|he is|es|son)$/;
+  const ALLY = /\b(aliados?|allies|ally|compa(?:nero)?s?|teammates?|mi pocket|mi flanco|pocket|flanco)(?:\s+\w+){0,3}$/;
   let subjectCiv = '';
   const mine = [],
-    opp = [];
+    opp = [],
+    allies = [];
+  let lastRole = '',
+    lastEnd = -1;
   for (const h of civHits.sort((a, b) => a.i - b.i)) {
     const before = words.slice(Math.max(0, h.i - 3), h.i).join(' ');
     const after = words[h.i + h.n] || '';
-    if (OPP.test(before)) opp.push(h.key);
+    const joined = lastRole && h.i - lastEnd <= 1 && (h.i === lastEnd || /^(y|e|and|o|or|con)$/.test(words[lastEnd] || '')); // "hunos y mayas", "hunos, mayas"
+    let role = '';
+    if (OPP.test(before)) role = 'opp';
+    else if (ALLY.test(before)) role = 'ally';
     else if (MINE.test(before) || /^(vs|versus|contra|against)$/.test(after))
-      mine.push(h.key); // "francos vs mayas": the civ before "vs" is mine
-    else if (!mine.length && !opp.length && civHits.length >= 2 && !state.myCiv && !state.oppCiv) mine.push(h.key);
-    else if (mine.length === 1 && !opp.length && civHits.length >= 2 && !state.oppCiv) opp.push(h.key);
+      role = 'mine'; // "francos vs mayas": the civ before "vs" is mine
+    else if (joined) role = lastRole;
+    else if (!mine.length && !opp.length && civHits.length >= 2 && !state.myCiv && !state.oppCiv) role = 'mine';
+    else if (mine.length === 1 && !opp.length && civHits.length >= 2 && !state.oppCiv) role = 'opp';
+    if (role === 'opp') opp.push(h.key);
+    else if (role === 'ally') allies.push(h.key);
+    else if (role === 'mine') mine.push(h.key);
     else subjectCiv = subjectCiv || h.key;
+    lastRole = role;
+    lastEnd = h.i + h.n;
   }
   if (mine.length) patch.my_civ = mine[0];
   if (opp.length) {
     patch.opp_civ = opp[0];
     if (opp.length > 1) patch.enemies = opp.slice(0, 4);
   }
+  if (allies.length) patch.allies = allies.slice(0, 3);
   // age ("estoy en feudal", "ya en castillos", "in castle age", "llegué a imperial")
   const ageM =
     t.match(
@@ -153,7 +167,9 @@ function parseMessage({ gd, strategy, text, state = {} }) {
   const theirM = raw.match(
     /\b(?:me (?:tira|hace|viene|manda|ataca con|est[aá] haciendo)|hace|hacen|tiene|tienen|viene con|vienen con|they (?:have|make|are making|go)|he (?:has|makes|is making|goes)|going)\s+(.{3,60}?)(?:[.,;?!]|$)/i
   );
-  if (theirM && units.length) patch.their_army = theirM[1].trim();
+  // "tiene" also asks for a unit's stats ("cuánta vida tiene el piquero"): that is not the rival's army
+  if (theirM && units.length && !(/^tiene|^tienen/i.test(theirM[0]) && /\b(vida|hp|cu[aá]nt[oa]s?|ataque|armadura|alcance|stats?)\b/.test(t)))
+    patch.their_army = theirM[1].split(/\s+(?:y|and|pero|but)\s+(?:yo|voy|hago|tengo|i|i'm|im|i am|i go|i make)\b/i)[0].trim(); // "…caballeros y voy arqueros": only their part
   // focus
   let focus = 'all';
   if (
