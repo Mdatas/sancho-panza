@@ -1193,6 +1193,7 @@ function bindSettings() {
     loadBoList();
   });
   $('#btnOpenDir').addEventListener('click', () => window.coach.app.openUserDir());
+  if ($('#btnUninstall')) $('#btnUninstall').addEventListener('click', () => window.coach.app.uninstall && window.coach.app.uninstall());
   $('#btnOpenLogs').addEventListener('click', () => window.coach.app.openLogs());
   $('#btnQuit').addEventListener('click', () => window.coach.window.quit());
   window.coach.data.onStatus(() => refreshData());

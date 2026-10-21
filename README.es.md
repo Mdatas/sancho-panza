@@ -15,6 +15,24 @@ Leelo en: [English](README.md) · **Español**
 
 ---
 
+## Capturas
+
+<p align="center"><img src="screenshots/chat.png" width="31%" alt="Chat: el coach responde con un resumen de 3 líneas y el detalle"> <img src="screenshots/team-counters.png" width="31%" alt="Barra 4 vs 4 con los counters a cada civ rival"> <img src="screenshots/build-reader.png" width="31%" alt="Una guía condensada para la partida, con su build extraído"></p>
+<p align="center"><em>Chat con el resumen de 3 líneas · la barra 4 vs 4 y sus counters · una guía condensada «en la partida» con «Cargar pasos»</em></p>
+
+<p align="center"><img src="screenshots/overlay-compact.png" width="60%" alt="Overlay compacto sobre el juego: paso del build, respuesta, línea de pregunta"></p>
+<p align="center"><em>El overlay compacto (470 × 262) que queda arriba del juego: paso actual del build, última respuesta, línea de pregunta</em></p>
+
+<p align="center"><img src="screenshots/guide-civ.png" width="49%" alt="Guía: página de civ"> <img src="screenshots/guide-map.png" width="49%" alt="Guía: página de mapa con el minimapa del juego"></p>
+<p align="center"><img src="screenshots/guide-units.png" width="49%" alt="Guía: qué le gana a una unidad"> <img src="screenshots/guide-themes.png" width="49%" alt="Guía: resúmenes por tema"></p>
+<p align="center"><em>La guía: civs, mapas con su imagen, «¿qué le gana a…?» y los 24 resúmenes por tema</em></p>
+
+<p align="center"><img src="screenshots/build-orders.png" width="31%" alt="Build orders: catálogo y paso actual"> <img src="screenshots/settings-appearance.png" width="31%" alt="Ajustes: apariencia"> <img src="screenshots/phone-guide.png" width="27%" alt="La versión web en un teléfono"></p>
+<p align="center"><em>Build orders (catálogo + panel de pasos) · Ajustes → Apariencia · la versión web en un teléfono</em></p>
+
+<p align="center"><img src="screenshots/themes.png" width="80%" alt="Los cuatro aspectos: Taverna, Taverna de noche, Clásico oscuro, Clásico claro"></p>
+<p align="center"><em>Los cuatro aspectos: Taverna (predeterminado), Taverna de noche, Clásico oscuro, Clásico claro — <a href="screenshots/guide-night.png">la guía de noche</a></em></p>
+
 ## Por qué existe
 
 Esto se hizo **por curiosidad sobre lo que se puede hacer con IA — puramente por gusto y curiosidad intelectual.**
@@ -103,6 +121,8 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 | Chat, barra de equipo, build orders, guía | ✅ | ✅ | ✅ |
 | Seguimiento de parches | ✅ | ✅ | notas revisadas hasta la versión publicada |
 | Instalación | descomprimí + `Instalar.bat` | descomprimí → Aplicaciones → *Privacidad y seguridad* → "Abrir de todos modos" (la app no está notarizada) | abrí el link → "Agregar a la pantalla principal" |
+| Actualizar | correr el nuevo `Instalar.bat`: reemplaza la versión anterior (ajustes, key y logs quedan) | arrastrar la app nueva sobre la vieja | automático en la próxima carga |
+| Desinstalar | Ajustes → Datos → *Desinstalar…*, o Windows → Aplicaciones instaladas, o `Desinstalar.bat` (pregunta si borrar también tus ajustes y la key) | Ajustes → Datos → *Desinstalar…* muestra la app para arrastrarla a la Papelera y puede borrar tus datos | quitar el ícono; los datos quedan en el navegador |
 
 **Comandos** (o simplemente decilo en tu pregunta): `/civ franks` · `/vs mongols` · `/age castle` · `/map arabia` · `/elo 1100` · `/allies mayans, britons` · `/enemies mongols, aztecs` · `/counters` · `/bo scouts` · `/n` `/p` · `/guide` · `/repeat` · `/match` · `/patch` · `/new` · `/help`
 (en castellano también: `/civ francos` · `/vs mongoles` · `/edad castillos` · `/mapa arabia` · `/aliados` · `/rivales` · `/repetir` · `/partida` · `/parche` · `/nueva` · `/ayuda`)

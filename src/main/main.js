@@ -692,6 +692,7 @@ function registerIpc() {
 
   ipcMain.handle('app:openUserDir', () => shell.openPath(app.getPath('userData')));
   ipcMain.handle('app:openLogs', () => shell.openPath(userPath('logs')));
+  ipcMain.handle('app:uninstall', () => uninstallApp());
   ipcMain.handle('app:openExternal', (_e, url) => {
     if (/^https?:/.test(url)) shell.openExternal(url);
   });
@@ -706,6 +707,71 @@ function registerIpc() {
     return settings.get().compact;
   });
   ipcMain.handle('window:release', () => releaseFocus());
+}
+
+/**
+ * Settings → Datos → Desinstalar. Windows: hands over to the uninstaller the installer left next to the executable
+ * (uninstall.ps1: closes the app, removes the program folder, shortcuts and the Apps & features entry, asks about the
+ * user data) and quits. Mac: shows the app in Finder to drag it to the Trash and offers to delete the user data folder.
+ */
+async function uninstallApp() {
+  const { spawn } = require('child_process');
+  const dataDir = app.getPath('userData');
+  if (process.platform === 'win32') {
+    const script = path.join(path.dirname(process.execPath), 'uninstall.ps1');
+    if (!fs.existsSync(script)) {
+      await dialog.showMessageBox(win, { type: 'info', message: mt('m.uninstallNoScript'), detail: path.dirname(process.execPath) });
+      return { ok: false };
+    }
+    const r = await dialog.showMessageBox(win, {
+      type: 'question',
+      buttons: [mt('m.uninstallGo'), mt('m.cancel')],
+      defaultId: 1,
+      cancelId: 1,
+      message: mt('m.uninstallTitle'),
+      detail: mt('m.uninstallBody', { data: dataDir }),
+    });
+    if (r.response !== 0) return { ok: false };
+    const child = spawn(
+      'cmd.exe',
+      ['/c', 'start', '"Sancho Panza - desinstalar"', 'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', script],
+      {
+        detached: true,
+        stdio: 'ignore',
+        windowsHide: false,
+        cwd: app.getPath('temp'),
+      }
+    );
+    child.unref();
+    app.isQuiting = true;
+    setTimeout(() => app.quit(), 300);
+    return { ok: true };
+  }
+  if (process.platform === 'darwin') {
+    const bundle = process.execPath.replace(/\/Contents\/MacOS\/.*$/, '');
+    const r = await dialog.showMessageBox(win, {
+      type: 'question',
+      buttons: [mt('m.uninstallMacShow'), mt('m.uninstallMacData'), mt('m.cancel')],
+      defaultId: 0,
+      cancelId: 2,
+      message: mt('m.uninstallTitle'),
+      detail: mt('m.uninstallMacBody', { app: bundle, data: dataDir }),
+    });
+    if (r.response === 0) shell.showItemInFolder(bundle);
+    else if (r.response === 1) {
+      try {
+        fs.rmSync(dataDir, { recursive: true, force: true });
+      } catch (e) {
+        log('uninstall: data dir', e.message);
+      }
+      shell.showItemInFolder(bundle);
+      app.isQuiting = true;
+      setTimeout(() => app.quit(), 300);
+    }
+    return { ok: r.response !== 2 };
+  }
+  await dialog.showMessageBox(win, { type: 'info', message: mt('m.uninstallTitle'), detail: mt('m.uninstallLinux', { data: dataDir }) });
+  return { ok: false };
 }
 
 /* ----------------------------------------------------------------- app */

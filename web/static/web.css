@@ -2,7 +2,7 @@
 body.web { height: 100dvh; padding-bottom: env(safe-area-inset-bottom); }
 /* main app: a readable column on desktop browsers, full width on phones; the guide (split layout) always uses the full width */
 body.web.full { max-width: 1100px; margin: 0 auto; border-left: 1px solid #000; border-right: 1px solid #000; }
-body.web #btnMode, body.web #btnHide, body.web #btnOpenDir, body.web #btnOpenLogs, body.web #btnQuit, body.web #btnSync { display: none !important; }
+body.web #btnMode, body.web #btnHide, body.web #btnOpenDir, body.web #btnOpenLogs, body.web #btnQuit, body.web #btnSync, body.web #btnUninstall { display: none !important; }
 body.web #setOnTop, body.web #setOpacity { display: none; }
 body.web .desktopOnly { display: none !important; }
 body.web #tabs button { padding: 9px 4px; font-size: 13px; }

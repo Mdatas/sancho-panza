@@ -35,6 +35,7 @@ contextBridge.exposeInMainWorld('coach', {
     imgIndex: () => ipcRenderer.invoke('app:imgIndex'),
     openUserDir: () => ipcRenderer.invoke('app:openUserDir'),
     openLogs: () => ipcRenderer.invoke('app:openLogs'),
+    uninstall: () => ipcRenderer.invoke('app:uninstall'),
     openExternal: (u) => ipcRenderer.invoke('app:openExternal', u),
   },
   window: {

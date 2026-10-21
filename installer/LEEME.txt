@@ -1,11 +1,13 @@
-Sancho Panza - Age of Empires 2 Fan Companion v0.21 - instalacion en Windows
+Sancho Panza - Age of Empires 2 Fan Companion v0.21.1 - instalacion en Windows
 ==========================================================
 
 1. Doble clic en "Instalar.bat".
    - Descarga el runtime Electron (~110 MB, una sola vez) desde github.com/electron
    - Instala la app en %LOCALAPPDATA%\Programs\AoE2Coach y crea el acceso directo "Sancho Panza - Age of Empires 2 Fan Companion" en el Escritorio (reemplaza el viejo "AoE2 Coach").
    - Si Windows SmartScreen avisa: "Mas informacion" -> "Ejecutar de todas formas" (la app no esta firmada).
-   - Si ya tenias la v0.1: correr el instalador la reemplaza y mantiene tu API key y ajustes.
+   - Si ya tenias una version: el instalador la detecta, la borra y pone la nueva; tu API key, ajustes y logs quedan (viven en %APPDATA%\AoE2 Coach).
+   - Muestra cada paso con su hora; descomprimir el runtime (170 MB) puede tardar un par de minutos porque el antivirus revisa cada archivo. Ningun paso espera sin limite.
+   - Tambien registra la app en Windows -> Configuracion -> Aplicaciones instaladas, con su desinstalador.
 2. Al abrir aparece una ventana que explica la API key: pegala y toca "Guardar y probar" (o "Saltar"; tambien va en Ajustes -> Cerebro).
 3. En el juego usa "Ventana sin bordes" (Opciones -> Graficos).
    F10 = escribirle al coach desde la partida (Enter envia y devuelve el foco al juego, Esc vuelve sin enviar)
@@ -13,7 +15,10 @@ Sancho Panza - Age of Empires 2 Fan Companion v0.21 - instalacion en Windows
 4. Comandos (como el chat del juego): /civ francos  /vs mongoles  /edad feudal  /mapa arabia  /nueva
    /bo scouts (buscar build) -> /bo 2 (elegir) -> /n /p (pasos)   /voz on|off   /mal <que estuvo mal>   /ayuda
    O decilo directamente en la pregunta: el coach registra la situacion y la muestra en la barra.
+5. Desinstalar: Ajustes -> Datos -> "Desinstalar..." dentro de la app, o Windows -> Aplicaciones instaladas -> Sancho Panza -> Desinstalar,
+   o doble clic en "Desinstalar.bat" (esta en este zip y en la carpeta de la app). Pregunta si borrar tambien tus ajustes y la API key.
 
+Nuevo en v0.21.1: instalador con progreso por paso y sin esperas infinitas; detecta y reemplaza la version anterior; desinstalador (boton en Ajustes, entrada en Aplicaciones instaladas, Desinstalar.bat).
 Nuevo en v0.21: aspecto "Taverna" (predeterminado): una calle de mercado de dia -carteles de roble colgados de un riel de hierro, hojas de pergamino, botones de laton y un toldo a rayas en la barra de titulo- y "Taverna de noche" (piedra, luz de farol, botones carmesi). En Ajustes -> Apariencia se vuelve al aspecto anterior en dos versiones: Clasico oscuro y Clasico claro. La Guia sigue la eleccion. Todo dibujado con CSS, sin arte del juego.
 Nuevo en v0.20: guias usables en la partida. (1) Cada guia de video abre con un bloque "En la partida" (3-6 lineas con los numeros que importan, con las correcciones de VIGENCIA ya aplicadas); la nota completa queda plegada. (2) Builds paso a paso extraidos de las guias que los explican (etiqueta "extraido"; cada paso guarda la frase de la nota que lo respalda; nada inventado): se cargan en el panel con "Cargar pasos" y funcionan con F7/F8 y el reloj. (3) Guia -> Temas: resumenes por tema de todas las guias (scouts, arqueros, drush, fast castle, torres, monjes, asedio, agua, defensa de rushes, muros, equipos, late game...), con alternativas cuando las guias no coinciden y la fuente en cada linea; el coach los usa para preguntas generales. (4) Ajustes quedo a la derecha de Guia.
 Nuevo en v0.19 (revision completa): (1) Mas rapido y mas barato: la respuesta se muestra mientras se escribe y el resumen se lee en voz alta apenas esta completo; la extraccion de datos de la partida corre en paralelo; counters precalculados para el ejercito rival registrado; cache de prompt activada por defecto (unos US$0,03-0,05 por pregunta). (2) Busqueda de notas nueva (indice BM25 bilingue) y un solo buscador en la Guia para civs, mapas, unidades y notas. (3) Reloj del build (boton ▶): los pasos avanzan solos por su tiempo y te dice si vas adelantado o atrasado; bonus de inicio de tu civ junto a los builds genericos; benchmarks de tiempos (A+..E) para el coach. (4) Bienvenida con dos caminos (con IA / sin IA) y costo real; Ajustes mas simples (lo raro esta en "Avanzado"); aviso si un atajo choca con una tecla del juego (F10 = menu); lectura de "+22" en el idioma de la voz. (5) Arreglos: la IA usaba datos viejos despues de sincronizar el parche; settings.json se escribe de forma atomica (antes un corte podia borrar la key); la key nunca viaja por http:// a un host publico; la app recuerda la partida si la reabris dentro de las 3 horas; logs de chat se borran a los 30 dias por defecto. (6) Seguridad: fuses de Electron en el instalador y en Mac; CI con lint, smoke test y test de la web en cada release.

@@ -15,6 +15,24 @@ Read this in: **English** · [Español](README.es.md)
 
 ---
 
+## Screenshots
+
+<p align="center"><img src="screenshots/chat.png" width="31%" alt="Chat: the coach answers with a 3-line summary and the detail"> <img src="screenshots/team-counters.png" width="31%" alt="4 v 4 team bar with the counters to each enemy civ"> <img src="screenshots/build-reader.png" width="31%" alt="A guide condensed for the game, with its extracted build"></p>
+<p align="center"><em>Chat with the 3-line summary · the 4 v 4 bar and its counters · a guide condensed “for the game” with “Load steps”</em></p>
+
+<p align="center"><img src="screenshots/overlay-compact.png" width="60%" alt="Compact overlay on top of the game: build step, answer, question line"></p>
+<p align="center"><em>The compact overlay (470 × 262) that stays on top of the game: current build step, last answer, question line</em></p>
+
+<p align="center"><img src="screenshots/guide-civ.png" width="49%" alt="Guide: civ page"> <img src="screenshots/guide-map.png" width="49%" alt="Guide: map page with the in-game minimap"></p>
+<p align="center"><img src="screenshots/guide-units.png" width="49%" alt="Guide: what beats a unit"> <img src="screenshots/guide-themes.png" width="49%" alt="Guide: topic summaries"></p>
+<p align="center"><em>The guide: civs, maps with their picture, “what beats…?”, and the 24 topic summaries</em></p>
+
+<p align="center"><img src="screenshots/build-orders.png" width="31%" alt="Build orders: catalogue and the current step"> <img src="screenshots/settings-appearance.png" width="31%" alt="Settings: appearance"> <img src="screenshots/phone-guide.png" width="27%" alt="The web version on a phone"></p>
+<p align="center"><em>Build orders (catalogue + step panel) · Settings → Appearance · the web version on a phone</em></p>
+
+<p align="center"><img src="screenshots/themes.png" width="80%" alt="The four looks: Tavern, Tavern at night, Classic dark, Classic light"></p>
+<p align="center"><em>The four looks: Tavern (default), Tavern at night, Classic dark, Classic light — <a href="screenshots/guide-night.png">the guide at night</a></em></p>
+
 ## Why it exists
 
 This was made **out of curiosity about what can be done with AI — purely for joy and intellectual curiosity.**
@@ -103,6 +121,8 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 | Chat, team bar, build orders, guide | ✅ | ✅ | ✅ |
 | Patch watch | ✅ | ✅ | notes reviewed up to the release |
 | Install | unzip + `Instalar.bat` | unzip → Applications → *Privacy & Security* → "Open Anyway" (app is not notarised) | open the link → "Add to Home screen" |
+| Update | run the new `Instalar.bat`: it replaces the previous version (settings, key and logs stay) | drag the new app over the old one | automatic on the next load |
+| Uninstall | Settings → Data → *Uninstall…*, or Windows → Installed apps, or `Desinstalar.bat` (asks whether to delete your settings and key too) | Settings → Data → *Uninstall…* shows the app to drag to the Trash and can delete your data | remove the icon; site data in the browser |
 
 **Commands** (or just say it in your question): `/civ franks` · `/vs mongols` · `/age castle` · `/map arabia` · `/elo 1100` · `/allies mayans, britons` · `/enemies mongols, aztecs` · `/counters` · `/bo scouts` · `/n` `/p` · `/guide` · `/repeat` · `/match` · `/patch` · `/new` · `/help`
 
