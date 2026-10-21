@@ -198,6 +198,8 @@ body.full #tab-bo.active { display: flex !important; flex-direction: column; ove
 .sheet .shb .t { font-weight: 600; flex: 1 1 100%; } .sheet .shb .s { display: flex; align-items: center; gap: 8px; flex: 1; font-size: 11.5px; }
 .sheet .shb .s button { margin-left: auto; }
 .sheet .shb .cico.sm { width: 16px; height: 16px; vertical-align: -3px; margin-right: 3px; border-radius: 2px; }
+.sheet .shu { padding: 4px 0; border-top: 1px solid var(--border); } .sheet .shu:first-child { border-top: 0; }
+.sheet .shu .t { font-weight: 600; } .sheet .shu .s { font-size: 11.5px; color: var(--muted); } .sheet .shu .s b { color: var(--text); }
 .sheet .shg { font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--gold); margin: 6px 0 2px; }
 .sheet .shf { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; } .sheet .shf .shmode { margin-left: auto; }
 .sheet .shmap { float: right; width: 72px; height: 72px; object-fit: cover; border-radius: 4px; margin: 0 0 4px 8px; border: 1px solid var(--border2); }

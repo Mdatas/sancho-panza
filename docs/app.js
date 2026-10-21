@@ -683,7 +683,15 @@ function sheetMapHtml(m, sh) {
   mrow(tr('sheet.mapCivs'), m.civs);
   mrow(tr('sheet.mistakes'), m.mistakes);
   if (!m.vsLine) mrow(tr('sheet.mapVs', { civ: '…' }).replace(' …', ''), m.vsCiv);
-  const pic = IMG.maps && IMG.maps[m.name] ? `<img class="shmap" src="${esc(IMG.base + IMG.maps[m.name])}" alt="">` : '';
+  // the map pictures are keyed by the lower-case name without accents or spaces (same rule as the guide)
+  const mk = (n) =>
+    String(n || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]/g, '');
+  const mapKey = IMG.maps ? [m.name, ...(m.aliases || [])].map(mk).find((x) => x && IMG.maps[x]) : '';
+  const pic = mapKey ? `<img class="shmap" src="${esc(IMG.base + IMG.maps[mapKey])}" alt="">` : '';
   return {
     title: `${esc(tr('sheet.map'))}: <b>${esc(m.name)}</b>${m.type ? ` <i class="muted">(${esc(m.type)})</i>` : ''}`,
     body: pic + rows.join('') + (more.length ? `<details class="shm"><summary>${esc(tr('sheet.more'))}</summary>${more.join('')}</details>` : ''),
@@ -710,6 +718,23 @@ function sheetCountersHtml(c, sh) {
     )
     .join('');
   return { title: `${esc(tr('sheet.counters'))} <span class="muted small">· ${esc(note)}</span>`, body: rows };
+}
+function sheetUnitsHtml(units, sh) {
+  const fmtCost = (c) =>
+    Object.entries(c || {})
+      .map(([k, v]) => `${v}${RES_ICON[k.toLowerCase()] || k[0]}`)
+      .join(' ');
+  const rows = units
+    .map(
+      (u) =>
+        `<div class="shu"><div class="t">${unitIcon(u.name_en)}<b>${esc(u.name)}</b> <span class="muted">· ${esc(L.ages[u.age] || '')} · ${esc(fmtCost(u.cost))}${u.trainTime ? ' · ' + esc(tr('sheet.train', { s: u.trainTime })) : ''}</span>${
+          u.mineCan === false ? ` <span class="tag bad">${esc(tr('sheet.mineNo'))}</span>` : ''
+        }${u.theirsCan === false && sh.opp ? ` <span class="tag warn">${esc(tr('sheet.theirsNo'))}</span>` : ''}</div><div class="s">${esc(tr('sheet.hp'))} <b>${u.hp}</b> · ${esc(tr('g.attack'))} <b>${u.attack}</b>${
+          u.range ? ` (${esc(tr('g.range'))} ${u.range})` : ''
+        } · ${esc(tr('g.armor'))} <b>${esc(u.armor)}</b> · ${esc(tr('g.speed'))} <b>${u.speed}</b>${u.bonusDamage.length ? `<br>${esc(tr('sheet.bonus'))}: ${esc(u.bonusDamage.join(' · '))}` : ''}</div></div>`
+    )
+    .join('');
+  return { title: esc(tr('sheet.units')), body: rows };
 }
 function sheetBuildsHtml(b, sh) {
   const civKeyOf = (n) => {
@@ -757,17 +782,20 @@ function sheetHtml(sh, { compact = false, extracted = false } = {}) {
   const add = (key, b) => b && blocks.push({ key, ...b });
   const order =
     sh.focus === 'counters'
-      ? ['counters', 'subject', 'opp', 'me', 'map', 'builds']
-      : sh.focus === 'opp'
-        ? ['opp', 'counters', 'me', 'map', 'builds']
-        : sh.focus === 'map'
-          ? ['map', 'me', 'opp', 'counters', 'builds']
-          : sh.focus === 'builds'
-            ? ['builds', 'me', 'map', 'opp', 'counters']
-            : sh.subject
-              ? ['subject', 'me', 'opp', 'map', 'counters', 'builds']
-              : ['me', 'opp', 'map', 'counters', 'builds'];
+      ? ['counters', 'units', 'subject', 'opp', 'me', 'map', 'builds']
+      : sh.focus === 'units'
+        ? ['units', 'counters', 'me', 'opp', 'map', 'builds']
+        : sh.focus === 'opp'
+          ? ['opp', 'counters', 'units', 'me', 'map', 'builds']
+          : sh.focus === 'map'
+            ? ['map', 'me', 'opp', 'counters', 'units', 'builds']
+            : sh.focus === 'builds'
+              ? ['builds', 'me', 'map', 'opp', 'counters', 'units']
+              : sh.subject
+                ? ['subject', 'me', 'opp', 'map', 'counters', 'units', 'builds']
+                : ['me', 'opp', 'map', 'counters', 'units', 'builds'];
   for (const k of order) {
+    if (k === 'units' && sh.units && sh.units.length) add('units', sheetUnitsHtml(sh.units, sh));
     if (k === 'me' && sh.me) add('me', sheetCivHtml(sh.me, sh));
     if (k === 'opp' && sh.opp) add('opp', sheetCivHtml(sh.opp, sh));
     if (k === 'subject' && sh.subject) add('subject', sheetCivHtml(sh.subject, sh));
@@ -928,7 +956,8 @@ async function ask(text, { advise = false } = {}) {
     .map((n) => L.tool[n] || n)
     .filter((v, i, a) => a.indexOf(v) === i)
     .join(', ');
-  const meta = `${tools ? tools + ' · ' : ''}${(r.ms / 1000).toFixed(1)}s${r.cost ? ` · $${r.cost.toFixed(3)} (${tr('session')} $${r.totals.cost.toFixed(2)})` : ''}`;
+  const fmtCost = (c) => (c < 0.001 ? c.toFixed(4) : c.toFixed(3)); // a sheet costs a fraction of a cent (the extraction only)
+  const meta = `${tools ? tools + ' · ' : ''}${(r.ms / 1000).toFixed(1)}s${r.cost ? ` · $${fmtCost(r.cost)} (${tr('session')} $${r.totals.cost.toFixed(2)})` : ''}`;
   if (r.kind === 'sheet') {
     if (r.cost && !S.keyOk) save({ keyOk: true }); // the extraction worked: the key is good
     showSheet(shown, r, meta);

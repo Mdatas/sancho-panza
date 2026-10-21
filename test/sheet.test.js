@@ -98,6 +98,17 @@ assert.strictEqual(sh.counters, null);
 assert.deepStrictEqual(sh.missing, ['myCiv', 'oppCiv', 'map', 'age', 'elo']);
 assert.ok(sh.builds.steps.every((b) => b.civs.includes('Any')), 'no civ → only generic step builds');
 assert.ok(sh.builds.guides.every((g) => !g.civs.length || g.civs.includes('Any')), 'no civ → only civ-agnostic guides');
+// unit stats straight from the data when the question asks for them
+sh = sheet.buildSheet({ gd, strategy, catalog: cat, state: { ...empty(), myCiv: 'Franks', oppCiv: 'Mongols', age: 3 }, stats, lang: 'es', question: 'cuánta vida tiene el piquero' });
+assert.strictEqual(sh.focus, 'units');
+assert.strictEqual(sh.units.length, 1);
+assert.deepStrictEqual([sh.units[0].name, sh.units[0].hp, sh.units[0].attack, sh.units[0].armor, sh.units[0].cost, sh.units[0].age], ['Piquero', 55, 4, '0/0', { Food: 35, Wood: 25 }, 3]);
+assert.ok(/^\+25 vs Elephants/.test(sh.units[0].bonusDamage[0]) && /^\+22 vs Mounted/.test(sh.units[0].bonusDamage[1]), 'biggest bonus first: ' + sh.units[0].bonusDamage.join(', '));
+assert.strictEqual(sh.units[0].mineCan, true);
+assert.ok(sheet.sheetText(sh).includes('## Unidades') && /^Piquero: 55 HP/.test(sheet.sheetSpoken(sh)));
+sh = sheet.buildSheet({ gd, strategy, catalog: cat, state: { ...empty(), myCiv: 'Franks', oppCiv: 'Mongols' }, stats, lang: 'en', question: 'what does the mangudai cost' });
+assert.strictEqual(sh.units[0].mineCan, false, 'Franks cannot make Mangudai');
+assert.strictEqual(sh.units[0].theirsCan, true);
 // opponent's typical units when nothing else is known; counters need my civ
 sh = sheet.buildSheet({ gd, strategy, catalog: cat, state: { ...empty(), oppCiv: 'Mongols', age: 3 }, stats, lang: 'es', question: 'contra mongoles?' });
 assert.strictEqual(sh.counters.from, 'threats');

@@ -156,7 +156,15 @@ function parseMessage({ gd, strategy, text, state = {} }) {
   if (theirM && units.length) patch.their_army = theirM[1].trim();
   // focus
   let focus = 'all';
-  if (units.length || /\bcounter|contra\b|\bbeat|gana a\b|qu[eé] le hago|c[oó]mo (?:paro|freno|mato)|how do i (?:stop|beat|kill)/.test(t)) focus = 'counters';
+  if (
+    units.length &&
+    /\b(vida|hp|stats?|ataque|armadura|alcance|velocidad|cuesta|costo|cost|damage|da[nñ]o|attack|armou?r|range|speed|cu[aá]nt[oa]s?|how much|how many|what does .* do|qu[eé] (?:hace|es) (?:el|la|un|una)\b)/.test(
+      t
+    )
+  )
+    focus = 'units';
+  else if (units.length || /\bcounter|contra\b|\bbeat|gana a\b|qu[eé] le hago|c[oó]mo (?:paro|freno|mato)|how do i (?:stop|beat|kill)/.test(t))
+    focus = 'counters';
   else if (/\bbuild\b|\bbo\b|apertura|opening|orden de construccion|qu[eé] abro|como abro|how do i open/.test(t)) focus = 'builds';
   else if (/\bmapa\b|\bmap\b/.test(t)) focus = 'map';
   else if (/\brival\b|\boponente\b|\bopponent\b|\benemy\b|\bcontra\b/.test(t) && (opp.length || state.oppCiv)) focus = 'opp';
@@ -282,6 +290,7 @@ function mapBlock({ strategy, name, oppCiv, gd }) {
   return {
     name: m.meta.map || m.title,
     type: m.meta.type || '',
+    aliases: Array.isArray(m.meta.aliases) ? m.meta.aliases : [],
     geography: sectionOf(m, 'Tipo y geografía'),
     resources: sectionOf(m, 'Recursos iniciales'),
     walls: sectionOf(m, 'Murallas'),
@@ -323,6 +332,44 @@ function counterRows({ gd, myCiv, oppCiv, age, units, lang }) {
     rows.push(row);
   }
   return { age: a, ageAssumed: !Number(age), rows };
+}
+
+/** Stats of the units named in the question, straight from the current-patch data (what lookup_unit gives the model). */
+function unitCards({ gd, units, lang, myCiv, oppCiv }) {
+  const out = [];
+  for (const u of units.slice(0, 4)) {
+    let d;
+    try {
+      d = gd.describeUnit(u, lang === 'es' ? 'es' : 'en');
+    } catch {
+      continue;
+    }
+    const avail = (civ) => (civ && gd.findCiv(civ) ? u.civs.has(gd.findCiv(civ).key) : null);
+    out.push({
+      name: lang === 'es' && u.name_es ? u.name_es : u.name_en,
+      name_en: u.name_en,
+      age: d.ageNum || u.age || 0,
+      building: d.building || u.buildingName || '',
+      line: d.line || [],
+      cost: d.cost || u.cost || {},
+      trainTime: d.trainTime,
+      hp: d.hp,
+      attack: d.attack,
+      attackType: d.attackType,
+      armor: d.armor,
+      range: d.range,
+      speed: d.speed,
+      reload: d.reload,
+      // biggest bonus first ("+22 vs Mounted Units" before "+1 vs Shock Infantry")
+      bonusDamage: (d.bonusDamage || [])
+        .filter((b) => !/\+0 /.test(b))
+        .sort((a, b) => (parseInt(b, 10) || 0) - (parseInt(a, 10) || 0))
+        .slice(0, 6),
+      mineCan: avail(myCiv),
+      theirsCan: avail(oppCiv),
+    });
+  }
+  return out;
 }
 
 /* ------------------------------------------------------------------ build suggestions */
@@ -442,6 +489,7 @@ function buildSheet({ gd, strategy, catalog = null, state = {}, stats = null, la
     }
   }
   const counters = units.length ? { ...counterRows({ gd, myCiv: state.myCiv, oppCiv: state.oppCiv, age: state.age, units, lang }), from: unitsFrom } : null;
+  const unitStats = p.units.length ? unitCards({ gd, units: p.units, lang, myCiv: state.myCiv, oppCiv: state.oppCiv }) : [];
   const wantMeme = /\bmeme|cheese|troll|cheesy|rara|sorpresa|surprise|loca\b/i.test(question || '');
   const builds = suggestBuilds({
     catalog,
@@ -475,6 +523,7 @@ function buildSheet({ gd, strategy, catalog = null, state = {}, stats = null, la
     subject,
     map,
     counters,
+    units: unitStats,
     builds,
   };
 }
@@ -506,8 +555,14 @@ function armyUnits(gd, text, oppCiv) {
 }
 
 /* ------------------------------------------------------------------ text version (voice, logs, model context) */
+const AGE_LABEL = { es: { 1: 'Oscura', 2: 'Feudal', 3: 'Castillos', 4: 'Imperial' }, en: { 1: 'Dark', 2: 'Feudal', 3: 'Castle', 4: 'Imperial' } };
 const LABELS = {
   es: {
+    units: 'Unidades',
+    attack: 'ataque',
+    range: 'alcance',
+    armor: 'armadura',
+    speed: 'velocidad',
     me: 'Mi civ',
     opp: 'Rival',
     subject: 'Civ',
@@ -532,6 +587,11 @@ const LABELS = {
     stats: 'Stats',
   },
   en: {
+    units: 'Units',
+    attack: 'attack',
+    range: 'range',
+    armor: 'armor',
+    speed: 'speed',
     me: 'My civ',
     opp: 'Opponent',
     subject: 'Civ',
@@ -599,6 +659,21 @@ function sheetText(sheet, { full = false } = {}) {
     }
     out.push(lines.join('\n'));
   }
+  if (sheet.units && sheet.units.length) {
+    const fmtCost = (c) =>
+      Object.entries(c || {})
+        .map(([k, v]) => `${v}${k[0]}`)
+        .join(' ');
+    out.push(
+      `## ${L.units}\n` +
+        sheet.units
+          .map(
+            (u) =>
+              `- ${u.name}: ${u.hp} HP · ${L.attack} ${u.attack}${u.range ? ` (${L.range} ${u.range})` : ''} · ${L.armor} ${u.armor} · ${L.speed} ${u.speed} · ${fmtCost(u.cost)} · ${AGE_LABEL[sheet.lang === 'es' ? 'es' : 'en'][u.age] || ''}${u.bonusDamage.length ? ' · ' + u.bonusDamage.join(', ') : ''}`
+          )
+          .join('\n')
+    );
+  }
   if (sheet.counters && sheet.counters.rows.length) {
     const c = sheet.counters;
     out.push(
@@ -625,6 +700,10 @@ function sheetText(sheet, { full = false } = {}) {
 function sheetSpoken(sheet) {
   const L = LABELS[sheet.lang === 'es' ? 'es' : 'en'];
   const lines = [];
+  if (sheet.focus === 'units' && sheet.units && sheet.units.length) {
+    const u = sheet.units[0];
+    lines.push(`${u.name}: ${u.hp} HP, ${L.attack} ${u.attack}, ${L.armor} ${u.armor}${u.bonusDamage.length ? ', ' + u.bonusDamage[0] : ''}`);
+  }
   if (sheet.counters && sheet.counters.rows.length && sheet.counters.rows[0].options.length) {
     const r = sheet.counters.rows[0];
     lines.push(
