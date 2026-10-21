@@ -85,6 +85,9 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 * Claude (Anthropic) por defecto — con la que se construyó y se probó.
 * También OpenAI, Google Gemini, Groq, OpenRouter, NVIDIA NIM, modelos locales (Ollama / LM Studio / llama.cpp / Hermes) o cualquier endpoint compatible con OpenAI. Algunos tienen planes gratuitos.
 
+**Apariencia**
+* Cuatro aspectos, se cambian en Ajustes → Apariencia: **Taverna** (predeterminado: una calle de mercado de día, carteles de roble colgados de un riel de hierro, hojas de pergamino, botones de latón y un toldo a rayas como barra de título), **Taverna de noche** (la misma calle de noche: piedra, luz de farol, botones carmesí), **Clásico oscuro** (el aspecto anterior) y **Clásico claro**. Dibujado solo con CSS, sin arte del juego; la ventana de la Guía sigue la elección.
+
 **Privacidad**
 * La app viene **sin API key**. Cada usuario trae la suya; queda en su dispositivo (cifrada en escritorio; en el almacenamiento local del navegador en la versión web).
 * Lo que sale de tu dispositivo: tus preguntas y las notas relevantes van al proveedor de IA que elegiste; el texto de las respuestas va a Microsoft solo si usás la voz de Edge; tu id de perfil va a aoe2companion solo si activás la detección de partida; al abrir, la app de escritorio consulta GitHub por datos del juego (aoe2techtree) y builds (rtsbuilds) más nuevos, y una vez por día ageofempires.com por noticias de parches (las dos cosas se apagan en Ajustes). Los logs de conversación quedan en tu dispositivo y se borran a los 30 días por defecto. No se le envía nada al autor.
@@ -184,4 +187,5 @@ Las correcciones son muy bienvenidas — sobre todo de traducciones (hechas con 
 
 Idea, pruebas y dirección: **M** ([Mdatas](https://github.com/Mdatas)). Construido con **Claude** (Anthropic).
 Gracias a cada creador listado en *Fuentes* — esta herramienta existe solo porque ellos comparten su conocimiento gratis.
+Tipografías: Cinzel, Almendra y Alegreya (SIL Open Font License, copias en `src/renderer/fonts`).
 Age of Empires II: Definitive Edition © Microsoft Corporation. Sancho Panza · Age of Empires 2 Fan Companion se creó bajo las "Game Content Usage Rules" de Microsoft usando recursos de Age of Empires II. No está respaldado por Microsoft ni afiliado a Microsoft.

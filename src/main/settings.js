@@ -16,6 +16,7 @@ const DEFAULTS = {
   streaming: true, // stream the answer while the model writes it (falls back to one block when the server cannot)
   language: 'auto', // answer language: 'auto' | 'es' | 'en'
   uiLanguage: 'es', // interface language
+  theme: 'taverna', // 'taverna' | 'taverna-night' | 'classic-dark' | 'classic-light'
   voiceOut: true, // read answers aloud
   ttsEngine: 'edge', // 'edge' | 'sapi' | 'off'
   ttsVoice: 'es-AR-ElenaNeural',
@@ -81,6 +82,7 @@ const SCHEMA = {
   streaming: T.bool,
   language: T.str,
   uiLanguage: T.enumOf(['es', 'en', 'de', 'pt', 'zh', 'vi', 'ko']),
+  theme: T.enumOf(['taverna', 'taverna-night', 'classic-dark', 'classic-light']),
   voiceOut: T.bool,
   ttsEngine: T.enumOf(['edge', 'sapi', 'off']),
   ttsVoice: T.str,

@@ -8,6 +8,32 @@ const norm = (s) =>
     .replace(/[\u0300-\u036f]/g, '');
 
 const I18N = window.I18N; // src/renderer/i18n.js (es, en, de, pt, zh, vi, ko)
+/* Appearance: taverna (day, default) · taverna-night · classic-dark · classic-light — theme.css keys everything off <html data-theme>. */
+const THEMES = ['taverna', 'taverna-night', 'classic-dark', 'classic-light'];
+const THEME_BAR = { taverna: '#4b321d', 'taverna-night': '#141a26', 'classic-dark': '#16130f', 'classic-light': '#e6dcc4' }; // phone browser chrome (web)
+function applyTheme(t) {
+  const theme = THEMES.includes(t) ? t : 'taverna';
+  document.documentElement.dataset.theme = theme;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', THEME_BAR[theme]);
+  $$('#setTheme button').forEach((b) => b.classList.toggle('on', b.dataset.v === theme));
+  const f = $('#guideFrame');
+  if (f && f.dataset.loaded) {
+    try {
+      f.contentWindow.postMessage({ type: 'sp:theme', theme }, location.origin === 'null' ? '*' : location.origin);
+    } catch {
+      /* */
+    }
+  }
+  return theme;
+}
+// desktop: the main process passes the saved theme in the URL so the first paint is already right (settings load a moment later)
+try {
+  const early = new URLSearchParams(location.search).get('theme');
+  if (early && THEMES.includes(early)) document.documentElement.dataset.theme = early;
+} catch {
+  /* */
+}
 const DEFAULT_VOICE = {
   es: 'es-AR-ElenaNeural',
   en: 'en-US-AriaNeural',
@@ -979,6 +1005,7 @@ async function loadSettings() {
   S = await window.coach.settings.get();
   L = langTable(S.uiLanguage || 'es');
   applyI18n();
+  applyTheme(S.theme);
   $('#setProvider').value = presetOf(S);
   onProviderChange();
   const masked = S.experimentalPrivacy === true;
@@ -1092,6 +1119,12 @@ function bindSettings() {
   bind('#setOpenaiModel', 'openaiModel', (v) => v.trim());
   keyInput('#setOpenaiKey', 'openaiApiKey');
   bind('#setLanguage', 'language');
+  $$('#setTheme button').forEach((b) =>
+    b.addEventListener('click', async () => {
+      await save({ theme: b.dataset.v });
+      applyTheme(S.theme);
+    })
+  );
   bind('#setTtsEngine', 'ttsEngine');
   bind('#setTtsVoice', 'ttsVoice');
   bind('#setFocusReturn', 'focusReturn');

@@ -85,6 +85,9 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 * Claude (Anthropic) by default — the one it was built and tested with.
 * Also OpenAI, Google Gemini, Groq, OpenRouter, NVIDIA NIM, local models (Ollama / LM Studio / llama.cpp / Hermes) or any OpenAI-compatible endpoint. Some have free tiers.
 
+**Appearance**
+* Four looks, switched in Settings → Appearance: **Tavern** (default — a daylight market street: oak signs hanging from an iron rail, parchment sheets, brass buttons, a striped awning for the title bar), **Tavern at night** (the same street after dark: stone, lamplight, crimson buttons), **Classic dark** (the previous look) and **Classic light**. Drawn with CSS only, no game art; the guide window follows the choice.
+
 **Privacy**
 * The app ships with **no API key**. Each user brings their own; it stays on their device (encrypted on desktop; in the browser's local storage on the web version).
 * What leaves your device: your questions and the relevant notes go to the AI provider you chose; answer text goes to Microsoft only if you use the Edge voice; your profile id goes to aoe2companion only if you turn on match detection; at start the desktop app checks GitHub for newer game data (aoe2techtree) and builds (rtsbuilds), and once a day ageofempires.com for patch news (both can be turned off in Settings). Conversation logs stay on your device and are deleted after 30 days by default. Nothing is sent to the author.
@@ -183,4 +186,5 @@ Corrections are very welcome — especially translations (made with AI) and outd
 
 Idea, testing and direction: **M** ([Mdatas](https://github.com/Mdatas)). Built with **Claude** (Anthropic).
 Thanks to every creator listed in *Sources* — this tool only exists because they share their knowledge for free.
+Fonts: Cinzel, Almendra and Alegreya (SIL Open Font License, copies in `src/renderer/fonts`).
 Age of Empires II: Definitive Edition © Microsoft Corporation. Sancho Panza · Age of Empires 2 Fan Companion was created under Microsoft's "Game Content Usage Rules" using assets from Age of Empires II. It is not endorsed by or affiliated with Microsoft.

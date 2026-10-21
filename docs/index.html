@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 
-<html lang="es">
+<html lang="es" data-theme="taverna">
 <head>
 <meta charset="utf-8"/>
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; media-src 'self' data: blob:; script-src 'self'; connect-src 'self' https: http://localhost:* http://127.0.0.1:*">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#16130f">
+  <meta name="theme-color" content="#4b321d">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="assets/icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -162,10 +162,14 @@
 <label class="field"><span data-i18n="set.focusReturn">Al enviar (Enter) o con Esc</span>
 <select id="setFocusReturn"><option data-i18n="h.option.75" value="blur">Devolver el foco al juego</option><option data-i18n="h.option.76" value="minimize">Minimizar y volver a mostrar (si lo anterior no funciona)</option><option data-i18n="h.option.77" value="none">No hacer nada</option></select></label>
 <p class="muted small" data-i18n="set.hkHelp">Formato Electron: F9, Alt+Q, Ctrl+Shift+C, num5… Si el juego ya usa la tecla, elegí otra.</p>
+<h3 data-i18n="set.appearance">Apariencia</h3>
+<div class="field"><span data-i18n="set.theme">Tema</span>
+<div class="seg" id="setTheme" role="group" aria-label="Tema"><button type="button" data-v="taverna" data-i18n="theme.taverna">Taverna</button><button type="button" data-v="taverna-night" data-i18n="theme.tavernaNight">Taverna de noche</button><button type="button" data-v="classic-dark" data-i18n="theme.classicDark">Clásico oscuro</button><button type="button" data-v="classic-light" data-i18n="theme.classicLight">Clásico claro</button></div>
+<p class="muted small" data-i18n="set.themeHelp" style="margin:2px 0 0">Taverna: madera, pergamino y latón, de día o de noche. Clásico: la interfaz anterior, oscura o clara.</p></div>
+<label class="field"><span data-i18n="set.uiLang">Idioma de la interfaz</span><select id="setUiLang"><option data-i18n="h.option.78" value="es">Español</option><option data-i18n="h.option.79" value="en">English</option><option value="de">Deutsch</option><option value="pt">Português</option><option value="zh">中文</option><option value="vi">Tiếng Việt</option><option value="ko">한국어</option></select></label>
 <h3 data-i18n="set.window">Ventana</h3>
 <label class="field"><span data-i18n="set.opacity">Opacidad</span><span class="keyrow"><input id="setOpacity" max="1" min="0.4" step="0.02" type="range"/><b id="opacityVal"></b></span></label>
 <label class="check"><input id="setOnTop" type="checkbox"/> <span data-i18n="set.onTop">Siempre encima (ventana sin bordes en el juego)</span></label>
-<label class="field"><span data-i18n="set.uiLang">Idioma de la interfaz</span><select id="setUiLang"><option data-i18n="h.option.78" value="es">Español</option><option data-i18n="h.option.79" value="en">English</option><option value="de">Deutsch</option><option value="pt">Português</option><option value="zh">中文</option><option value="vi">Tiếng Việt</option><option value="ko">한국어</option></select></label>
 <details class="advanced" id="advanced"><summary data-i18n="set.advanced">Avanzado</summary>
 <h3 data-i18n="h.h3.51">Partida automática (opcional)</h3>
 <p class="muted small" data-i18n="h.p.52">Lee tu partida en curso desde el perfil público de AoE2 (servicio comunitario aoe2companion) y completa civs y mapa. Si no hay partida o está apagado, la app funciona igual: lo que escribas vos siempre manda.</p>

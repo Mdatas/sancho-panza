@@ -354,7 +354,7 @@ function createWindow() {
     }
   }
   win.setOpacity(Number(s.opacity) || 0.94);
-  win.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'));
+  win.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'), { query: { theme: settings.get().theme || 'taverna' } }); // first paint already in the chosen look
   win.once('ready-to-show', () => win.show());
   let boundsTimer = null;
   const saveBounds = () => {
@@ -403,7 +403,7 @@ function openGuide(arg = {}) {
     });
     guideWin.setMenuBarVisibility(false);
     guideWin.setAlwaysOnTop(true, 'screen-saver');
-    guideWin.loadFile(path.join(__dirname, '..', 'renderer', 'guide.html'));
+    guideWin.loadFile(path.join(__dirname, '..', 'renderer', 'guide.html'), { query: { theme: settings.get().theme || 'taverna' } });
     guideWin.webContents.setWindowOpenHandler(({ url }) => {
       if (/^https?:/.test(url)) shell.openExternal(url);
       return { action: 'deny' };
@@ -548,6 +548,7 @@ function registerIpc() {
         /* ignore */
       }
     }
+    if ('theme' in patch && guideWin && !guideWin.isDestroyed()) guideWin.webContents.send('settings:changed', { theme: after.theme });
     return after;
   });
 

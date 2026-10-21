@@ -570,13 +570,25 @@ function bindOmni() {
 }
 
 /* ------------------------------------------------------------ boot */
+const THEME_IDS = ['taverna', 'taverna-night', 'classic-dark', 'classic-light'];
+function applyTheme(t) {
+  document.documentElement.dataset.theme = THEME_IDS.includes(t) ? t : 'taverna';
+}
+try {
+  const early = new URLSearchParams(location.search).get('theme'); // desktop passes it in the URL for a correct first paint
+  if (early && THEME_IDS.includes(early)) applyTheme(early);
+} catch {
+  /* */
+}
 async function boot() {
   try {
     const S = await window.coach.settings.get();
     setLang(S.uiLanguage || 'es');
+    applyTheme(S.theme);
   } catch {
     setLang('es');
   }
+  if (window.coach.settings.onChange) window.coach.settings.onChange((s) => s && s.theme && applyTheme(s.theme)); // desktop: the main window changed it
   applyGuideI18n();
   try {
     IMG = await window.coach.app.imgIndex();
@@ -637,6 +649,10 @@ window.coach.guide.onGoto((arg) => {
 window.addEventListener('message', (e) => {
   if (/^https?:$/.test(location.protocol) && e.origin !== location.origin) return;
   /* web: only our own page may drive the guide */ const d = e.data || {};
+  if (d.type === 'sp:theme') {
+    applyTheme(d.theme);
+    return;
+  }
   if (d.type !== 'sp:goto') return;
   if (window.coach.setStateFromParent) window.coach.setStateFromParent(d.state || {});
   const arg = d.arg || {};

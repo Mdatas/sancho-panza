@@ -8,7 +8,7 @@ const on = (channel) => (cb) => {
 };
 
 contextBridge.exposeInMainWorld('coach', {
-  settings: { get: () => ipcRenderer.invoke('settings:get'), set: (patch) => ipcRenderer.invoke('settings:set', patch) },
+  settings: { get: () => ipcRenderer.invoke('settings:get'), set: (patch) => ipcRenderer.invoke('settings:set', patch), onChange: on('settings:changed') },
   chat: {
     ask: (text) => ipcRenderer.invoke('chat:ask', { text }),
     reset: () => ipcRenderer.invoke('chat:reset'),

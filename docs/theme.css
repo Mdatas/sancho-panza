@@ -1,13 +1,25 @@
 /*
- * Sancho Panza theme — "castle hall at night": dark oak and leather surfaces, gilt for what matters,
- * heraldic lapis (your side) and madder (the enemy). Display: Cinzel (Roman inscriptions, like the game's own UI).
- * Text: Alegreya (a calligraphic book face that stays readable at overlay sizes). Fonts: SIL OFL, in ./fonts.
- * Loaded after styles.css / guide.css; it only re-skins, the layout stays in those files.
+ * Sancho Panza themes. Loaded after styles.css / guide.css: it only re-skins, the layout stays in those files.
+ *
+ *   <html data-theme="taverna">        "calle de mercado" (default): daylight plaster wall, oak signs hanging from an iron
+ *                                      rail, parchment sheets, brass buttons, a striped awning for the title bar.
+ *   <html data-theme="classic-dark">   the previous look, "castle hall at night": dark oak and leather, gilt accents.
+ *   <html data-theme="classic-light">  the same look in daylight: paper neutrals, darker gilt for contrast.
+ *
+ * Every colour is a token on :root (classic-dark values, so a page without the attribute still renders); the other two
+ * themes only redefine tokens, and taverna adds its own structural rules at the end of this file (signs, awning, planks).
+ * Heraldry is shared: lapis = your side, madder = the enemy, verdigris = ok.
+ * Fonts (SIL OFL, in ./fonts): Cinzel (classic display), Almendra (taverna display), Alegreya (text).
  */
 @font-face { font-family: "Cinzel"; font-weight: 600; font-display: swap; src: url(fonts/cinzel-latin-600-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215; }
 @font-face { font-family: "Cinzel"; font-weight: 600; font-display: swap; src: url(fonts/cinzel-latin-ext-600-normal.woff2) format("woff2"); unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
 @font-face { font-family: "Cinzel"; font-weight: 700; font-display: swap; src: url(fonts/cinzel-latin-700-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215; }
 @font-face { font-family: "Cinzel"; font-weight: 700; font-display: swap; src: url(fonts/cinzel-latin-ext-700-normal.woff2) format("woff2"); unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Almendra"; font-weight: 400; font-display: swap; src: url(fonts/almendra-latin-400-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Almendra"; font-weight: 400; font-display: swap; src: url(fonts/almendra-latin-ext-400-normal.woff2) format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Almendra"; font-weight: 700; font-display: swap; src: url(fonts/almendra-latin-700-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Almendra"; font-weight: 700; font-display: swap; src: url(fonts/almendra-latin-ext-700-normal.woff2) format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Almendra"; font-style: italic; font-weight: 400; font-display: swap; src: url(fonts/almendra-latin-400-italic.woff2) format("woff2"); }
 @font-face { font-family: "Alegreya"; font-weight: 400; font-display: swap; src: url(fonts/alegreya-latin-400-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215; }
 @font-face { font-family: "Alegreya"; font-weight: 400; font-display: swap; src: url(fonts/alegreya-latin-ext-400-normal.woff2) format("woff2"); unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
 @font-face { font-family: "Alegreya"; font-weight: 400; font-display: swap; src: url(fonts/alegreya-vietnamese-400-normal.woff2) format("woff2"); unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB; }
@@ -16,19 +28,11 @@
 @font-face { font-family: "Alegreya"; font-weight: 700; font-display: swap; src: url(fonts/alegreya-vietnamese-700-normal.woff2) format("woff2"); unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB; }
 @font-face { font-family: "Alegreya"; font-style: italic; font-weight: 400; font-display: swap; src: url(fonts/alegreya-latin-400-italic.woff2) format("woff2"); }
 
+/* ============================================================ tokens: classic-dark (the base) */
 :root {
-  --oak: #14100c;        /* night oak: window background */
-  --leather: #1f1710;    /* panels */
-  --leather2: #2a2016;   /* raised panels, hover */
-  --iron: #3a2d21;       /* hairlines */
-  --iron2: #574330;      /* borders, inputs */
-  --vellum: #ece0c4;     /* text */
-  --ash: #a8977a;        /* secondary text */
-  --gilt: #caa24c;       /* the one accent */
-  --gilt-dim: #7a6232;
-  --lapis: #3e6cb0;      /* your side */
-  --madder: #b2392d;     /* the enemy, errors */
-  --verdigris: #5f9c80;  /* ok */
+  --oak: #14100c; --leather: #1f1710; --leather2: #2a2016; --iron: #3a2d21; --iron2: #574330;
+  --vellum: #ece0c4; --ash: #a8977a; --gilt: #caa24c; --gilt-dim: #7a6232;
+  --lapis: #3e6cb0; --madder: #b2392d; --verdigris: #5f9c80;
 
   --bg: var(--oak); --panel: var(--leather); --panel2: var(--leather2); --border: var(--iron); --border2: var(--iron2);
   --text: var(--vellum); --muted: var(--ash); --gold: var(--gilt); --gold-dim: var(--gilt-dim); --gold-soft: rgba(202,162,76,.13);
@@ -36,13 +40,120 @@
   --radius: 6px;
   --font: "Alegreya", "Noto Serif", Georgia, "Noto Sans CJK SC", "Noto Sans KR", "Malgun Gothic", "Microsoft YaHei", "PingFang SC", serif;
   --display: "Cinzel", "Trajan Pro", Georgia, serif;
+
+  --bg-art: radial-gradient(120% 90% at 50% 0%, rgba(202,162,76,.06), transparent 60%), repeating-linear-gradient(97deg, rgba(255,255,255,.012) 0 2px, transparent 2px 9px);
+  --bar: #261c13; --bar2: #19130d; --bar-line: #000;
+  --input-bg: #100c09; --deep: #17110c; --card: #1f1710; --card2: #1a130d; --gist-bg: #19140f;
+  --msg-user: #241b12; --msg-user-border: var(--iron2); --msg-assistant: #19140f; --msg-assistant-border: var(--iron);
+  --error-bg: #2a1712; --error-border: #6b3a2f; --error-text: #f1c3b6;
+  --toast-bg: #2a241c; --code-bg: #0f0d0a; --option-bg: #1f1a15;
+  --strong: #f0d995; --on-gold: #1b130a;
+  --mine-text: #8fb3ea; --theirs-text: #e08a7f;
+  --mine-chip-bg: rgba(62,108,176,.16); --mine-chip-border: #27477a; --mine-chip-text: #cfe0fb;
+  --enemy-chip-bg: rgba(178,57,45,.16); --enemy-chip-border: #6a2119; --enemy-chip-text: #f3c2b8;
+  --shadow: 0 4px 16px rgba(0,0,0,.5); --shadow-lg: 0 10px 40px rgba(0,0,0,.5); --ico-ring: #000;
+  --btn-grad: linear-gradient(180deg, #d8b25c, #b8903c);
+  --danger-text: #f0a08f; --danger-border: #6b3a2f; --warn-text: #f0b232;
+  --modal-grad: linear-gradient(180deg, #221a12, #17110c);
+  --slot-fill: #2a2017; --slot-fill2: #140e09;
+  color-scheme: dark;
 }
+
+/* ============================================================ tokens: classic-light */
+:root[data-theme="classic-light"] {
+  --bg: #efe7d6; --panel: #f8f3e8; --panel2: #ebe2cd; --border: #d6c9ad; --border2: #bfae8e;
+  --text: #2a2117; --muted: #6b5c49; --gold: #8a6520; --gold-dim: #b9994f; --gold-soft: rgba(138,101,32,.12);
+  --danger: #a8352a; --ok: #3f7a3c; --warn: #8f5f0e; --user: #efe4cc; --assistant: #fdf9f1;
+  --bg-art: radial-gradient(120% 90% at 50% 0%, rgba(255,255,255,.55), transparent 60%);
+  --bar: #e6dcc4; --bar2: #d9ccb0; --bar-line: #bfae8e;
+  --input-bg: #fffdf8; --deep: #ebe2cd; --card: #fbf7ee; --card2: #f4ecda; --gist-bg: #fbf4e2;
+  --msg-user: #efe4cc; --msg-user-border: #bfae8e; --msg-assistant: #fdf9f1; --msg-assistant-border: #d6c9ad;
+  --error-bg: #f8e3dd; --error-border: #d8a197; --error-text: #7a2a1e;
+  --toast-bg: #fbf7ee; --code-bg: #ece3cf; --option-bg: #fbf7ee;
+  --strong: #6b4a0c;
+  --mine-text: #2d5a9c; --theirs-text: #a8352a;
+  --mine-chip-bg: rgba(62,108,176,.12); --mine-chip-border: #8fa9d3; --mine-chip-text: #27477a;
+  --enemy-chip-bg: rgba(178,57,45,.12); --enemy-chip-border: #c9897e; --enemy-chip-text: #7a2a1e;
+  --shadow: 0 4px 16px rgba(60,40,20,.18); --shadow-lg: 0 10px 40px rgba(60,40,20,.25); --ico-ring: #fff;
+  --danger-text: #a8352a; --danger-border: #d8a197; --warn-text: #8f5f0e;
+  --modal-grad: linear-gradient(180deg, #fbf7ee, #f4ecda);
+  --slot-fill: #ddd2b8; --slot-fill2: #c9bc9c;
+  color-scheme: light;
+}
+
+/* ============================================================ tokens: taverna (daylight market street) */
+:root[data-theme="taverna"], :root[data-theme="taverna-night"] {
+  --radius: 3px;
+  --display: "Almendra", "Cinzel", Georgia, serif;
+  --mine-text: #2f5c9e; --theirs-text: #a32e2a;
+  --mine-chip-bg: rgba(47,92,158,.12); --mine-chip-border: #7f9fd0; --mine-chip-text: #213f70;
+  --enemy-chip-bg: rgba(163,46,42,.12); --enemy-chip-border: #c9897e; --enemy-chip-text: #6f1c18;
+  --danger-text: #9a2e26; --danger-border: #c9897e; --warn-text: #8f5a0c;
+  /* materials shared by day and night */
+  --iron-grad: linear-gradient(180deg, #5e5752, #3a3531 55%, #2a2724);
+  --brass: linear-gradient(180deg, #e8c06a 0%, #c9962e 55%, #a9761c 100%);
+  --parch: radial-gradient(90% 55% at 50% 0%, rgba(255,255,255,.42), transparent 70%), radial-gradient(70% 70% at 100% 100%, rgba(130,95,45,.20), transparent 60%), radial-gradient(60% 60% at 0% 100%, rgba(130,95,45,.16), transparent 60%);
+  --seal: #a42a22; --focus: #c9962e; --ink-line: #8c7452;
+  --plank-text: #e8d5aa; --plank-mine: #bfd3f5; --plank-theirs: #f2b8ae;
+  --sign-text: #f7e9c9; --sign-text-on: #ffe6a3; --sign-edge: #3a2512; --sign-base: #2b1a0c;
+  --sign-shadow: inset 0 1px 0 rgba(255,235,200,.25), inset 0 -2px 0 rgba(0,0,0,.35), 0 3px 0 var(--sign-base), 0 5px 8px rgba(30,18,6,.4);
+  --glow: none;
+  color-scheme: light;
+}
+:root[data-theme="taverna"] {
+  --bg: #ddcca6; --panel: #f2e5c4; --panel2: #e8d9b4; --border: #c9b48a; --border2: #b89c68;
+  --text: #2b2117; --muted: #6e5a3e; --gold: #8b5e14; --gold-dim: #b08a3e; --gold-soft: rgba(201,150,46,.16);
+  --danger: #9a2e26; --ok: #4e7c4c; --warn: #8f5a0c; --user: #d9c39b; --assistant: #f7ecd2;
+  --bg-art: radial-gradient(90% 60% at 50% 0%, rgba(255,251,240,.55), transparent 70%), repeating-linear-gradient(0deg, rgba(110,85,50,.06) 0 1px, transparent 1px 6px), repeating-linear-gradient(90deg, rgba(110,85,50,.045) 0 1px, transparent 1px 9px);
+  --bar: #6b4b2d; --bar2: #4b321d; --bar-line: #2b1a0c;
+  --input-bg: #f8eed6; --deep: #e6d6ae; --card: #f2e5c4; --card2: #eedfbc; --gist-bg: #f8efd8;
+  --msg-user: #d9c39b; --msg-user-border: #a6895a; --msg-assistant: #f7ecd2; --msg-assistant-border: #b89c68;
+  --error-bg: #f3d9d2; --error-border: #c9897e; --error-text: #6e1812;
+  --toast-bg: #f2e5c4; --code-bg: #e6d6ae; --option-bg: #f8eed6;
+  --strong: #6e1812;
+  --shadow: 0 6px 14px rgba(40,25,10,.28); --shadow-lg: 0 12px 36px rgba(40,25,10,.35); --ico-ring: #f2e5c4;
+  --modal-grad: linear-gradient(180deg, #f6ebd0, #eedfbc);
+  --slot-fill: #5a4a33; --slot-fill2: #3a2d1c;
+  --wood: repeating-linear-gradient(93deg, rgba(0,0,0,.09) 0 2px, transparent 2px 12px, rgba(255,235,200,.05) 12px 14px, transparent 14px 31px), linear-gradient(180deg, #a5733b 0%, #87592a 45%, #754a20 55%, #8b5d2c 100%);
+  --wood-dark: repeating-linear-gradient(93deg, rgba(0,0,0,.10) 0 2px, transparent 2px 12px, rgba(255,235,200,.04) 12px 14px, transparent 14px 31px), linear-gradient(180deg, #7a5126 0%, #633f1c 45%, #533314 55%, #684320 100%);
+  --btn-grad: var(--brass); --btn-text: #2a1b07; --btn-edge: #6e4d12; --btn-base: #5a3d0f; --btn-glint: rgba(255,244,210,.6);
+  --awning: repeating-linear-gradient(90deg, #b5362c 0 26px, #f3e7cc 26px 52px);
+  --beam: #4b321d; --beam-edge: #2b1a0c;
+  --tag-bad: linear-gradient(180deg, #b8463a, #9a2e26 60%, #7f241e);
+}
+
+/* ============================================================ tokens: taverna-night (the same street after dark: stone, lamplight, crimson) */
+:root[data-theme="taverna-night"] {
+  --bg: #141a26; --panel: #e4d3ab; --panel2: #d6c398; --border: #b39c6e; --border2: #9c8457;
+  --text: #22190f; --muted: #5e4b32; --gold: #7a5010; --gold-dim: #a37f38; --gold-soft: rgba(201,150,46,.18);
+  --danger: #8f1f1f; --ok: #3f6a3e; --warn: #7f4f0a; --user: #c9b183; --assistant: #ecdcb4;
+  --bg-art: radial-gradient(70% 50% at 85% 0%, rgba(255,160,50,.20), transparent 60%), radial-gradient(45% 35% at 10% 100%, rgba(255,140,40,.12), transparent 60%), repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 14px), repeating-linear-gradient(90deg, rgba(255,255,255,.022) 0 1px, transparent 1px 22px);
+  --bar: #3b2614; --bar2: #22150a; --bar-line: #0d0805;
+  --input-bg: #efe0b9; --deep: #d6c398; --card: #e4d3ab; --card2: #dccaa0; --gist-bg: #eddcb6;
+  --msg-user: #c9b183; --msg-user-border: #8f7649; --msg-assistant: #ecdcb4; --msg-assistant-border: #9c8457;
+  --error-bg: #e9c9c0; --error-border: #b97d72; --error-text: #5e1410;
+  --toast-bg: #e4d3ab; --code-bg: #d6c398; --option-bg: #efe0b9;
+  --strong: #5e1410;
+  --shadow: 0 8px 18px rgba(0,0,0,.55); --shadow-lg: 0 14px 40px rgba(0,0,0,.65); --ico-ring: #e4d3ab;
+  --modal-grad: linear-gradient(180deg, #e9d9b2, #dccaa0);
+  --slot-fill: #3a2d1c; --slot-fill2: #1f1710;
+  --wood: repeating-linear-gradient(93deg, rgba(0,0,0,.10) 0 2px, transparent 2px 12px, rgba(255,215,160,.05) 12px 14px, transparent 14px 31px), linear-gradient(180deg, #8a5a2c 0%, #6e4520 45%, #5e3a18 55%, #704822 100%);
+  --wood-dark: repeating-linear-gradient(93deg, rgba(0,0,0,.12) 0 2px, transparent 2px 12px, rgba(255,215,160,.04) 12px 14px, transparent 14px 31px), linear-gradient(180deg, #5a3a1d 0%, #46291a 45%, #3a2010 55%, #4a2e17 100%);
+  --sign-text: #e8d5aa; --sign-text-on: #ffd98a; --sign-edge: #1f1208; --sign-base: #0f0804;
+  --sign-shadow: inset 0 1px 0 rgba(255,215,160,.18), inset 0 -2px 0 rgba(0,0,0,.45), 0 3px 0 var(--sign-base), 0 6px 12px rgba(0,0,0,.55);
+  --glow: 0 0 14px rgba(255,180,80,.35);
+  --plank-text: #d9c48f; --plank-mine: #a9c4ec; --plank-theirs: #eaa89c;
+  --btn-grad: linear-gradient(180deg, #a3302a 0%, #7d1c18 55%, #5e1210 100%); --btn-text: #f6e2b0; --btn-edge: #3a0d0d; --btn-base: #2a0909; --btn-glint: rgba(0,0,0,.45);
+  --awning: repeating-linear-gradient(90deg, #7a2420 0 26px, #b9a98a 26px 52px);
+  --beam: #2f1d0e; --beam-edge: #120a04;
+  --tag-bad: linear-gradient(180deg, #a3302a, #7d1c18 60%, #5e1210);
+  --focus: #e0a84a; --seal: #8f1f1f;
+}
+
+/* ============================================================ shared skin (every theme, through the tokens) */
 body {
   font-family: var(--font); font-size: 14px;
-  background:
-    radial-gradient(120% 90% at 50% 0%, rgba(202,162,76,.06), transparent 60%),
-    repeating-linear-gradient(97deg, rgba(255,255,255,.012) 0 2px, transparent 2px 9px),
-    var(--oak);
+  background: var(--bg-art), var(--bg);
 }
 :lang(zh) body, :lang(ko) body, body:lang(zh), body:lang(ko) { font-family: "Noto Sans CJK SC", "Noto Sans KR", "Malgun Gothic", "Microsoft YaHei", "PingFang SC", sans-serif; }
 
@@ -50,49 +161,57 @@ body {
 h2, h3, #tabs button, .stateLine, .teamBar .vs, .modal .mbox h2, .card > summary, .lu b, th, .bolist .grp, .group, .bopos b {
   font-family: var(--display); text-transform: none; letter-spacing: .02em;
 }
-h3 { font-size: 12.5px; color: var(--gilt); border-bottom: 1px solid var(--iron); }
-th { font-size: 11.5px; color: var(--gilt-dim); }
+h3 { font-size: 12.5px; color: var(--gold); border-bottom: 1px solid var(--border); }
+th { font-size: 11.5px; color: var(--gold-dim); }
 
 /* Buttons: gilt for the main action, iron outline for the rest. */
-button { border-radius: 4px; background: linear-gradient(180deg, #d8b25c, #b8903c); color: #1b130a; box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 1px 0 rgba(0,0,0,.4); }
-button.ghost, button.small.ghost { background: transparent; box-shadow: none; color: var(--vellum); border: 1px solid var(--iron2); }
-button.ghost:hover { background: var(--leather2); border-color: var(--gilt-dim); }
-button.ico { box-shadow: none; background: transparent; }
-:focus-visible { outline: 2px solid var(--gilt); outline-offset: 1px; }
-input[type=text], input:not([type]), input[type=password], select, textarea, input, select { background: #100c09; border-color: var(--iron2); border-radius: 4px; }
+button { border-radius: 4px; background: var(--btn-grad); color: var(--on-gold); box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 1px 0 rgba(0,0,0,.4); }
+button.ghost, button.small.ghost { background: transparent; box-shadow: none; color: var(--text); border: 1px solid var(--border2); }
+button.ghost:hover { background: var(--panel2); border-color: var(--gold-dim); }
+button.ico { box-shadow: none; background: transparent; color: var(--muted); }
+button.danger { color: var(--danger-text); border-color: var(--danger-border); }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+input[type=text], input:not([type]), input[type=password], select, textarea, input, select { background: var(--input-bg); border-color: var(--border2); border-radius: 4px; color: var(--text); }
+select option { background: var(--option-bg); color: var(--text); }
+.warn, .warnbadge { color: var(--warn-text); }
+.toast { background: var(--toast-bg); border-color: var(--border2); color: var(--text); box-shadow: var(--shadow); }
+.answer code { background: var(--code-bg); }
+.msg.error { background: var(--error-bg); border-color: var(--error-border); color: var(--error-text); }
+.civPick, .omniOut { box-shadow: var(--shadow-lg); }
+.err { color: var(--error-text); }
 
 /* Title bar and tabs: a carved lintel with a gilt rule under the active tab. */
-#bar, #top { background: linear-gradient(180deg, #261c13, #19130d); border-bottom: 1px solid #000; box-shadow: inset 0 -1px 0 var(--iron); }
-.stateLine { font-size: 13px; color: var(--gilt); }
+#bar, #top { background: linear-gradient(180deg, var(--bar), var(--bar2)); border-bottom: 1px solid var(--bar-line); box-shadow: inset 0 -1px 0 var(--border); }
+.stateLine { font-size: 13px; color: var(--gold); }
 #tabs { background: transparent; }
-#tabs button { box-shadow: none; background: transparent; color: var(--ash); font-weight: 600; font-size: 12.5px; border-bottom: 2px solid transparent; display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: 1 1 auto; min-width: 0; white-space: nowrap; padding-left: 4px; padding-right: 4px; }
+#tabs button { box-shadow: none; background: transparent; color: var(--muted); font-weight: 600; font-size: 12.5px; border-bottom: 2px solid transparent; display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex: 1 1 auto; min-width: 0; white-space: nowrap; padding-left: 4px; padding-right: 4px; }
 #tabs button svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 body.compact #tabs button svg { width: 13px; height: 13px; }
-#tabs button:hover { color: var(--vellum); }
-#tabs button.active { color: var(--gilt); border-bottom-color: var(--gilt); background: linear-gradient(0deg, rgba(202,162,76,.10), transparent 70%); }
+#tabs button:hover { color: var(--text); }
+#tabs button.active { color: var(--gold); border-bottom-color: var(--gold); background: linear-gradient(0deg, var(--gold-soft), transparent 70%); }
 /* the guide button is a tab like the others (same size and weight) */
-#tabs .guideBtn { flex: 1; border-left: 0; padding-left: 4px; padding-right: 4px; color: var(--ash); }
-#tabs .guideBtn:hover { color: var(--gilt); background: transparent; }
+#tabs .guideBtn { flex: 1; border-left: 0; padding-left: 4px; padding-right: 4px; color: var(--muted); }
+#tabs .guideBtn:hover { color: var(--gold); background: transparent; }
 
 /* The memorable element: the 4 v 4 bar — two groups of heraldic shields with captions (blue = your team, red = enemies). */
-.teamBar { display: flex; align-items: flex-end; justify-content: center; gap: 10px; padding: 4px 8px 5px; background: linear-gradient(180deg, #1b140e, #15100b); border-bottom: 1px solid #000; box-shadow: inset 0 -1px 0 var(--iron); }
+.teamBar { display: flex; align-items: flex-end; justify-content: center; gap: 10px; padding: 4px 8px 5px; background: linear-gradient(180deg, var(--bar), var(--bar2)); border-bottom: 1px solid var(--bar-line); box-shadow: inset 0 -1px 0 var(--border); }
 .teamBar .side { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 0 1 auto; }
-.teamBar .side .cap { font-family: var(--display); font-size: 11px; letter-spacing: .04em; color: var(--ash); line-height: 1.1; }
-.teamBar .side.mine .cap { color: #8fb3ea; } .teamBar .side.theirs .cap { color: #e08a7f; }
+.teamBar .side .cap { font-family: var(--display); font-size: 11px; letter-spacing: .04em; color: var(--muted); line-height: 1.1; }
+.teamBar .side.mine .cap { color: var(--mine-text); } .teamBar .side.theirs .cap { color: var(--theirs-text); }
 .teamBar .slots { display: flex; gap: 4px; }
-.teamBar .slot { display: flex; flex-direction: column; align-items: center; gap: 1px; width: 38px; padding: 0; background: none; border: 0; box-shadow: none; color: var(--ash); cursor: pointer; }
-.teamBar .slot .sh { display: block; width: 32px; height: 36px; padding: 2px; clip-path: polygon(0 0, 100% 0, 100% 64%, 50% 100%, 0 64%); background: var(--rim, var(--iron2)); }
-.teamBar .slot .sh > i { display: grid; place-items: center; width: 100%; height: 100%; clip-path: polygon(0 0, 100% 0, 100% 64%, 50% 100%, 0 64%); background: linear-gradient(180deg, var(--fill, #2a2017), #140e09); font-style: normal; }
-.teamBar .slot .sh em { font-style: normal; font-size: 16px; line-height: 1; color: var(--ash); margin-bottom: 6px; }
+.teamBar .slot { display: flex; flex-direction: column; align-items: center; gap: 1px; width: 38px; padding: 0; background: none; border: 0; box-shadow: none; color: var(--muted); cursor: pointer; }
+.teamBar .slot .sh { display: block; width: 32px; height: 36px; padding: 2px; clip-path: polygon(0 0, 100% 0, 100% 64%, 50% 100%, 0 64%); background: var(--rim, var(--border2)); }
+.teamBar .slot .sh > i { display: grid; place-items: center; width: 100%; height: 100%; clip-path: polygon(0 0, 100% 0, 100% 64%, 50% 100%, 0 64%); background: linear-gradient(180deg, var(--fill, var(--slot-fill)), var(--slot-fill2)); font-style: normal; }
+.teamBar .slot .sh em { font-style: normal; font-size: 16px; line-height: 1; color: var(--muted); margin-bottom: 6px; }
 .teamBar .slot .sh .cico { width: 20px; height: 20px; margin-bottom: 7px; border-radius: 2px; box-shadow: none; }
-.teamBar .slot .nm { display: none; font-size: 11px; line-height: 1.1; color: var(--ash); max-width: 44px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.teamBar .side.mine .slot.set { --rim: #4a7cc4; --fill: #203a63; } .teamBar .side.mine .slot.set .nm { color: #c7d9f5; }
+.teamBar .slot .nm { display: none; font-size: 11px; line-height: 1.1; color: var(--muted); max-width: 44px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.teamBar .side.mine .slot.set { --rim: #4a7cc4; --fill: #203a63; } .teamBar .side.mine .slot.set .nm { color: var(--mine-text); }
 .teamBar .side.mine .slot.me.set { --rim: var(--gilt); --fill: #27477a; }
-.teamBar .side.theirs .slot.set { --rim: #c24a3c; --fill: #5e1d16; } .teamBar .side.theirs .slot.set .nm { color: #f0b9b0; }
-.teamBar .slot.empty .sh { --rim: var(--iron2); } .teamBar .slot.empty:hover .sh { --rim: var(--gilt-dim); }
+.teamBar .side.theirs .slot.set { --rim: #c24a3c; --fill: #5e1d16; } .teamBar .side.theirs .slot.set .nm { color: var(--theirs-text); }
+.teamBar .slot.empty .sh { --rim: var(--border2); } .teamBar .slot.empty:hover .sh { --rim: var(--gold-dim); }
 .teamBar .slot:hover .sh > i { filter: brightness(1.2); }
-.teamBar .slot:focus-visible { outline: 2px solid var(--gilt); outline-offset: 2px; }
-.teamBar .vs { align-self: center; margin-top: 10px; font-family: var(--display); font-weight: 700; font-size: 13px; color: var(--gilt); background: none; border: 1px solid var(--gilt-dim); border-radius: 3px; padding: 2px 7px; box-shadow: none; cursor: pointer; }
+.teamBar .slot:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.teamBar .vs { align-self: center; margin-top: 10px; font-family: var(--display); font-weight: 700; font-size: 13px; color: var(--gold); background: none; border: 1px solid var(--gold-dim); border-radius: 3px; padding: 2px 7px; box-shadow: none; cursor: pointer; }
 .teamBar .vs:hover { background: var(--gold-soft); }
 /* full window / web: bigger shields with the civ name under each one */
 body.full .teamBar { padding: 6px 8px 6px; gap: 10px; }
@@ -103,63 +222,63 @@ body.full .teamBar .slot .nm { display: block; max-width: 48px; font-size: 10.5p
   body.full .teamBar .slot { width: 56px; } body.full .teamBar .slot .sh { width: 40px; height: 46px; } body.full .teamBar .slot .sh .cico { width: 26px; height: 26px; margin-bottom: 9px; }
   body.full .teamBar .slot .nm { max-width: 56px; font-size: 12px; }
 }
-.tbhint { font-size: 12px; color: var(--ash); padding: 4px 12px; background: #17110c; border-bottom: 1px solid var(--iron); }
+.tbhint { font-size: 12px; color: var(--muted); padding: 4px 12px; background: var(--deep); border-bottom: 1px solid var(--border); }
 body.full .tbhint.off, .tbhint.off { display: none !important; }
-.tcPanel { background: #17110c; }
+.tcPanel { background: var(--deep); }
 .tcPanel.off, body.full .tcPanel.off { display: none !important; }
-.tcPanel .tch { cursor: pointer; } .tcPanel .tch::before { content: '▾ '; color: var(--gilt-dim); } .tcPanel.collapsed .tch::before { content: '▸ '; }
+.tcPanel .tch { cursor: pointer; } .tcPanel .tch::before { content: '▾ '; color: var(--gold-dim); } .tcPanel.collapsed .tch::before { content: '▸ '; }
 .tcPanel.collapsed .tclegend, .tcPanel.collapsed .tcrow { display: none !important; }
-.tcPanel .tch { font-size: 12px; color: var(--vellum); } .tcPanel .tch b { color: var(--gilt); }
+.tcPanel .tch { font-size: 12px; color: var(--text); } .tcPanel .tch b { color: var(--gold); }
 .tclegend { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 2px 0 4px; }
 .tclegend .lg { padding: 1px 7px; border-radius: 3px; font-family: var(--display); }
-.tclegend .lg.enemy, .unit.enemy { background: rgba(178,57,45,.16); border: 1px solid #6a2119; color: #f3c2b8; }
-.tclegend .lg.mine, .unit.mine { background: rgba(62,108,176,.16); border: 1px solid #27477a; color: #cfe0fb; }
-.tcPanel .tcrow { display: grid; grid-template-columns: 120px 1fr; gap: 4px 10px; align-items: start; padding: 5px 0; border-top: 1px solid var(--iron); }
-.tcPanel .tcciv { display: flex; align-items: center; gap: 6px; font-family: var(--display); color: #e08a7f; font-size: 12.5px; }
+.tclegend .lg.enemy, .unit.enemy { background: var(--enemy-chip-bg); border: 1px solid var(--enemy-chip-border); color: var(--enemy-chip-text); }
+.tclegend .lg.mine, .unit.mine { background: var(--mine-chip-bg); border: 1px solid var(--mine-chip-border); color: var(--mine-chip-text); }
+.tcPanel .tcrow { display: grid; grid-template-columns: 120px 1fr; gap: 4px 10px; align-items: start; padding: 5px 0; border-top: 1px solid var(--border); }
+.tcPanel .tcciv { display: flex; align-items: center; gap: 6px; font-family: var(--display); color: var(--theirs-text); font-size: 12.5px; }
 .tcPanel .tcciv .cico { width: 20px; height: 20px; }
 .tcpairs { display: flex; flex-direction: column; gap: 3px; }
 .pair { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
 .unit { display: inline-flex; align-items: center; gap: 4px; padding: 1px 6px 1px 2px; border-radius: 3px; font-size: 12px; line-height: 1.3; }
-.unit .uico { width: 18px; height: 18px; border-radius: 2px; } .unit i { font-style: normal; font-size: 9.5px; background: var(--gilt-dim); color: #1a1409; border-radius: 2px; padding: 0 3px; }
+.unit .uico { width: 18px; height: 18px; border-radius: 2px; } .unit i { font-style: normal; font-size: 9.5px; background: var(--gold-dim); color: var(--on-gold); border-radius: 2px; padding: 0 3px; }
 .unit.mine span { font-weight: 700; }
-.pair .arr, .tclegend .arr { color: var(--gilt); font-weight: 700; }
+.pair .arr, .tclegend .arr { color: var(--gold); font-weight: 700; }
 @media (max-width: 560px) { .tcPanel .tcrow { grid-template-columns: 1fr; } }
 
 /* Answers: quiet. The 3-line summary gets a gilt rule like a rubricated initial line. */
-.tldr { background: rgba(202,162,76,.08); border-left: 2px solid var(--gilt); border-radius: 0 4px 4px 0; font-weight: 700; }
+.tldr { background: var(--gold-soft); border-left: 2px solid var(--gold); border-radius: 0 4px 4px 0; font-weight: 700; }
 .msg { border-radius: 4px; }
-.msg.user { background: #241b12; border-color: var(--iron2); }
-.msg.assistant { background: #19140f; border-color: var(--iron); border-left: 2px solid var(--gilt-dim); }
-.msg.error, .answer .err { color: #f1c3b6; }
-.replayIn { box-shadow: none; background: var(--leather2); color: var(--gilt); border-radius: 4px; }
+.msg.user { background: var(--msg-user); border-color: var(--msg-user-border); }
+.msg.assistant { background: var(--msg-assistant); border-color: var(--msg-assistant-border); border-left: 2px solid var(--gold-dim); }
+.msg.error, .answer .err { color: var(--error-text); }
+.replayIn { box-shadow: none; background: var(--panel2); color: var(--gold); border-radius: 4px; }
 
 /* Cards, chips, lists */
 .card, .lu, .ucard, .bocard, .bostep, .boreader, .banner { border-radius: 4px; }
-.card { background: linear-gradient(180deg, #1f1710, #1a130d); }
-.card > summary { color: var(--gilt); font-size: 13.5px; }
-.card .body b, .bonotes b { color: #f0d995; }
+.card { background: linear-gradient(180deg, var(--card), var(--card2)); }
+.card > summary { color: var(--gold); font-size: 13.5px; }
+.card .body b, .bonotes b { color: var(--strong); }
 .chip { box-shadow: none; border-radius: 3px; font-family: var(--font); font-weight: 400; font-size: 12.5px; }
-.chip.on { background: var(--gold-soft); color: var(--gilt); border-color: var(--gilt-dim); }
+.chip.on { background: var(--gold-soft); color: var(--gold); border-color: var(--gold-dim); }
 .tag { border-radius: 3px; }
-.bocard:hover, .item:hover { background: var(--leather2); }
-.item.sel, .bocard.sel { background: rgba(202,162,76,.10); border-color: var(--gilt-dim); }
+.bocard:hover, .item:hover { background: var(--panel2); }
+.item.sel, .bocard.sel { background: var(--gold-soft); border-color: var(--gold-dim); }
 .age { border-radius: 3px; font-family: var(--display); font-size: 11.5px; }
-.age.on { background: linear-gradient(180deg, #d8b25c, #b8903c); color: #1b130a; }
-.bar > i { background: linear-gradient(90deg, var(--gilt-dim), var(--gilt)); }
+.age.on { background: var(--btn-grad); color: var(--on-gold); }
+.bar > i { background: linear-gradient(90deg, var(--gold-dim), var(--gold)); }
 .agetag { font-family: var(--display); text-transform: none; letter-spacing: 0; border-radius: 3px; }
-.modal .mbox { border-radius: 4px; border-color: var(--gilt-dim); background: linear-gradient(180deg, #221a12, #17110c); }
+.modal .mbox { border-radius: 4px; border-color: var(--gold-dim); background: var(--modal-grad); box-shadow: var(--shadow-lg); }
 .toast { border-radius: 4px; }
-::-webkit-scrollbar-thumb { background: var(--iron2); border-radius: 0; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 0; }
 
 /* Guide: icons sit in small gilt frames */
 .ico { border-radius: 3px; box-shadow: 0 0 0 1px rgba(202,162,76,.35); }
-.ico.big { border-radius: 4px; box-shadow: 0 0 0 1px var(--gilt-dim), 0 0 0 3px #000; }
+.ico.big { border-radius: 4px; box-shadow: 0 0 0 1px var(--gold-dim), 0 0 0 3px var(--ico-ring); }
 .badge { font-size: 10.5px; border-radius: 3px; padding: 0 5px; margin-left: 4px; font-family: var(--font); }
 .badge.mine { background: var(--lapis); color: #eef3fb; } .badge.theirs { background: var(--madder); color: #fff; }
 .item.mine::after, .item.theirs::after { content: none; }
 .techs { padding: 4px 18px 10px; display: flex; flex-wrap: wrap; gap: 6px; }
-.tech { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px 3px 3px; border: 1px solid var(--iron2); border-radius: 3px; background: var(--leather); font-size: 12.5px; }
-.tech.bad { border-color: #6b2a22; color: #e7b2a8; } .tech.bad .ico { filter: grayscale(1) brightness(.75); }
+.tech { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px 3px 3px; border: 1px solid var(--border2); border-radius: 3px; background: var(--panel); font-size: 12.5px; }
+.tech.bad { border-color: var(--enemy-chip-border); color: var(--enemy-chip-text); } .tech.bad .ico { filter: grayscale(1) brightness(.75); }
 .mapEmblem { width: 40px; height: 40px; flex: none; }
 .item .mapEmblem { width: 22px; height: 22px; }
 
@@ -168,32 +287,189 @@ body.full .tbhint.off, .tbhint.off { display: none !important; }
 .card .body p, .card .body li, .boreader .rb p, .boreader .rb li { max-width: 80ch; }
 
 /* build-order cards: what kind is it, and how safe (meta / anti-meta / meme) */
-.bocard { border-left: 3px solid var(--iron2); }
-.bocard.steps { border-left-color: var(--gilt); } .bocard.note.tier-meta { border-left-color: #6f8f6a; } .bocard.tier-anti-meta { border-left-color: var(--warn); } .bocard.tier-meme { border-left-color: var(--madder); }
-.bocard .t .kind { display: inline-block; width: 16px; color: var(--gilt); margin-right: 4px; font-weight: 700; }
+.bocard { border-left: 3px solid var(--border2); }
+.bocard.steps { border-left-color: var(--gold); } .bocard.note.tier-meta { border-left-color: #6f8f6a; } .bocard.tier-anti-meta { border-left-color: var(--warn); } .bocard.tier-meme { border-left-color: var(--madder); }
+.bocard .t .kind { display: inline-block; width: 16px; color: var(--gold); margin-right: 4px; font-weight: 700; }
 .bocard .t .cico.sm { width: 16px; height: 16px; vertical-align: -3px; margin-right: 3px; border-radius: 2px; }
 /* in-page guide (web) */
-#tab-guide { padding: 0; } #guideFrame { flex: 1; width: 100%; border: 0; min-height: 0; background: var(--oak); }
+#tab-guide { padding: 0; } #guideFrame { flex: 1; width: 100%; border: 0; min-height: 0; background: var(--bg); }
 /* the selected civ / map in lists gets a gilt bar */
-.item.sel, .bocard.sel { box-shadow: inset 3px 0 0 var(--gilt); }
+.item.sel, .bocard.sel { box-shadow: inset 3px 0 0 var(--gold); }
 
 /* streamed answer while the model is still writing */
-.msg.assistant.live { opacity: 0.85; border-left-color: var(--gilt); }
-.msg.assistant.live::after { content: '▍'; color: var(--gilt); animation: blink 1s steps(2) infinite; }
+.msg.assistant.live { opacity: 0.85; border-left-color: var(--gold); }
+.msg.assistant.live::after { content: '▍'; color: var(--gold); animation: blink 1s steps(2) infinite; }
 @keyframes blink { to { opacity: 0; } }
 
 /* quick-action chips inside the welcome / new-game notice */
 .qchips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
-.qchips button { font-family: var(--display); font-size: 11px; letter-spacing: 0.03em; padding: 2px 8px; border-radius: 3px; border: 1px solid var(--iron2); background: var(--leather2); color: var(--ash); cursor: pointer; white-space: nowrap; }
-.qchips button:hover { color: var(--vellum); border-color: var(--gilt-dim); }
+.qchips button { font-family: var(--display); font-size: 11px; letter-spacing: 0.03em; padding: 2px 8px; border-radius: 3px; border: 1px solid var(--border2); background: var(--panel2); color: var(--muted); cursor: pointer; white-space: nowrap; box-shadow: none; }
+.qchips button:hover { color: var(--text); border-color: var(--gold-dim); }
 /* narrow windows (the 470 px desktop window, phones): labels only, never a clipped tab */
 #tabs button span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 560px) { #tabs button svg { display: none; } #tabs button { font-size: 12px; } }
-#boClock.on { color: var(--gilt); border-color: var(--gilt-dim); }
-#boCivNotes { padding: 0 2px; color: var(--ash); }
+#boClock.on { color: var(--gold); border-color: var(--gold-dim); }
+#boCivNotes { padding: 0 2px; color: var(--muted); }
 /* condensed note ("en la partida") in the build-order reader */
-#boReader .gist { margin: 6px 0 8px; padding: 8px 12px; border: 1px solid var(--gilt-dim); border-left: 3px solid var(--gilt); background: #19140f; border-radius: 4px; }
-#boReader .gist .gh { font-family: var(--display); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gilt); margin-bottom: 4px; }
+#boReader .gist { margin: 6px 0 8px; padding: 8px 12px; border: 1px solid var(--gold-dim); border-left: 3px solid var(--gold); background: var(--gist-bg); border-radius: 4px; }
+#boReader .gist .gh { font-family: var(--display); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
 #boReader .gist ul { margin: 0; padding-left: 18px; }
 #boReader .gist li { margin: 3px 0; font-size: 14px; line-height: 1.4; }
-#boReader details > summary { cursor: pointer; color: var(--ash); }
+#boReader details > summary { cursor: pointer; color: var(--muted); }
+/* guide: the section tabs are never squeezed into initials; when the window is narrow they scroll sideways */
+#top #tabs { overflow-x: auto; scrollbar-width: none; } #top #tabs::-webkit-scrollbar { display: none; }
+#top #tabs button { flex: 0 0 auto; min-width: max-content; } #top #tabs button span { overflow: visible; min-width: max-content; }
+@media (max-width: 1150px) { #top { flex-wrap: wrap; } #top #tabs { flex: 1 1 100%; order: 2; } }
+/* the web page's side rules follow the theme */
+html[data-theme] body.web.full { border-left-color: var(--border2); border-right-color: var(--border2); }
+
+/* appearance picker (Settings → Apariencia): three buttons, the current one lit */
+.seg { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 2px; }
+.seg button { background: var(--panel2); color: var(--muted); border: 1px solid var(--border2); border-radius: 4px; box-shadow: none; padding: 5px 11px; font-size: 12.5px; font-weight: 600; text-shadow: none; }
+.seg button:hover { color: var(--text); filter: none; background: var(--panel); border-color: var(--gold-dim); }
+.seg button.on { background: var(--btn-grad); color: var(--on-gold); border-color: transparent; }
+
+/* ============================================================ taverna (day and night): structure — signs, awning, planks, parchment */
+html[data-theme^="taverna"] #bar { position: relative; background: var(--awning); border-bottom: 7px solid var(--beam); box-shadow: inset 0 -1px 0 rgba(0,0,0,.25), 0 1px 0 var(--beam-edge); padding: 5px 8px 4px 10px; min-height: 36px; }
+html[data-theme^="taverna"] #bar::after { content: ""; position: absolute; left: 0; right: 0; bottom: -10px; height: 10px; background: var(--awning); -webkit-mask: radial-gradient(circle at 13px 0, #000 9px, transparent 10px) 0 0/26px 10px repeat-x; mask: radial-gradient(circle at 13px 0, #000 9px, transparent 10px) 0 0/26px 10px repeat-x; pointer-events: none; z-index: 2; }
+html[data-theme^="taverna"] #bar .logo { width: 18px; height: 18px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.5)); }
+html[data-theme^="taverna"] #bar .stateLine, html[data-theme^="taverna"] #bar .stateEmpty { flex: 0 1 auto; background: var(--wood); border: 2px solid var(--sign-edge); border-radius: 3px; padding: 1px 9px; color: var(--sign-text-on); font-family: var(--display); font-weight: 700; font-size: 12px; text-shadow: 0 1px 0 var(--sign-base); box-shadow: inset 0 1px 0 rgba(255,235,200,.25), 0 2px 0 var(--sign-base); }
+html[data-theme^="taverna"] #bar .stateEmpty { color: var(--sign-text); font-weight: 400; font-size: 11.5px; }
+html[data-theme^="taverna"] #bar .busy { background: var(--panel); border: 1px solid var(--border2); border-radius: 3px; padding: 0 7px; color: var(--text); }
+html[data-theme^="taverna"] #bar .btns { margin-left: auto; gap: 4px; }
+html[data-theme^="taverna"] #bar button.ico { background: var(--iron-grad); border: 1px solid #1b1917; border-radius: 3px; color: #e8dcc2; filter: none; opacity: 1; min-width: 24px; height: 22px; padding: 0 5px; line-height: 20px; font-size: 13px; box-shadow: inset 0 1px 0 rgba(255,255,255,.12); text-shadow: none; }
+html[data-theme^="taverna"] #bar button.ico:hover { filter: brightness(1.15); }
+html[data-theme^="taverna"] #bar button.ico.on { color: var(--sign-text-on); }
+
+/* team bar: a dark oak plank, shields with brass rims, the VS as a brass medallion */
+html[data-theme^="taverna"] .teamBar { background: var(--wood-dark); border-bottom: 2px solid var(--sign-edge); box-shadow: inset 0 1px 0 rgba(255,235,200,.12), inset 0 -3px 0 rgba(0,0,0,.35); padding-top: 9px; }
+html[data-theme^="taverna"] .teamBar .side .cap { color: var(--plank-text); text-shadow: 0 1px 0 var(--sign-base); letter-spacing: .08em; }
+html[data-theme^="taverna"] .teamBar .side.mine .cap { color: var(--plank-mine); } html[data-theme^="taverna"] .teamBar .side.theirs .cap { color: var(--plank-theirs); }
+html[data-theme^="taverna"] .teamBar .slot .nm { color: var(--plank-text); text-shadow: 0 1px 0 var(--sign-base); }
+html[data-theme^="taverna"] .teamBar .slot .sh em { color: rgba(255,235,200,.75); }
+html[data-theme^="taverna"] .teamBar .slot.empty .sh { --rim: rgba(255,235,200,.35); } html[data-theme^="taverna"] .teamBar .slot.empty:hover .sh { --rim: #c9962e; }
+html[data-theme^="taverna"] .teamBar .side.mine .slot.set { --rim: #1b2f52; --fill: #2f5c9e; } html[data-theme^="taverna"] .teamBar .side.mine .slot.set .nm { color: var(--plank-mine); }
+html[data-theme^="taverna"] .teamBar .side.mine .slot.me.set { --rim: #c9962e; }
+html[data-theme^="taverna"] .teamBar .side.theirs .slot.set { --rim: #5a1512; --fill: #a32e2a; } html[data-theme^="taverna"] .teamBar .side.theirs .slot.set .nm { color: var(--plank-theirs); }
+html[data-theme^="taverna"] .teamBar .vs { background: var(--brass); color: #2a1b07; border: 1px solid #6e4d12; border-radius: 50%; width: 34px; height: 34px; padding: 0; display: grid; place-items: center; font-size: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 2px 0 #5a3d0f; text-shadow: 0 1px 0 rgba(255,244,210,.6); }
+html[data-theme^="taverna"] .teamBar .vs:hover { filter: brightness(1.06); background: var(--brass); }
+
+/* buttons: brass by day, crimson by night; parchment for the rest, iron for the small tools */
+html[data-theme^="taverna"] button { background: var(--btn-grad); color: var(--btn-text); border: 1px solid var(--btn-edge); border-radius: 3px; box-shadow: inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.25), 0 2px 0 var(--btn-base), 0 3px 6px rgba(0,0,0,.3); text-shadow: 0 1px 0 var(--btn-glint); font-family: var(--display); font-weight: 700; }
+html[data-theme^="taverna"] button:hover { filter: brightness(1.08); }
+html[data-theme^="taverna"] button:active { transform: translateY(1px); box-shadow: inset 0 2px 3px rgba(0,0,0,.3); }
+html[data-theme^="taverna"] button.ghost, html[data-theme^="taverna"] button.small.ghost, html[data-theme^="taverna"] .replayIn, html[data-theme^="taverna"] .trBtn { background: var(--panel2); color: var(--text); border: 1px solid var(--border2); box-shadow: 0 1px 0 rgba(0,0,0,.15); text-shadow: none; font-family: var(--font); font-weight: 500; transform: none; }
+html[data-theme^="taverna"] button.ghost:hover, html[data-theme^="taverna"] .replayIn:hover { background: var(--panel); border-color: var(--gold-dim); filter: none; }
+html[data-theme^="taverna"] .replayIn, html[data-theme^="taverna"] .trBtn { color: var(--gold); }
+html[data-theme^="taverna"] button.ico { background: transparent; border: 0; box-shadow: none; text-shadow: none; color: var(--muted); transform: none; }
+html[data-theme^="taverna"] button.ico:hover { color: var(--text); background: var(--panel2); }
+html[data-theme^="taverna"] button.danger { color: var(--danger-text); border-color: var(--danger-border); }
+html[data-theme^="taverna"] .seg button { background: var(--panel2); color: var(--muted); border: 1px solid var(--border2); border-radius: 3px; box-shadow: none; text-shadow: none; font-family: var(--font); transform: none; }
+html[data-theme^="taverna"] .seg button.on { background: var(--btn-grad); color: var(--btn-text); border-color: var(--btn-edge); }
+html[data-theme^="taverna"] .qchips button { background: var(--wood-dark); color: var(--sign-text); border: 1px solid var(--sign-edge); box-shadow: 0 1px 0 var(--sign-base); text-shadow: 0 1px 0 var(--sign-base); font-family: var(--display); }
+html[data-theme^="taverna"] .qchips button:hover { color: var(--sign-text-on); filter: brightness(1.08); }
+html[data-theme^="taverna"] .chip, html[data-theme^="taverna"] button.chip { background: var(--wood-dark); color: var(--sign-text); border: 1px solid var(--sign-edge); box-shadow: 0 1px 0 var(--sign-base); text-shadow: 0 1px 0 var(--sign-base); font-family: var(--display); font-weight: 700; font-size: 11.5px; border-radius: 2px; transform: none; }
+html[data-theme^="taverna"] .chip:hover { color: var(--sign-text-on); }
+html[data-theme^="taverna"] .chip.on { background: var(--wood); color: var(--sign-text-on); border-color: var(--sign-edge); }
+html[data-theme^="taverna"] .bohead .nav { background: var(--btn-grad); color: var(--btn-text); border: 1px solid var(--btn-edge); }
+html[data-theme^="taverna"] .age { background: var(--panel2); color: var(--muted); border: 1px solid var(--border2); box-shadow: none; text-shadow: none; }
+html[data-theme^="taverna"] .age.on { background: var(--btn-grad); color: var(--btn-text); border-color: var(--btn-edge); }
+html[data-theme^="taverna"] input[type=text], html[data-theme^="taverna"] input:not([type]), html[data-theme^="taverna"] input[type=password], html[data-theme^="taverna"] select, html[data-theme^="taverna"] textarea { border-radius: 3px; box-shadow: inset 0 1px 2px rgba(60,40,20,.12); }
+html[data-theme^="taverna"] input:focus, html[data-theme^="taverna"] select:focus, html[data-theme^="taverna"] textarea:focus { border-color: var(--focus); box-shadow: 0 0 0 2px rgba(201,150,46,.35); }
+html[data-theme^="taverna"] :focus-visible { outline-color: var(--focus); }
+
+/* tabs: signs hanging from an iron rail (main window); in the guide they sit on the oak bar */
+html[data-theme^="taverna"] #tabs { position: relative; background: transparent; border-bottom: 0; }
+html[data-theme^="taverna"] body > #tabs { padding: 8px 10px 10px; gap: 8px; }
+html[data-theme^="taverna"] body > #tabs::before { content: ""; position: absolute; left: 10px; right: 10px; top: 6px; height: 5px; border-radius: 2px; background: var(--iron-grad); border: 1px solid #1b1917; box-sizing: border-box; }
+html[data-theme^="taverna"] #tabs button { position: relative; background: var(--wood-dark); border: 2px solid var(--sign-edge); border-radius: 3px; color: var(--sign-text); font-family: var(--display); font-weight: 700; font-size: 13px; letter-spacing: .02em; text-shadow: 0 1px 0 var(--sign-base), 0 0 3px rgba(0,0,0,.5); box-shadow: var(--sign-shadow); padding: 5px 6px; outline: 1px solid rgba(255,230,180,.3); outline-offset: -5px; transform: none; }
+html[data-theme^="taverna"] #tabs button:hover { color: var(--sign-text-on); filter: brightness(1.08); }
+html[data-theme^="taverna"] #tabs button.active { background: var(--wood); color: var(--sign-text-on); border-color: var(--sign-edge); box-shadow: var(--sign-shadow), var(--glow); }
+html[data-theme^="taverna"] #tabs button:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+html[data-theme^="taverna"] #tabs .guideBtn { border-left: 2px solid var(--sign-edge); padding-left: 6px; padding-right: 6px; color: var(--sign-text); }
+html[data-theme^="taverna"] #tabs .guideBtn:hover { color: var(--sign-text-on); background: var(--wood-dark); }
+html[data-theme^="taverna"] body > #tabs button { margin-top: 14px; }
+html[data-theme^="taverna"] body > #tabs button::before, html[data-theme^="taverna"] body > #tabs button::after { content: ""; position: absolute; top: -16px; width: 3px; height: 15px; background: linear-gradient(180deg, #5e5752, #2a2724); border-radius: 1px; }
+html[data-theme^="taverna"] body > #tabs button::before { left: 22%; } html[data-theme^="taverna"] body > #tabs button::after { right: 22%; }
+html[data-theme^="taverna"] body > #tabs button.active { margin-top: 18px; }
+html[data-theme^="taverna"] body > #tabs button.active::before, html[data-theme^="taverna"] body > #tabs button.active::after { top: -20px; height: 19px; }
+/* compact overlay: no room for chains — short signs flush under the rail */
+html[data-theme^="taverna"] body.compact > #tabs { padding: 4px 8px 6px; gap: 6px; }
+html[data-theme^="taverna"] body.compact > #tabs::before { display: none; }
+html[data-theme^="taverna"] body.compact > #tabs button, html[data-theme^="taverna"] body.compact > #tabs button.active { margin-top: 0; font-size: 11.5px; padding: 3px 4px; box-shadow: inset 0 1px 0 rgba(255,235,200,.25), 0 2px 0 var(--sign-base); }
+html[data-theme^="taverna"] body.compact > #tabs button::before, html[data-theme^="taverna"] body.compact > #tabs button::after { display: none; }
+
+/* conversation: a parchment sheet; the player's notes on kraft, the coach's answers sealed in red */
+html[data-theme^="taverna"] .messages, html[data-theme^="taverna"] .answer { background: var(--parch), var(--panel); border: 1px solid var(--border2); border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.45), 0 1px 0 rgba(0,0,0,.25), var(--shadow); }
+html[data-theme^="taverna"] .messages { padding: 10px 10px 8px; gap: 10px; }
+html[data-theme^="taverna"] .answer { margin: 6px 6px 4px; padding: 6px 10px; }
+html[data-theme^="taverna"] .msg { border-radius: 3px; box-shadow: 0 2px 5px rgba(40,25,10,.2); }
+html[data-theme^="taverna"] .msg.user { background: var(--msg-user); border: 1px solid var(--msg-user-border); transform: rotate(.3deg); }
+html[data-theme^="taverna"] .msg.assistant { background: var(--parch), var(--msg-assistant); border: 1px solid var(--msg-assistant-border); border-left: 3px solid var(--seal); }
+html[data-theme^="taverna"] .msg.assistant.live { border-left-color: var(--focus); }
+html[data-theme^="taverna"] .msg.system { box-shadow: none; }
+html[data-theme^="taverna"] .msg.error { border-left: 3px solid var(--danger); }
+html[data-theme^="taverna"] .tldr { background: rgba(139,94,20,.08); border-left: 3px solid var(--gold-dim); border-radius: 0 3px 3px 0; }
+html[data-theme^="taverna"] .msg b, html[data-theme^="taverna"] .answer .a b { color: var(--gold); }
+html[data-theme^="taverna"] .boLine { background: var(--wood-dark); color: var(--sign-text); border-bottom: 2px solid var(--sign-edge); text-shadow: 0 1px 0 var(--sign-base); }
+html[data-theme^="taverna"] .boLine b { color: var(--sign-text-on); }
+html[data-theme^="taverna"] #inputRow { margin: 0 10px 10px; background: var(--parch), var(--panel); border: 1px solid var(--border2); border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.45), var(--shadow); padding: 4px 8px; }
+html[data-theme^="taverna"] body.compact #inputRow { margin: 0 6px 6px; }
+html[data-theme^="taverna"] #inputRow .prompt { color: var(--gold); }
+html[data-theme^="taverna"] #cmd { border-bottom: 1px solid var(--ink-line); border-radius: 0; box-shadow: none; }
+html[data-theme^="taverna"] #cmd:focus { box-shadow: none; border-bottom: 2px solid var(--focus); }
+html[data-theme^="taverna"] #cmd::placeholder { color: var(--ink-line); font-style: italic; }
+html[data-theme^="taverna"] body.focused #inputRow { box-shadow: inset 0 0 0 1px rgba(255,255,255,.45), 0 0 0 2px rgba(201,150,46,.55), var(--shadow); }
+html[data-theme^="taverna"] .banner { background: var(--parch), var(--user); border: 1px solid var(--msg-user-border); border-radius: 3px; }
+html[data-theme^="taverna"] .tbhint, html[data-theme^="taverna"] .tcPanel { background: var(--deep); border-bottom-color: var(--border2); }
+
+/* build orders: the step on a ledger page, the tally on a plank, cards like index cards */
+html[data-theme^="taverna"] .bostep, html[data-theme^="taverna"] .boreader, html[data-theme^="taverna"] .modal .mbox, html[data-theme^="taverna"] .civPick, html[data-theme^="taverna"] .toast { background: var(--parch), var(--panel); border: 1px solid var(--border2); border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.45), var(--shadow); }
+html[data-theme^="taverna"] .modal .mbox { box-shadow: inset 0 0 0 1px rgba(255,255,255,.45), var(--shadow-lg); }
+html[data-theme^="taverna"] .bores { background: var(--wood-dark); border: 1px solid var(--sign-edge); border-radius: 3px; padding: 5px 6px; gap: 10px; justify-content: space-around; box-shadow: inset 0 1px 0 rgba(255,235,200,.15), inset 0 -2px 0 rgba(0,0,0,.35); }
+html[data-theme^="taverna"] .res { background: transparent; border: 0; color: var(--plank-text); font-family: var(--display); font-size: 12.5px; padding: 1px 4px; }
+html[data-theme^="taverna"] .res b { color: var(--sign-text-on); text-shadow: 0 1px 0 var(--sign-base); font-size: 14px; }
+html[data-theme^="taverna"] .agetag, html[data-theme^="taverna"] .agetag.a1 { background: linear-gradient(180deg, #8a6a4a, #6a4c33 60%, #4e3522); color: #fbebd0; letter-spacing: .05em; border-radius: 2px; box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.3); }
+html[data-theme^="taverna"] .agetag.a2 { background: linear-gradient(180deg, #7cb085, #4e7c4c 60%, #2e4d2d); }
+html[data-theme^="taverna"] .agetag.a3 { background: linear-gradient(180deg, #4f7bc0, #2f5c9e 60%, #213f70); }
+html[data-theme^="taverna"] .agetag.a4 { background: var(--brass); color: #2a1b07; }
+html[data-theme^="taverna"] .bocard { background: var(--card2); border: 1px solid var(--border2); border-left-width: 3px; border-radius: 3px; box-shadow: 0 2px 5px rgba(40,25,10,.2); }
+html[data-theme^="taverna"] .bocard.sel { background: var(--gold-soft); border-color: var(--gold-dim); box-shadow: inset 3px 0 0 var(--focus), 0 2px 5px rgba(40,25,10,.2); }
+html[data-theme^="taverna"] .tag.gold { background: var(--brass); color: #2a1b07; } html[data-theme^="taverna"] .tag.bad { background: var(--tag-bad); color: #fbebd0; }
+html[data-theme^="taverna"] h3 { color: var(--strong); border-bottom-color: var(--border2); font-size: 13.5px; }
+html[data-theme^="taverna"] .bolist .grp, html[data-theme^="taverna"] .group { color: var(--strong); }
+html[data-theme^="taverna"] #boReader .gist { border: 1px solid var(--border2); border-left: 3px solid var(--focus); }
+html[data-theme^="taverna"] #boReader .gist .gh { color: var(--strong); }
+html[data-theme^="taverna"] .field, html[data-theme^="taverna"] .check { color: var(--muted); }
+html[data-theme^="taverna"] ::-webkit-scrollbar-thumb { background: var(--border2); border: 2px solid var(--bg); }
+
+/* guide window: an oak bar with signs, the lists on a plank, the civ/map pages on parchment cards */
+html[data-theme^="taverna"] #top { background: var(--wood-dark); border-bottom: 3px solid var(--beam-edge); box-shadow: inset 0 1px 0 rgba(255,235,200,.12), inset 0 -3px 0 rgba(0,0,0,.35); padding: 6px 10px; gap: 10px; }
+html[data-theme^="taverna"] #top #tabs { padding: 0; gap: 6px; }
+html[data-theme^="taverna"] #top #tabs button, html[data-theme^="taverna"] #top #tabs button.active { margin-top: 0; padding: 7px 12px; }
+html[data-theme^="taverna"] #top .ctx { color: var(--sign-text); text-shadow: 0 1px 0 var(--sign-base); font-family: var(--display); }
+html[data-theme^="taverna"] .list { background: var(--wood-dark); border-right: 3px solid var(--beam-edge); box-shadow: inset -2px 0 0 rgba(0,0,0,.3); }
+html[data-theme^="taverna"] .list .item { color: var(--sign-text); text-shadow: 0 1px 0 var(--sign-base); border-radius: 3px; }
+html[data-theme^="taverna"] .list .item:hover { background: rgba(0,0,0,.22); }
+html[data-theme^="taverna"] .list .item.sel { background: rgba(0,0,0,.32); border-color: rgba(0,0,0,.45); color: var(--sign-text-on); box-shadow: inset 3px 0 0 var(--focus); }
+html[data-theme^="taverna"] .list .item .sub, html[data-theme^="taverna"] .list .group { color: var(--plank-text); }
+html[data-theme^="taverna"] .list .chip { background: var(--panel2); color: var(--text); border-color: var(--border2); text-shadow: none; box-shadow: none; }
+html[data-theme^="taverna"] .list .chip.on { background: var(--brass); color: #2a1b07; }
+html[data-theme^="taverna"] .list .item.mine::after { background: var(--brass); color: #2a1b07; }
+html[data-theme^="taverna"] .card, html[data-theme^="taverna"] .lu, html[data-theme^="taverna"] .ucard { background: var(--parch), var(--card); border: 1px solid var(--border2); border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.4), 0 2px 5px rgba(40,25,10,.2); }
+html[data-theme^="taverna"] .card > summary, html[data-theme^="taverna"] .lu b { color: var(--strong); }
+html[data-theme^="taverna"] .view .head h2, html[data-theme^="taverna"] .modal .mbox h2 { color: var(--text); }
+html[data-theme^="taverna"] .tag { border-radius: 2px; font-family: var(--display); font-weight: 700; letter-spacing: .03em; }
+html[data-theme^="taverna"] .u { background: var(--panel2); border-color: var(--border2); border-radius: 2px; }
+html[data-theme^="taverna"] th { color: var(--strong); border-bottom-color: var(--border2); }
+html[data-theme^="taverna"] td { border-bottom-color: var(--border); }
+html[data-theme^="taverna"] .tech { background: var(--panel2); border-radius: 2px; }
+html[data-theme^="taverna"] .omniOut { background: var(--parch), var(--panel); border-color: var(--border2); border-radius: 3px; }
+html[data-theme^="taverna"] .omniOut .og { color: var(--strong); }
+html[data-theme^="taverna"] .bar { background: var(--panel2); } html[data-theme^="taverna"] .bar > i { background: var(--brass); }
+/* the guide's content area and the text on bare wall/stone: cream at night, ink by day */
+html[data-theme="taverna-night"] .view, html[data-theme="taverna-night"] .tab:not(.split) { color: var(--text); }
+html[data-theme="taverna-night"] body { color: #e8d5aa; }
+html[data-theme="taverna-night"] .messages, html[data-theme="taverna-night"] .answer, html[data-theme="taverna-night"] .bostep, html[data-theme="taverna-night"] .boreader, html[data-theme="taverna-night"] .card, html[data-theme="taverna-night"] .lu, html[data-theme="taverna-night"] .ucard, html[data-theme="taverna-night"] .modal .mbox, html[data-theme="taverna-night"] .civPick, html[data-theme="taverna-night"] .toast, html[data-theme="taverna-night"] #inputRow, html[data-theme="taverna-night"] .bocard, html[data-theme="taverna-night"] .banner, html[data-theme="taverna-night"] .tbhint, html[data-theme="taverna-night"] .tcPanel, html[data-theme="taverna-night"] .omniOut, html[data-theme="taverna-night"] #tab-settings, html[data-theme="taverna-night"] #tab-bo, html[data-theme="taverna-night"] .view, html[data-theme="taverna-night"] .pad { color: var(--text); }
+html[data-theme="taverna-night"] #tab-settings, html[data-theme="taverna-night"] #tab-bo, html[data-theme="taverna-night"] .view, html[data-theme="taverna-night"] .tab.pad { background: var(--parch), var(--panel); }
+html[data-theme="taverna-night"] body.full #tab-settings, html[data-theme="taverna-night"] body.full #tab-bo { margin: 0 10px 10px; border: 1px solid var(--border2); border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35), var(--shadow); }

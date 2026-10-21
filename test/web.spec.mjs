@@ -144,6 +144,17 @@ try {
     await page.click('#tabs button[data-tab="settings"]');
     check(await page.$eval('#setStreaming', (e) => e.checked), `${label}: streaming on by default`);
     check(!(await page.$eval('#advanced', (e) => e.open)), `${label}: advanced section folded`);
+    // appearance: taverna by default; the picker switches the page and the guide iframe, and the choice survives a reload
+    check((await page.$eval('html', (h) => h.dataset.theme)) === 'taverna', `${label}: tavern theme by default`);
+    check((await frame.locator('html').getAttribute('data-theme')) === 'taverna', `${label}: guide iframe uses the same theme`);
+    await page.click('#setTheme button[data-v="classic-light"]');
+    await page.waitForTimeout(300);
+    check((await page.$eval('html', (h) => h.dataset.theme)) === 'classic-light', `${label}: theme switched to classic light`);
+    check((await frame.locator('html').getAttribute('data-theme')) === 'classic-light', `${label}: guide iframe followed the theme change`);
+    check(await page.$eval('#setTheme button[data-v="classic-light"]', (b) => b.classList.contains('on')), `${label}: picker marks the current theme`);
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.waitForTimeout(800);
+    check((await page.$eval('html', (h) => h.dataset.theme)) === 'classic-light', `${label}: theme persisted across reload`);
     check(errors.length === 0, `${label}: console errors: ${errors.slice(0, 3).join(' | ')}`);
     await ctx.close();
   }
