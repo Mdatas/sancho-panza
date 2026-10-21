@@ -6,7 +6,11 @@
  * Sources are the project's own notes (video summaries with VIGENCIA checks); the model is given the notes with a tag [S1]..[Sn]
  * and may only cite those tags; citations are verified and rewritten to "[Autor año]" before saving. Nothing else is accepted.
  *
- *   SP_KEY=sk-ant-... node tools/themes.js [--only "regex on theme name"] [--model claude-sonnet-5-5] [--dry]
+ *   SP_KEY=sk-ant-... node tools/themes.js [--only "regex on 'name slug'"] [--model claude-sonnet-5-5] [--dry]
+ *
+ * ~US$0.11 per theme with Sonnet (the sources are ~25k input tokens). maxTokens is 16000 because the model's reasoning counts
+ * against it: with 4000 the answers came back cut, so a truncated answer (stop=max_tokens) is never saved. The raw model output
+ * goes to $SP_RAW_DIR (default: <tmp>/sancho-themes-raw) for review.
  */
 const fs = require('fs');
 const path = require('path');
@@ -33,6 +37,7 @@ if (!KEY && !DRY) {
   process.exit(2);
 }
 const MAX_CHARS = 95000; // ≈ 25k tokens of sources per theme
+const RAW_DIR = process.env.SP_RAW_DIR || path.join(require('os').tmpdir(), 'sancho-themes-raw'); // raw model output, for review
 
 /** name, slug, catalog types that belong to the theme, search queries for the rest of the knowledge base */
 const THEMES = [
@@ -206,6 +211,35 @@ Output markdown with EXACTLY these five sections, each heading starting with "##
   how to stop / punish this (when the theme is a strategy) or what it loses to.
 Rules: every bullet ends with its citation tags like [S3] or [S3][S9]; ONLY tags that exist in the sources; never add facts, numbers or opinions that are not in the sources; keep each bullet under 30 words; no introduction, no conclusion, no "Fuentes" section (it is added automatically). Prefer newer and patch-checked sources; when old and new disagree, say which is current.`;
 
+/** Short source name for a knowledge file: "hera_coaching.md" → "Hera", "sotl_civs.md" → "SotL"… (+ year from the section title when present). */
+const FILE_LABEL = [
+  [/^hera_/, 'Hera'],
+  [/^elbiry/, 'El Biry'],
+  [/^tatoh/, 'TaToH'],
+  [/^sotl/, 'SotL'],
+  [/^break_the_meta/, 'Break the Meta'],
+  [/^poop_lord/, 'Poop Lord'],
+  [/^builds_pros/, 'Pros'],
+  [/^respuestas_a_aperturas/, 'Respuestas'],
+  [/^economy/, 'Economía'],
+  [/^fundamentos/, 'Fundamentos'],
+  [/^aoecoach/, 'aoecoach'],
+  [/^aoe2matchup/, 'aoe2matchup'],
+  [/^meta_y_tips/, 'Meta'],
+  [/^parches/, 'Parches'],
+  [/^alexander/, 'Alexander'],
+  [/^lectura_y_scouting/, 'Scouting'],
+  [/^counters_detallados/, 'Counters'],
+  [/^estrategias_jugadores/, 'Jugadores'],
+  [/^mapas_catalogo/, 'Mapas'],
+  [/^stats_civs/, 'Stats'],
+];
+function labelFor(file, title) {
+  const base = (FILE_LABEL.find(([re]) => re.test(file)) || [null, file.replace(/\.md$/, '')])[1];
+  const year = (title.match(/\b(20\d\d)\b/) || [])[1];
+  return `${base}${year ? ' ' + year : ''}: ${title}`;
+}
+
 function tagText(s) {
   return String(s || '')
     .replace(/\s+/g, ' ')
@@ -237,15 +271,19 @@ async function main() {
     const notes = cat.notes.filter((n) => n.types.some((t) => th.types.includes(t)));
     const rank = { meta: 0, 'anti-meta': 1, meme: 2 };
     notes.sort((a, b) => rank[a.tier] - rank[b.tier] || String(b.date).localeCompare(String(a.date)));
-    for (const n of notes.filter((n) => n.tier !== 'meme').slice(0, 40)) {
+    // (a) guides of the theme's types: meta/anti-meta in full (newest first, capped so the search hits below keep room), memes condensed
+    const stemsAdded = new Set();
+    for (const n of notes.filter((n) => n.tier !== 'meme').slice(0, 22)) {
       const t = bocatalog.noteText(kn, n.file, n.stem);
-      add(
-        `${n.author}${n.date ? ' ' + String(n.date).slice(0, 4) : ''}: ${n.title}`,
-        t.lessons.slice(0, 3500) + (t.vigencia ? ' VIGENCIA: ' + t.vigencia.slice(0, 1200) : ''),
-        n.tier
-      );
+      const c = condensed[n.file + '|' + n.stem];
+      const body =
+        (c && c.resumen ? 'RESUMEN: ' + c.resumen.join(' ') + ' DETALLE: ' : '') +
+        t.lessons.slice(0, 2600) +
+        (t.vigencia ? ' VIGENCIA: ' + t.vigencia.slice(0, 1000) : '');
+      add(`${n.author}${n.date ? ' ' + String(n.date).slice(0, 4) : ''}: ${n.title}`, body, n.tier);
+      stemsAdded.add(n.file + '|' + n.stem);
     }
-    for (const n of notes.filter((n) => n.tier === 'meme').slice(0, 12)) {
+    for (const n of notes.filter((n) => n.tier === 'meme').slice(0, 10)) {
       const c = condensed[n.file + '|' + n.stem];
       const t = bocatalog.noteText(kn, n.file, n.stem);
       add(
@@ -253,20 +291,31 @@ async function main() {
         c && c.resumen ? c.resumen.join(' ') : t.lessons.slice(0, 700),
         'meme'
       );
+      stemsAdded.add(n.file + '|' + n.stem);
     }
+    // (b) what the rest of the knowledge base says (coaching reviews, SotL, fundamentals, responses…): BM25 hits, memes excluded
+    const hitLabels = new Set();
     for (const q of th.q) {
-      for (const h of kn.search(q, { limit: 12, maxChars: 1800 })) {
-        if (/^temas_/.test(h.file)) continue;
-        if (h.tier === 'meme' && notes.length) continue;
-        add(`${h.file.replace(/\.md$/, '')}: ${h.title}`, h.text, h.tier);
+      for (const h of kn.search(q, { limit: 14, maxChars: 1800 })) {
+        if (/^temas_/.test(h.file) || h.tier === 'meme') continue;
+        const stem = h.file + '|' + h.title.replace(/: (lecciones|VIGENCIA hoy).*$/, '').replace(/ \(\d+\/\d+\)$/, '');
+        if (stemsAdded.has(stem)) continue; // already in full from (a)
+        const label = labelFor(h.file, h.title);
+        hitLabels.add(label);
+        add(label, h.text, h.tier);
       }
     }
-    // budget
+    // budget: the guides may take at most ~55 % of it, so the broader notes always get in
     let total = 0;
     const kept = [];
+    const guideCap = Math.round(MAX_CHARS * 0.55);
+    let guideChars = 0;
     for (const s of sources) {
+      const isGuide = !hitLabels.has(s.label);
+      if (isGuide && guideChars + s.text.length > guideCap) continue;
       if (total + s.text.length > MAX_CHARS) continue;
       total += s.text.length;
+      if (isGuide) guideChars += s.text.length;
       kept.push(s);
     }
     const tagged = kept.map((s, i) => ({ ...s, tag: `S${i + 1}` }));
@@ -276,13 +325,35 @@ async function main() {
       `THEME: ${th.name}\nCURRENT PATCH: ${PATCH}\n\nSOURCE NOTES:\n` + tagged.map((s) => `[${s.tag}] (${s.tier}) ${s.label}\n${s.text}`).join('\n\n');
     let r;
     try {
-      r = await plainComplete('anthropic', { apiKey: KEY, model: MODEL, system: SYSTEM, user, maxTokens: 4000, timeoutMs: 180000 });
+      r = await plainComplete('anthropic', { apiKey: KEY, model: MODEL, system: SYSTEM, user, maxTokens: 16000, timeoutMs: 300000 });
     } catch (e) {
       console.error('API error', th.name, e.message);
       continue;
     }
     cost += r.cost || estimateCost(MODEL, r.usage) || 0;
     let md = String(r.text || '').trim();
+    console.log(`   answer: ${md.length} chars · stop=${r.stop} · out tokens=${r.usage && r.usage.output_tokens}`);
+    try {
+      fs.mkdirSync(RAW_DIR, { recursive: true });
+      fs.writeFileSync(path.join(RAW_DIR, `${th.slug}.txt`), md);
+    } catch {
+      /* no raw log */
+    }
+    // the model's reasoning tokens count against maxTokens: a cut answer would save a theme missing its last sections
+    if (r.stop === 'max_tokens') {
+      console.error(`truncated answer for ${th.name} (stop=max_tokens): not saved — raise maxTokens and run again with --only`);
+      continue;
+    }
+    // normalise citation spellings the model sometimes uses: "[S3, S5]" / "[S3; S5]" / "(S3)" → "[S3][S5]"; "•" bullets → "- "
+    md = md
+      .replace(/\[(S\d+(?:\s*[,;/]\s*S\d+)+)\]/g, (m, inner) =>
+        inner
+          .split(/\s*[,;/]\s*/)
+          .map((t) => `[${t}]`)
+          .join('')
+      )
+      .replace(/\((S\d+)\)/g, '[$1]')
+      .replace(/^\s*[•*]\s+/gm, '- ');
     // 2) verify citations: every [Sn] must exist; bullets without any valid tag are dropped
     const valid = new Set(tagged.map((s) => s.tag));
     const used = new Set();
@@ -296,7 +367,7 @@ async function main() {
     });
     md = lines.join('\n');
     // 3) rewrite tags to short source names and append the sources list
-    const short = (s) => s.label.split(':')[0].replace(/ \(meme\)$/, '');
+    const short = (s) => s.label.split(':')[0].replace(/ \(meme\)$/, ' meme');
     for (const s of tagged) md = md.split(`[${s.tag}]`).join(`[${short(s)}]`);
     const fuentes = tagged.filter((s) => used.has(s.tag)).map((s) => `- ${s.label}${s.tier !== 'meta' ? ` (${s.tier})` : ''}`);
     const out =

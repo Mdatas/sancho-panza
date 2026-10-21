@@ -1,0 +1,60 @@
+{
+ "name": "Tatti Archer Rush (cheese)",
+ "civilization": "Saracens",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=5zeUcdVjijY",
+ "description": "Pasos extraídos por IA de la nota «Tatti Saracen Archer Rush Against Scouts» (Poop Lord, 2021-08-13); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_every_unique_strategy.md",
+  "stem": "Poop Lord (anti-meta/meme) EU024 — Tatti Saracen Archer Rush Against Scouts (video publicado 2021-08-13)",
+  "tier": "meme",
+  "date": "2021-08-13"
+ },
+ "build_order": [
+  {
+   "villager_count": 6,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Mandá 6 aldeanos a ovejas.",
+    "El scout también junta de la oveja y del scout."
+   ],
+   "evidencia": "6 a ovejas; scout con oveja y con el scout"
+  },
+  {
+   "villager_count": 9,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Los 3 siguientes van a madera.",
+    "La madera es para galerías, herrería y arqueros."
+   ],
+   "evidencia": "los 3 siguientes a madera"
+  },
+  {
+   "villager_count": 10,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 7,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "El siguiente va al jabalí.",
+    "Los demás van a comida, sin bayas ni ciervos."
+   ],
+   "evidencia": "el siguiente al jabalí y todos los demás a comida"
+  }
+ ]
+}

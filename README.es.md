@@ -61,10 +61,10 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 * Para cada civ enemiga calcula sus unidades principales probables en tu edad (unidad única + líneas características) y **tus mejores counters** para cada una, con íconos.
 
 **Build orders**
-* 41 builds paso a paso (Hera, Morley Games, DauT, TaToH…) que avanzan con F7/F8 y se pueden leer en voz alta.
+* 66 builds paso a paso que avanzan con F7/F8 y se pueden leer en voz alta: 41 de rtsbuilds (Hera, Morley Games, DauT, TaToH…) y 25 **extraídos por IA de las propias notas de guías del proyecto** — cada paso lleva la frase de la nota que lo respalda, y un build se conservó solo cuando todas las citas se encontraron textualmente en la nota (etiquetados *extraído*, con su nivel meta/meme).
 * **Reloj del build**: tocás ▶ cuando empieza la partida y los pasos avanzan solos según su tiempo; si movés un paso a mano te dice cuántos segundos vas adelantado o atrasado respecto del build. Un build genérico muestra los bonus de inicio/economía de la civ que registraste.
 * **Benchmarks** de tiempos con nota (A+ … E) para los builds estándar (clic a Feudal/Castillos, primer ejército), tomados de la referencia de builds de Cicero, disponibles para el coach como herramienta.
-* ~640 guías de builds/estrategia sacadas de videos, navegables como tarjetas con filtros: civ, tipo (Scouts, Arqueros, Drush, Fast Castle, Torres, TC drop, Castle drop, Agua, Boom…), fuente y meta/anti-meta/meme. Cada una se abre con lo que enseña y lo que cambió desde entonces.
+* ~640 guías de builds/estrategia sacadas de videos, navegables como tarjetas con filtros: civ, tipo (Scouts, Arqueros, Drush, Fast Castle, Torres, TC drop, Castle drop, Agua, Boom…), fuente y meta/anti-meta/meme. Cada una se abre con un bloque **"En la partida"** (3–6 líneas con los números que importan, con las correcciones de parche ya aplicadas, condensado por IA a partir de la nota) y la nota completa plegada debajo.
 * Importá tus propios builds (buildorderguide.com / RTS Overlay JSON).
 
 **Guía visual** (📖)
@@ -73,6 +73,7 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 * Calculadora de counters "¿Qué le gana a…?" con stats de unidades.
 * Íconos de civs, unidades y tecnologías (tecnologías únicas y todo lo que le falta a cada civ).
 * Tabla del meta (porcentaje de victorias y de elección por civ, parche actual).
+* **Temas**: 24 resúmenes por temática — scouts, arqueros, hombres de armas/drush, fast castle y boom, caballeros, torres, TC/castle drop, monjes, asedio, agua, elefantes, rush de aldeanos, economía de Edad Oscura, defensa contra rushes, muros, exploración, composiciones, mapas cerrados, Nomad, equipos, late game, micro, errores por ELO, benchmarks de macro — cada uno con lo esencial, cómo se hace, **alternativas cuando las guías no coinciden**, errores típicos y contras; cada línea cita su guía. El coach los lee para las preguntas generales.
 * Un solo buscador para todo: civs, mapas, unidades y notas.
 * Búsqueda de texto completo en todas las notas (índice BM25 con stemming bilingüe y sinónimos: "malienses", "malians" y "malíes" son un mismo término).
 * La interfaz está traducida a los 7 idiomas. Los perfiles de civs y mapas y las notas están escritos en castellano: en cualquier otro idioma, un botón 🌐 *Traducir* en cada sección la traduce con tu propia API key (una fracción de centavo por sección; queda guardada en tu dispositivo).
@@ -138,7 +139,7 @@ Cada fuente está acreditada dentro de las notas, video por video, con su link y
 
 Construido en 2026 por **M** **conversando con Claude (Anthropic)**, dentro de la app de Claude con sus herramientas agénticas: Claude escribió y probó el código, investigó fuentes, corrió agentes de investigación en paralelo y chequeó sus propios datos; M decidió qué construir, lo probó en partidas reales y corrigió el rumbo.
 
-**Pipeline de investigación.** Los agentes abrieron cada video de YouTube en un navegador Chrome real (Claude in Chrome), leyeron los subtítulos y escribieron una nota en castellano por video con fecha, lecciones y el build order si lo había. Una segunda pasada chequeó cada afirmación que depende del balance contra el historial de parches y los datos actuales del juego, escribiendo el bloque de VIGENCIA. Los videos sin subtítulos se saltearon y quedaron registrados, nunca se adivinaron. Un script de auditoría revisa toda la base de conocimiento en busca de contradicciones (por ejemplo, elementos eliminados del juego que se siguen dando como consejo).
+**Pipeline de investigación.** Los agentes abrieron cada video de YouTube en un navegador Chrome real (Claude in Chrome), leyeron los subtítulos y escribieron una nota en castellano por video con fecha, lecciones y el build order si lo había. Una segunda pasada chequeó cada afirmación que depende del balance contra el historial de parches y los datos actuales del juego, escribiendo el bloque de VIGENCIA. Los videos sin subtítulos se saltearon y quedaron registrados, nunca se adivinaron. Un script de auditoría revisa toda la base de conocimiento en busca de contradicciones (por ejemplo, elementos eliminados del juego que se siguen dando como consejo). Una tercera pasada (`tools/condense.js`, `tools/themes.js`) condensó cada nota en su bloque "En la partida", extrajo builds paso a paso solo donde la nota los enuncia (cada paso cita la nota y la cita se verifica) y escribió los 24 resúmenes por tema con una cita por línea; las notas son la única entrada, y la salida del modelo se revisa antes de conservar nada.
 
 **Herramientas, y por qué estas en lugar de las alternativas**
 
@@ -169,7 +170,7 @@ npm run build:web        # web version → docs/ (GitHub Pages)
 
 **Los releases son automáticos:** cuando cambia la `version` de `package.json` en `main`, `.github/workflows/release.yml` testea la app, arma Windows y Mac en los servidores de GitHub y publica el release `v<versión>` con el texto de `release-notes/v<versión>.md`.
 
-Estructura del repositorio: `src/main` (motor, cerebro de IA, voz, sincronización de datos; `api.js` es la única implementación detrás del IPC de escritorio y del `window.coach` de la web), `src/renderer` (interfaz y traducciones), `data` (datos del juego, build orders, notas de conocimiento, íconos), `web` (versión para navegador), `docs` (app web publicada), `installer` (instalador de Windows), `tools` (scripts de datos), `test`.
+Estructura del repositorio: `src/main` (motor, cerebro de IA, voz, sincronización de datos; `api.js` es la única implementación detrás del IPC de escritorio y del `window.coach` de la web), `src/renderer` (interfaz y traducciones), `data` (datos del juego, build orders — `rtsbuilds` y `extracted` —, notas de conocimiento con `resumen_guias.json` y los resúmenes por tema `temas_*.md`, íconos), `web` (versión para navegador), `docs` (app web publicada), `installer` (instalador de Windows), `tools` (scripts de datos), `test`.
 
 ## Ideas a considerar
 

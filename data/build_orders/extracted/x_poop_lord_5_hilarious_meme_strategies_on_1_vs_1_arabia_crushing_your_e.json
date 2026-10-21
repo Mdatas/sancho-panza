@@ -1,0 +1,57 @@
+{
+ "name": "Malay 12 pop scouts",
+ "civilization": "Malay",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=A3Ld8EzZaWY",
+ "description": "Pasos extraídos por IA de la nota «5 Hilarious Meme Strategies on 1 Vs 1 Arabia. Crushing Your Enemies Has Never Been this Fun in AOE2» (Poop Lord, 2023-05-15); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_book_of_memes.md",
+  "stem": "Poop Lord (meme) BM29 — 5 Hilarious Meme Strategies on 1 Vs 1 Arabia. Crushing Your Enemies Has Never Been this Fun in AOE2 (video publicado 2023-05-15)",
+  "tier": "meme",
+  "date": "2023-05-15"
+ },
+ "build_order": [
+  {
+   "villager_count": 6,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Mandá los primeros 6 aldeanos a comida."
+   ],
+   "evidencia": "6 a comida, 3 a madera, últimos 2 a comida, telar"
+  },
+  {
+   "villager_count": 9,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Sumá 3 aldeanos a madera para cuartel y campamento maderero."
+   ],
+   "evidencia": "6 a comida, 3 a madera, últimos 2 a comida, telar"
+  },
+  {
+   "villager_count": 12,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 8,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Los últimos 2 van a comida y uno de ellos construye el telar."
+   ],
+   "evidencia": "últimos 2 a comida, telar"
+  }
+ ]
+}

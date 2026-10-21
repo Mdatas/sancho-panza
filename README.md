@@ -61,10 +61,10 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 * For each enemy civ it computes their likely main units at your age (unique unit + signature lines) and **your best counters** to each, with icons.
 
 **Build orders**
-* 41 step-by-step builds (Hera, Morley Games, DauT, TaToH…) that advance with F7/F8 and can be read aloud.
+* 66 step-by-step builds that advance with F7/F8 and can be read aloud: 41 from rtsbuilds (Hera, Morley Games, DauT, TaToH…) and 25 **extracted by AI from the project's own guide notes** — each step carries the sentence of the note that supports it, and a build was kept only when every quote was found verbatim in the note (tagged *extraído*, with its meta/meme tier).
 * **Build clock**: press ▶ when the game starts and the steps advance by their time stamp; if you move a step by hand it tells you how many seconds ahead or behind the build you are. A generic build shows the start/eco bonuses of the civ you registered.
 * Graded timing **benchmarks** (A+ … E) for the standard builds (Feudal/Castle click, first army), from Cicero's build-order reference, available to the coach as a tool.
-* ~640 build/strategy guides from videos, browsable as cards with filters: civ, type (Scouts, Archers, Drush, Fast Castle, Towers, TC drop, Castle drop, Water, Boom…), source, and meta/anti-meta/meme. Each opens with what it teaches and what changed since.
+* ~640 build/strategy guides from videos, browsable as cards with filters: civ, type (Scouts, Archers, Drush, Fast Castle, Towers, TC drop, Castle drop, Water, Boom…), source, and meta/anti-meta/meme. Each opens with an **"En la partida" block** (3–6 lines with the numbers that matter, patch corrections already applied, condensed by AI from the note) and the full note folded underneath.
 * Import your own builds (buildorderguide.com / RTS Overlay JSON).
 
 **Visual guide** (📖)
@@ -73,6 +73,7 @@ It is free, it has no ads, it collects nothing, and it will stay non-commercial.
 * "What beats…?" counter calculator with unit stats.
 * Meta table (win rate and pick rate per civ, current patch).
 * Icons for civs, units and technologies (unique techs and everything a civ lacks).
+* **Topics** (Temas): 24 summaries by theme — scouts, archers, men-at-arms/drush, fast castle & boom, knights, towers, TC/castle drop, monks, siege, water, elephants, villager rush, Dark Age economy, defending rushes, walls, scouting, compositions, closed maps, Nomad, team games, late game, micro, mistakes by ELO, macro benchmarks — each with the essentials, how it is done, **alternatives where the guides disagree**, typical mistakes and counters; every line cites its guide. The coach reads them for general questions.
 * One search box for everything: civs, maps, units and notes.
 * Full-text search over all notes (BM25 index with bilingual stemming and alias folding: "malienses", "malians" and "malíes" are one term).
 * The interface is translated into all 7 languages. Civ/map profiles and notes are written in Spanish: in any other language a 🌐 *Translate* button on each section translates it with your own AI key (a fraction of a cent per section, cached on your device).
@@ -137,7 +138,7 @@ Every source is credited inside the notes, video by video, with its link and pub
 
 Built in 2026 by **M** **in conversation with Claude (Anthropic)**, inside the Claude app with its agentic tools: Claude wrote and tested the code, researched sources, ran parallel research agents and checked its own data; M decided what to build, tested it in real games and corrected course.
 
-**Research pipeline.** Agents opened each YouTube video in a real Chrome browser (Claude in Chrome), read the captions, and wrote a Spanish note per video with date, lessons and the build order if any. A second pass checked every balance-dependent claim against the patch history and the current game data, writing the VIGENCIA block. Videos without captions were skipped and logged, never guessed. An audit script checks the whole knowledge base for contradictions (e.g. items removed from the game still given as advice).
+**Research pipeline.** Agents opened each YouTube video in a real Chrome browser (Claude in Chrome), read the captions, and wrote a Spanish note per video with date, lessons and the build order if any. A second pass checked every balance-dependent claim against the patch history and the current game data, writing the VIGENCIA block. Videos without captions were skipped and logged, never guessed. An audit script checks the whole knowledge base for contradictions (e.g. items removed from the game still given as advice). A third pass (`tools/condense.js`, `tools/themes.js`) condensed every note into its "En la partida" block, extracted step-by-step builds only where the note states one (every step quotes the note, and the quote is verified), and wrote the 24 topic summaries with one citation per line; the notes are the only input, and the raw model output is checked before anything is kept.
 
 **Tools, and why these instead of the alternatives**
 
@@ -168,7 +169,7 @@ npm run build:web        # web version → docs/ (GitHub Pages)
 
 **Releases are automatic:** when the `version` in `package.json` changes on `main`, `.github/workflows/release.yml` tests the app, builds Windows and Mac on GitHub's servers and publishes release `v<version>` with the text in `release-notes/v<version>.md`.
 
-Repository layout: `src/main` (engine, AI brain, voice, data sync; `api.js` is the one implementation behind both the desktop IPC and the web `window.coach`), `src/renderer` (UI and translations), `data` (game data, build orders, knowledge notes, icons), `web` (browser version), `docs` (published web app), `installer` (Windows installer), `tools` (data scripts), `test`.
+Repository layout: `src/main` (engine, AI brain, voice, data sync; `api.js` is the one implementation behind both the desktop IPC and the web `window.coach`), `src/renderer` (UI and translations), `data` (game data, build orders — `rtsbuilds` and `extracted` —, knowledge notes with `resumen_guias.json` and the `temas_*.md` topic summaries, icons), `web` (browser version), `docs` (published web app), `installer` (Windows installer), `tools` (data scripts), `test`.
 
 ## Ideas under consideration
 

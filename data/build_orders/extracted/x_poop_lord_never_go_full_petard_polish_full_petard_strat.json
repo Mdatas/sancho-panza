@@ -1,0 +1,71 @@
+{
+ "name": "Full petardo polaco (variante Vlad)",
+ "civilization": "Poles",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=XqHJrdk_wj8",
+ "description": "Pasos extraídos por IA de la nota «Never Go Full Petard: Polish Full Petard Strat!» (Poop Lord, 2023-08-02); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_every_unique_strategy.md",
+  "stem": "Poop Lord (anti-meta/meme) EU356 — Never Go Full Petard: Polish Full Petard Strat! (video publicado 2023-08-02)",
+  "tier": "meme",
+  "date": "2023-08-02"
+ },
+ "build_order": [
+  {
+   "villager_count": 6,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Empezá con 6 aldeanos a comida."
+   ],
+   "evidencia": "6 a comida → 5 a madera → resto a comida"
+  },
+  {
+   "villager_count": 11,
+   "age": 1,
+   "resources": {
+    "wood": 5,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Sumá 5 aldeanos a madera."
+   ],
+   "evidencia": "6 a comida → 5 a madera → resto a comida"
+  },
+  {
+   "villager_count": 25,
+   "age": 1,
+   "resources": {
+    "wood": 5,
+    "food": 20,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Resto a comida; hacé clic a Feudal a ~25-26 de población."
+   ],
+   "evidencia": "6 a comida → 5 a madera → resto a comida"
+  },
+  {
+   "villager_count": 25,
+   "age": 2,
+   "resources": {
+    "wood": 5,
+    "food": 14,
+    "gold": 0,
+    "stone": 6
+   },
+   "notes": [
+    "Tras el clic, 6 aldeanos a piedra; uno construye el Campamento minero."
+   ],
+   "evidencia": "Tras el clic: 6 a piedra"
+  }
+ ]
+}

@@ -1,0 +1,71 @@
+{
+ "name": "12 Pop Scouts Malayos",
+ "civilization": "Malay",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=p7YfLWRUGcE",
+ "description": "Pasos extraídos por IA de la nota «New 12 Pop Scouts Better Meme Strat than 8 Pop Scouts! Faster Feudal! 1650 Elo» (Poop Lord, 2023-05-14); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_every_unique_strategy.md",
+  "stem": "Poop Lord (anti-meta/meme) EU349 — New 12 Pop Scouts Better Meme Strat than 8 Pop Scouts?! Faster Feudal?! 1650 Elo (video publicado 2023-05-14)",
+  "tier": "meme",
+  "date": "2023-05-14"
+ },
+ "build_order": [
+  {
+   "villager_count": 6,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Empujar ciervos si se puede."
+   ],
+   "evidencia": "6 a comida (empujar ciervos si se puede)"
+  },
+  {
+   "villager_count": 9,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Construir el Campamento maderero."
+   ],
+   "evidencia": "3 a madera (Campamento maderero)"
+  },
+  {
+   "villager_count": 11,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 8,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Hacer el Telar y el Cuartel con 175 de madera, construyendo con 2 aldeanos."
+   ],
+   "evidencia": "Telar → Cuartel con 175 de madera (hacerlo con 2 aldeanos)"
+  },
+  {
+   "villager_count": 11,
+   "age": 2,
+   "resources": {
+    "wood": 3,
+    "food": 8,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Hacer clic a Feudal con 12 de población (11 aldeanos más un scout)."
+   ],
+   "evidencia": "clic a Feudal a 12 pop (11 aldeanos + scout)"
+  }
+ ]
+}

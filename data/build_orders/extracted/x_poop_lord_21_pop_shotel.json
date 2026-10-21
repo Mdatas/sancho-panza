@@ -1,0 +1,57 @@
+{
+ "name": "Castle drop 21 pop",
+ "civilization": "Ethiopians",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=lUueDTlOBJc",
+ "description": "Pasos extraídos por IA de la nota «21 Pop Shotel» (Poop Lord, 2022-08-12); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_book_of_memes.md",
+  "stem": "Poop Lord (meme) BM17 — Book of Memes Strategy Guide: 21 Pop Shotel (video publicado 2022-08-12)",
+  "tier": "meme",
+  "date": "2022-08-12"
+ },
+ "build_order": [
+  {
+   "villager_count": 7,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 7,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Empujá un ciervo enseguida; el séptimo va al jabalí."
+   ],
+   "evidencia": "7 a comida (empujar un ciervo enseguida; el 7º va al jabalí)"
+  },
+  {
+   "villager_count": 14,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 10,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Alternás madera y comida según la secuencia del build."
+   ],
+   "evidencia": "3 a madera (algunos prefieren 4); 2 a comida; 1 a madera; 1 más a comida"
+  },
+  {
+   "villager_count": 20,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 16,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Pasá 6 a bayas, con 100 de madera para molino en bayas; clickeá Feudal a 21 pop."
+   ],
+   "evidencia": "6 a bayas (con 100 de madera, molino en bayas)"
+  }
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "name": "Apertura de Scouts (pase con 20)",
+ "civilization": "Generic",
+ "author": "El Biry",
+ "source": "https://www.youtube.com/watch?v=EpDdoLMXNBQ",
+ "description": "Pasos extraídos por IA de la nota «CURSO AGE OF EMPIRES 2 CAPITULO 1 : BUILD ORDER SCOUTS Y DEFENSA VS MAA» (El Biry, 2023-02-16); cada paso cita la frase de la nota que lo respalda. Tier: meta.",
+ "extracted_from": {
+  "file": "elbiry_curso.md",
+  "stem": "El Biry FC01 — CURSO AGE OF EMPIRES 2 CAPITULO 1 : BUILD ORDER SCOUTS Y DEFENSA VS MAA (video publicado 2023-02-16)",
+  "tier": "meta",
+  "date": "2023-02-16"
+ },
+ "build_order": [
+  {
+   "villager_count": 6,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "2 casas al inicio.",
+    "Primeros 6 aldeanos a ovejas."
+   ],
+   "evidencia": "primeros 6 aldeanos a ovejas"
+  },
+  {
+   "villager_count": 9,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Aldeanos 7-9 a madera: son 3, no 4, para poder pasar con 20."
+   ],
+   "evidencia": "aldeanos 7-9 a madera (3, no 4, para poder pasar con 20)"
+  },
+  {
+   "villager_count": 13,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 10,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Luego jabalíes (lureo).",
+    "El aldeano ~12 hace 2 casas; el 13 va al jabalí."
+   ],
+   "evidencia": "aldeano 13 al jabalí"
+  },
+  {
+   "villager_count": 20,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 17,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Del aldeano 14 en adelante, 4 a bayas con molino; telar.",
+    "Clickeá Feudal con 20 de pop."
+   ],
+   "time": "7:10",
+   "evidencia": "click a Feudal con 20 (~7:10 de juego)"
+  }
+ ]
+}

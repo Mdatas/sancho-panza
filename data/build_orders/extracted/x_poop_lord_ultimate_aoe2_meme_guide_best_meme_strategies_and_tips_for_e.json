@@ -1,0 +1,59 @@
+{
+ "name": "24 Knights en 20 minutos",
+ "civilization": "Britons",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=qJK5qwCFcKk",
+ "description": "Pasos extraídos por IA de la nota «Ultimate AOE2 Meme Guide Best Meme Strategies and Tips for Each Civ B is for Britons» (Poop Lord, 2024-04-16); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_book_of_memes.md",
+  "stem": "Poop Lord (meme) UM03 — Ultimate AOE2 Meme Guide Best Meme Strategies and Tips for Each Civ B is for Britons (video publicado 2024-04-16)",
+  "tier": "meme",
+  "date": "2024-04-16"
+ },
+ "build_order": [
+  {
+   "villager_count": 10,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Arrancá con 6 aldeanos a comida y 4 a madera.",
+    "Subí la comida hasta 15 aldeanos."
+   ],
+   "evidencia": "6 comida, 4 madera, comida hasta 15"
+  },
+  {
+   "villager_count": 23,
+   "age": 1,
+   "resources": {
+    "wood": 8,
+    "food": 15,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Sumá 4 a madera y empujá ciervos y toda la caza."
+   ],
+   "evidencia": "+4 madera, empujar ciervos y toda la caza"
+  },
+  {
+   "villager_count": 27,
+   "age": 1,
+   "resources": {
+    "wood": 8,
+    "food": 15,
+    "gold": 4,
+    "stone": 0
+   },
+   "notes": [
+    "Pasá los últimos 4 a oro y hacé click a 28 pop.",
+    "Construí el cuartel en la subida a Feudal."
+   ],
+   "evidencia": "click a 28 pop con 27 aldeanos (8 madera, 15 comida, 4 oro)"
+  }
+ ]
+}

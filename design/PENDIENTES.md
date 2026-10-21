@@ -15,8 +15,9 @@ se borra de esta lista y queda en las notas de la versión.
   endpoint.
 
 ## Contenido
-- **Más builds paso a paso**: 36 civs no tienen ningún build específico y casi todo es Arabia/Arena. Tienen que venir de
-  fuentes (videos/guías), no inventarse; la extracción automática desde las notas (`tools/condense.js`) cubre una parte.
+- **Más builds paso a paso**: muchas civs no tienen ningún build específico y casi todo es Arabia/Arena. Tienen que venir
+  de fuentes (videos/guías), no inventarse; la extracción automática desde las notas (`tools/condense.js`, v0.20) sacó 25
+  builds de las ~640 notas (el resto no enuncia una secuencia con asignación de aldeanos). Lo que falta son más fuentes.
 - **Editor de builds** dentro de la app (crear/duplicar/editar pasos) y compartirlos. Hoy solo se importa JSON.
 - **Pre-traducir los perfiles de civs y mapas** a los 6 idiomas en el build (una sola corrida de IA, ~US$5–10) para que en
   otros idiomas no haga falta la key ni el botón Traducir. Pendiente de decidir el gasto.
@@ -24,8 +25,9 @@ se borra de esta lista y queda en las notas de la versión.
   por parche. Hay que verificar los términos de uso de la fuente.
 - **Las 5 imágenes de mapa que faltan** (Cross, Forest Breach, Snake Forest, Stranded, Twin Forests): no existen en las
   wikis; harían falta capturas propias.
-- **Resúmenes por tema y por guía generados por IA** (`tools/themes.js`, `tools/condense.js`): corrida completa pendiente
-  de aprobar el gasto (~US$5–6).
+- **Regenerar los resúmenes por tema y por guía** (`tools/themes.js`, `tools/condense.js`, hechos en v0.20) cuando se
+  sumen notas nuevas o cambie el parche: los scripts son idempotentes (saltean lo ya resumido por hash), pero una corrida
+  completa cuesta ~US$8–9 en API, así que conviene correrlos por lotes (`--only`, `--tier`).
 
 ## Interfaz
 - **Respuesta estructurada** (resumen de 3 líneas + detalle como campos de una herramienta en vez de texto con `---`):

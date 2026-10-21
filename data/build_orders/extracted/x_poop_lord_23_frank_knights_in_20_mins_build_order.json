@@ -1,0 +1,85 @@
+{
+ "name": "23 Caballeros Francos en 20 min",
+ "civilization": "Franks",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=oJLPbdoMIGc",
+ "description": "Pasos extraídos por IA de la nota «23 Frank Knights in 20 Mins Build Order» (Poop Lord, 2022-11-14); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_every_unique_strategy.md",
+  "stem": "Poop Lord (anti-meta/meme) EU167 — 23 Frank Knights in 20 Mins Build Order (video publicado 2022-11-14)",
+  "tier": "meme",
+  "date": "2022-11-14"
+ },
+ "build_order": [
+  {
+   "villager_count": 6,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Mandá 6 aldeanos a ovejas y empujá ciervos con el scout."
+   ],
+   "evidencia": "6 a comida (ovejas) y empujar ciervos con el scout"
+  },
+  {
+   "villager_count": 10,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Llevá 4 aldeanos a madera, en un campamento en un rincón con muchos árboles."
+   ],
+   "evidencia": "4 a madera (campamento en un rincón con mucha superficie de árboles)"
+  },
+  {
+   "villager_count": 18,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 14,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Pasá 8 aldeanos a comida: molino en bayas con 6 aldeanos; casas hasta 30 de población."
+   ],
+   "evidencia": "8 a comida (Molino en bayas, 6 en bayas; casas hasta 30 de población)"
+  },
+  {
+   "villager_count": 23,
+   "age": 1,
+   "resources": {
+    "wood": 9,
+    "food": 14,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Atraé el jabalí con el scout y sumá 5 aldeanos a madera."
+   ],
+   "evidencia": "atraer jabalí con el scout → 5 a madera → 4 a oro"
+  },
+  {
+   "villager_count": 27,
+   "age": 1,
+   "resources": {
+    "wood": 9,
+    "food": 14,
+    "gold": 4,
+    "stone": 0
+   },
+   "notes": [
+    "Mandá 4 aldeanos a oro; hacé clic a Feudal a ~28 de población."
+   ],
+   "evidencia": "atraer jabalí con el scout → 5 a madera → 4 a oro"
+  }
+ ]
+}

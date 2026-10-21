@@ -1,0 +1,71 @@
+{
+ "name": "Build de castillo para Torre de Asedio (Sicilianos)",
+ "civilization": "Generic",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=MLOUAaLC_i4",
+ "description": "Pasos extraídos por IA de la nota «Siege Tower Hop into Castle Drop» (Poop Lord, 2022-07-21); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_book_of_memes.md",
+  "stem": "Poop Lord (meme) BM15 — Book of Memes Strategy Guide: Siege Tower Hop into Castle Drop (video publicado 2022-07-21)",
+  "tier": "meme",
+  "date": "2022-07-21"
+ },
+ "build_order": [
+  {
+   "villager_count": 6,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Mandá los primeros 6 aldeanos a comida."
+   ],
+   "evidencia": "6 a comida; 4 a madera; 15 más a comida; click a Feudal con 26 de población."
+  },
+  {
+   "villager_count": 10,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Sumá 4 aldeanos a madera."
+   ],
+   "evidencia": "6 a comida; 4 a madera; 15 más a comida; click a Feudal con 26 de población."
+  },
+  {
+   "villager_count": 25,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 21,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Agregá 15 aldeanos más a comida y llegá a 25 de población."
+   ],
+   "evidencia": "6 a comida; 4 a madera; 15 más a comida; click a Feudal con 26 de población."
+  },
+  {
+   "villager_count": 25,
+   "age": 2,
+   "resources": {
+    "wood": 4,
+    "food": 15,
+    "gold": 4,
+    "stone": 2
+   },
+   "notes": [
+    "Al pasar a Feudal, mové 4 de comida a oro y 2 aldeanos a piedra."
+   ],
+   "evidencia": "En Feudal: mover 4 de comida a oro; 2 aldeanos a piedra"
+  }
+ ]
+}

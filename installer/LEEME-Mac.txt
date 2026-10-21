@@ -1,4 +1,4 @@
-Sancho Panza - Age of Empires 2 Fan Companion v0.19 - Mac
+Sancho Panza - Age of Empires 2 Fan Companion v0.20 - Mac
 ======================================
 
 Cual bajar: Mac con chip Apple (M1, M2, M3, M4...) -> "mac-arm64". Mac con Intel -> "mac-x64".

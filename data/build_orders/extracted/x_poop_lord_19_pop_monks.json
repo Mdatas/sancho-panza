@@ -1,0 +1,57 @@
+{
+ "name": "Fast Castle 19 pop con monjes",
+ "civilization": "Lithuanians",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=psEjihx-8cU",
+ "description": "Pasos extraídos por IA de la nota «19 Pop Monks» (Poop Lord, 2022-08-03); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_book_of_memes.md",
+  "stem": "Poop Lord (meme) BM07 — Book of Memes Strategy Guide: 19 Pop Monks (video publicado 2022-08-03)",
+  "tier": "meme",
+  "date": "2022-08-03"
+ },
+ "build_order": [
+  {
+   "villager_count": 10,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 10,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Mandá los primeros 10 aldeanos a comida."
+   ],
+   "evidencia": "10 a comida; 4 a madera + casa"
+  },
+  {
+   "villager_count": 14,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 10,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Sumá 4 a madera y construí la casa con ellos."
+   ],
+   "evidencia": "4 a madera + casa (y campamento maderero)"
+  },
+  {
+   "villager_count": 19,
+   "age": 2,
+   "resources": {
+    "wood": 4,
+    "food": 15,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Pasá 5 más a comida y clickeá Feudal al llegar a 19 pop."
+   ],
+   "evidencia": "5 más a comida; click a Feudal (19 pop)"
+  }
+ ]
+}

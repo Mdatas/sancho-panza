@@ -1,0 +1,131 @@
+{
+ "name": "Fast Castle 24+2 → boom",
+ "civilization": "Generic",
+ "author": "Hera",
+ "source": "https://www.youtube.com/watch?v=JsTNM7j6fs4",
+ "description": "Pasos extraídos por IA de la nota «Fast Castle 24+2 → boom (Arena)» (Hera, 2023); cada paso cita la frase de la nota que lo respalda. Tier: meta.",
+ "extracted_from": {
+  "file": "hera_builds.md",
+  "stem": "Hera (2023): Build de principiante: Fast Castle 24+2 → boom (Arena)",
+  "tier": "meta",
+  "date": "2023"
+ },
+ "build_order": [
+  {
+   "villager_count": 6,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "6 a ovejas",
+    "Encolá aldeanos y hacé 2 casas"
+   ],
+   "evidencia": "6 a ovejas → 3 a madera"
+  },
+  {
+   "villager_count": 9,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "3 a madera: un solo campamento, en bosque denso",
+    "Atraé el jabalí"
+   ],
+   "evidencia": "3 a madera (UN solo campamento de madera"
+  },
+  {
+   "villager_count": 10,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 7,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "1 aldeano hace casa y molino en las bayas"
+   ],
+   "evidencia": "1 hace casa y molino en las bayas"
+  },
+  {
+   "villager_count": 12,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 9,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "2 a la caza (2º jabalí)"
+   ],
+   "evidencia": "2 a la caza (2º jabalí)"
+  },
+  {
+   "villager_count": 16,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 13,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "4 a bayas (5 en total)"
+   ],
+   "evidencia": "4 a bayas (5 en bayas total)"
+  },
+  {
+   "villager_count": 18,
+   "age": 1,
+   "resources": {
+    "wood": 3,
+    "food": 15,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Casa a ~18 pop",
+    "2 más a la caza"
+   ],
+   "evidencia": "casa a ~18 pop → 2 más a la caza"
+  },
+  {
+   "villager_count": 22,
+   "age": 1,
+   "resources": {
+    "wood": 7,
+    "food": 15,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "4 a madera, hasta 7 en total"
+   ],
+   "evidencia": "4 a madera (hasta 7 en madera antes de clickear)"
+  },
+  {
+   "villager_count": 24,
+   "age": 1,
+   "resources": {
+    "wood": 7,
+    "food": 15,
+    "gold": 2,
+    "stone": 0
+   },
+   "notes": [
+    "Los últimos 2 a oro",
+    "Sembrá 4 granjas al acabarse el jabalí y clickeá Feudal sin Telar"
+   ],
+   "evidencia": "los ÚLTIMOS 2 aldeanos a ORO (clave)"
+  }
+ ]
+}

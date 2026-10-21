@@ -1,0 +1,146 @@
+{
+ "name": "Rush de arqueros all-in (guía 2001)",
+ "civilization": "Generic",
+ "author": "Hera",
+ "source": "https://www.youtube.com/watch?v=IH1GfT2R6Xc",
+ "description": "Pasos extraídos por IA de la nota «Rush de arqueros all-in de 2001 (qué sirve hoy)» (Hera, 2001); cada paso cita la frase de la nota que lo respalda. Tier: meta.",
+ "extracted_from": {
+  "file": "hera_builds.md",
+  "stem": "Hera (2001): Rush de arqueros all-in de 2001 (qué sirve hoy)",
+  "tier": "meta",
+  "date": "2001"
+ },
+ "build_order": [
+  {
+   "villager_count": 6,
+   "age": 1,
+   "resources": {
+    "wood": 0,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Aldeanos 1-6 a ovejas: comé solo 4 y guardá 4.",
+    "Atraé el jabalí con uno al pasar de la 3ª a la 4ª oveja."
+   ],
+   "evidencia": "Aldeanos 1-6: ovejas."
+  },
+  {
+   "villager_count": 8,
+   "age": 1,
+   "resources": {
+    "wood": 2,
+    "food": 6,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Aldeanos 7-8 a un árbol suelto cercano, sin campamento."
+   ],
+   "evidencia": "Aldeanos 7-8: árbol suelto cercano"
+  },
+  {
+   "villager_count": 10,
+   "age": 1,
+   "resources": {
+    "wood": 2,
+    "food": 8,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Aldeanos 9-10 a los ciervos.",
+    "Hacé el Telar."
+   ],
+   "evidencia": "9-10: a los ciervos (2 aldeanos)"
+  },
+  {
+   "villager_count": 12,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 8,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "El 12 construye casa.",
+    "Con 4 leñadores, hacé campamento de madera y mudalos ahí."
+   ],
+   "evidencia": "Aldeanos 11-12: también al árbol suelto"
+  },
+  {
+   "villager_count": 13,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 9,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "El aldeano 13 va a los ciervos (3 en total)."
+   ],
+   "evidencia": "Aldeano 13: se suma a los ciervos"
+  },
+  {
+   "villager_count": 18,
+   "age": 1,
+   "resources": {
+    "wood": 9,
+    "food": 9,
+    "gold": 0,
+    "stone": 0
+   },
+   "notes": [
+    "Aldeanos 14-18 a madera (9 en total)."
+   ],
+   "evidencia": "14-18: madera (total 9 en madera)"
+  },
+  {
+   "villager_count": 21,
+   "age": 1,
+   "resources": {
+    "wood": 9,
+    "food": 9,
+    "gold": 3,
+    "stone": 0
+   },
+   "notes": [
+    "Aldeanos 19-21 a oro con campamento de minería (3 en oro)."
+   ],
+   "evidencia": "19-21: oro + campamento de minería (3 en oro)"
+  },
+  {
+   "villager_count": 21,
+   "age": 1,
+   "resources": {
+    "wood": 9,
+    "food": 9,
+    "gold": 3,
+    "stone": 0
+   },
+   "notes": [
+    "Clickeá Feudal con el 21º aldeano casi terminado.",
+    "Apuntá a 430-490 de comida."
+   ],
+   "evidencia": "3 ciervos, 3 oro, 9 madera y 6 aldeanos"
+  },
+  {
+   "villager_count": 21,
+   "age": 2,
+   "resources": {
+    "wood": 9,
+    "food": 6,
+    "gold": 6,
+    "stone": 0
+   },
+   "notes": [
+    "De los 6 libres, 3 van al oro.",
+    "Los otros 3 sanos van adelante a construir las arquerías."
+   ],
+   "evidencia": "3 sanos se van adelante a construir"
+  }
+ ]
+}

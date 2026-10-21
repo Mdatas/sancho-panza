@@ -1,0 +1,60 @@
+{
+ "name": "Portugueses 22 pop castle drop",
+ "civilization": "Portuguese",
+ "author": "Poop Lord",
+ "source": "https://www.youtube.com/watch?v=kfEzpfAjp-c",
+ "description": "Pasos extraídos por IA de la nota «Portuguese Organ Guns + Siege Elephants + Scouts: Making Grown Man Cry!» (Poop Lord, 2023-03-22); cada paso cita la frase de la nota que lo respalda. Tier: meme.",
+ "extracted_from": {
+  "file": "poop_lord_every_unique_strategy.md",
+  "stem": "Poop Lord (anti-meta/meme) EU317 — Portuguese Organ Guns + Siege Elephants + Scouts: Making Grown Man Cry! (video publicado 2023-03-22)",
+  "tier": "meme",
+  "date": "2023-03-22"
+ },
+ "build_order": [
+  {
+   "villager_count": 21,
+   "age": 1,
+   "resources": {
+    "wood": 4,
+    "food": 14,
+    "gold": 3,
+    "stone": 0
+   },
+   "notes": [
+    "Mandá 4 a comida bajo el TC para empujar ciervos y 4 a bayas con molino.",
+    "Sumá 6 más a comida bajo el TC; el 12.º hace casa y trae el jabalí."
+   ],
+   "evidencia": "4 a comida bajo el TC (empujar ciervos)"
+  },
+  {
+   "villager_count": 21,
+   "age": 2,
+   "resources": {
+    "wood": 6,
+    "food": 12,
+    "gold": 3,
+    "stone": 0
+   },
+   "notes": [
+    "Llegá a Feudal con 22 pop y pasá 2 de comida a madera.",
+    "Armá Mercado y Herrería con los de madera."
+   ],
+   "evidencia": "pasar 2 de comida a madera (6 madera, 12 comida)"
+  },
+  {
+   "villager_count": 22,
+   "age": 2,
+   "resources": {
+    "wood": 6,
+    "food": 12,
+    "gold": 3,
+    "stone": 1
+   },
+   "notes": [
+    "Mandá 1 aldeano nuevo a piedra y sacá Loom.",
+    "Castillos a 23 pop; si falta piedra, comprala en el Mercado."
+   ],
+   "evidencia": "1 aldeano nuevo a piedra"
+  }
+ ]
+}
