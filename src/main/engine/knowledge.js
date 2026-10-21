@@ -164,6 +164,7 @@ function tierOf(file) {
   return 'meta';
 }
 
+const THEME_META = /^Tema: |— Fuentes( \(\d+\/\d+\))?$/; // temas_*.md: the "# Tema:" intro and the "— Fuentes" source list
 const SECTION_MAX = 1600; // longer sections are split at line boundaries so the search never truncates the tail of a note
 const BM25_K1 = 1.2,
   BM25_B = 0.75,
@@ -263,6 +264,7 @@ class Knowledge {
     const scored = [];
     for (const [i, sc] of scores) {
       const s = this.sections[i];
+      if (s.file.startsWith('temas_') && THEME_META.test(s.title)) continue; // a theme's intro line and its bibliography carry no advice
       let score = sc;
       if (!wantsMeme && s._tier === 'meme') score *= 0.6;
       else if (!wantsMeme && s._tier === 'anti-meta') score *= 0.8;

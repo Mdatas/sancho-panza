@@ -95,4 +95,13 @@ for (const f of fs.readdirSync(KDIR).filter((x) => /^temas_.*\.md$/.test(x))) {
   for (const l of body.split('\n').filter((l) => /^\s*[-*•]\s/.test(l))) assert.ok(/\[[^\]\n]{3,}\]/.test(l), `${f}: uncited bullet: ${l.slice(0, 80)}`);
   assert.ok(bullets.length >= 10, f + ': too few bullets');
 }
+// the themes' intro line and source list never come back from search (they are a bibliography, not advice); their advice sections do
+{
+  const hits = k.search('qué hago contra monjes', { limit: 8 });
+  assert.ok(!hits.some((h) => /^Tema: |— Fuentes/.test(h.title)), 'theme intro/sources excluded from search');
+  assert.ok(
+    hits.some((h) => h.file === 'temas_monjes.md'),
+    'theme advice sections are searchable'
+  );
+}
 console.log(`knowledge tests passed: ${k.sections.length} sections, ${builds.length} patches, current ${CURRENT_PATCH}`);
