@@ -29,6 +29,7 @@ const tts = require('./voice/tts');
 const patchwatch = require('./patchwatch');
 const matchwatch = require('./matchwatch');
 const screenread = require('./screenread');
+const { createLocalOcr } = require('./ocr/local');
 const { pathToFileURL } = require('url');
 const pkg = require('../../package.json');
 const I18N = require('../renderer/i18n.js');
@@ -335,12 +336,35 @@ function setupMatchWatch() {
   matchPoller.start();
 }
 
-/* ----------------------------------------------------------------- screen reader (optional, the game's resource bar via the vision model) */
+/* ----------------------------------------------------------------- screen reader (optional: the game's resource bar, local Tesseract or the vision model) */
+/** Tesseract runs in a worker thread; inside a packaged app its files live in app.asar.unpacked (electron-builder asarUnpack). */
+function createLocalOcrSafe() {
+  try {
+    const tess = require('tesseract.js');
+    const unpacked = (p) => p.replace(/app\.asar([\\/])/, 'app.asar.unpacked$1');
+    const workerPath = unpacked(require.resolve('tesseract.js/src/worker-script/node/index.js'));
+    return createLocalOcr({
+      tesseract: { createWorker: (lang, oem, opts) => tess.createWorker(lang, oem, { ...opts, workerPath }), PSM: tess.PSM },
+      langPath: path.join(BUNDLED_DATA, 'ocr'),
+      cachePath: null,
+      log,
+    });
+  } catch (e) {
+    log('local ocr unavailable', e.message);
+    return null;
+  }
+}
 function setupScreenReader() {
+  const hasAi = (s) => {
+    const a = brain._providerArgs(s, { extraction: true });
+    return a.provider === 'openai' || !!a.apiKey;
+  };
   screenReader = screenread.createScreenReader({
     electron: { desktopCapturer, screen, systemPreferences },
     getSettings,
-    providerArgs: (s) => brain._providerArgs(s, { extraction: true }), // the cheap model (Haiku) reads the bar
+    providerArgs: (s) => brain._providerArgs(s, { extraction: true }), // the cheap model (Haiku) reads the bar when the engine is 'ai'
+    localOcr: createLocalOcrSafe(),
+    engine: (s) => (s.ocrEngine === 'ai' && hasAi(s) ? 'ai' : 'local'),
     enabled: () => settings.get().screenRead === true && !!win && win.isVisible(),
     getDisplay: () => {
       try {
@@ -589,7 +613,7 @@ function registerIpc() {
       }
     }
     if ('theme' in patch && guideWin && !guideWin.isDestroyed()) guideWin.webContents.send('settings:changed', { theme: after.theme });
-    if (('screenRead' in patch || 'screenReadInterval' in patch || 'screenReadRegion' in patch) && screenReader) screenReader.poke();
+    if (('screenRead' in patch || 'screenReadInterval' in patch || 'screenReadRegion' in patch || 'ocrEngine' in patch) && screenReader) screenReader.poke();
     return after;
   });
   // ---- screen reader (HUD OCR)
@@ -601,13 +625,22 @@ function registerIpc() {
       log('screen', e.message);
       return {
         ok: false,
-        error: e.code === 'mac-permission' ? mt('screen.macPerm') : e.code === 'no-key' ? mt('screen.noKey') : e.message,
+        error:
+          e.code === 'mac-permission'
+            ? mt('screen.macPerm')
+            : e.code === 'no-key'
+              ? mt('screen.noKey')
+              : e.code === 'no-local-ocr'
+                ? mt('screen.noLocal')
+                : e.message,
         code: e.code || '',
       };
     }
   };
   ipcMain.handle('screen:test', () => screenCall(() => screenReader.readOnce({ manual: true })));
   ipcMain.handle('screen:calibrate', () => screenCall(() => screenReader.calibrate()));
+  ipcMain.handle('screen:calibrateManual', (_e, box) => screenCall(() => screenReader.calibrateManual(box || {})));
+  ipcMain.handle('screen:snapshot', () => screenCall(() => screenReader.snapshot()));
   ipcMain.handle('screen:status', () => (screenReader ? screenReader.status() : null));
 
   ipcMain.handle('chat:ask', (_e, { text }) => core.ask(text, (ev) => send('chat:event', ev)));
@@ -670,6 +703,18 @@ function registerIpc() {
   ipcMain.handle('guide:index', () => core.guideIndex());
   ipcMain.handle('guide:civ', (_e, key) => core.guideCiv(key));
   ipcMain.handle('guide:map', (_e, key) => core.guideMap(key));
+  ipcMain.handle('guide:meta', (_e, key) => core.guideMeta(key));
+  // the guide window asks the main window to load a build / open a catalog entry
+  ipcMain.handle('guide:loadBuild', (_e, id) => {
+    send('bo:load', { id });
+    if (win) win.show();
+    return true;
+  });
+  ipcMain.handle('guide:openCatalog', (_e, id) => {
+    send('bo:open', { id });
+    if (win) win.show();
+    return true;
+  });
   ipcMain.handle('guide:stats', () => core.guideStats());
   ipcMain.handle('guide:translate', (_e, a) => core.guideTranslate(a || {}));
   ipcMain.handle('guide:notes', (_e, q) => core.guideNotes(q));

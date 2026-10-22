@@ -35,12 +35,21 @@ se borra de esta lista y queda en las notas de la versión.
   partida** de la v0.22 ya cubre el caso determinista; esto es para el modo libre.)
 - **Entrada por voz** (hablarle al coach en vez de escribir): hotkey push-to-talk → Groq Whisper (gratis, ~1 s) o Whisper
   local; el texto reconocido entra como un mensaje más. Pendiente de decidir el proveedor y la privacidad del audio.
-- **Lectura de pantalla (v0.22) — siguientes pasos**: probarla en partidas reales con la UI del juego en 1080p/1440p y
-  escala de HUD distinta de 100 %; leer también la barra de edad/tiempo cuando está separada; detectar el panel de
-  aldeanos ociosos; versión web con `getDisplayMedia`; cortar el ciclo cuando la app está en segundo plano mucho tiempo.
+- **Lectura de pantalla (v0.22–0.23) — siguientes pasos**: el motor local (Tesseract, v0.23) se afinó sólo con capturas
+  sintéticas del HUD a 1080p y 864p; falta validarlo con **capturas reales** (1080p/1440p/4K, escala de HUD 100 % y
+  distinta, modos de UI del juego, mods de HUD) y ajustar umbral/segmentación con ellas — pedirle al jugador 3–4 capturas.
+  Después: leer la barra de edad/tiempo cuando está separada; detectar el panel de aldeanos ociosos; versión web con
+  `getDisplayMedia`; cortar el ciclo cuando la app está en segundo plano mucho tiempo; probar el motor IA con proveedores
+  gratuitos (Groq/Gemini: sin key acá, no se probó).
+- **Modos de respuesta (v0.23) — siguientes pasos**: un **proveedor por tarea** (uno gratis/local para interpretar el
+  mensaje y el OCR, Claude para el consejo); mejorar el lector local de palabras clave con las frases que fallen en uso
+  real (hoy cubre civs/mapas/unidades es+en, roles «soy/vs/aliados», edad, ELO, ejército rival).
 - **Ficha de partida (v0.22) — siguientes pasos**: mostrar la ficha en la pestaña Guía (hoy vive en el chat); builds
   sugeridos por rival (hoy: civ + mapa + apertura del perfil); más builds paso a paso de agua, Nomad e híbridos en el
   catálogo (hoy hay pocos y la ficha cae en guías); contraste de la ficha con el replay cuando exista el lector de replays.
+- **Build orders (v0.23) — siguientes pasos**: probar la tarjeta del paso en partidas reales (tamaño de letra en el
+  overlay a 1440p/4K); un filtro «sólo los que encajan» además del grupo «Para tu partida»; recordar el último build por
+  civ+mapa.
 - **Atajos por defecto**: F10 es el menú del juego en AoE2 DE. Hoy se avisa del choque en Ajustes; cambiar los valores
   por defecto afectaría la costumbre de quien ya los usa.
 - **Claves i18n semánticas** (`g.h.p.6` → `guide.pickCiv`): 418 claves × 7 idiomas; mucho riesgo de romper textos para

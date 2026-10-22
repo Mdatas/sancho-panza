@@ -383,6 +383,7 @@ function renderState() {
   $('#stateLine').title = (line + (extra ? '\n' + extra : '')).trim();
   renderTeam();
   renderBoCivNotes();
+  if (CAT && $('#tab-bo').classList.contains('active')) renderCatalog(); // "Para tu partida" follows the registered civ / map
 }
 async function setState(patch) {
   const r = await window.coach.state.set(patch);
@@ -534,10 +535,20 @@ async function runCommand(line) {
       return true;
     case 'modo':
     case 'mode': {
-      const v = /^(libre|free|ia|ai)$/i.test(arg) ? 'libre' : /^(ficha|sheet|datos|data)$/i.test(arg) ? 'ficha' : sheetMode() ? 'libre' : 'ficha';
-      await save({ answerMode: v });
+      const v = /^(libre|free|ia|ai|coach)$/i.test(arg)
+        ? 'libre'
+        : /^(ficha|sheet|datos|data)$/i.test(arg)
+          ? 'ficha'
+          : /^(local|offline|sin ia|no ai)$/i.test(arg)
+            ? 'local'
+            : answerMode() === 'local'
+              ? 'ficha'
+              : answerMode() === 'ficha'
+                ? 'libre'
+                : 'local';
+      await save({ answerMode: v, modeChosen: true });
       renderAnswerMode();
-      ok(tr('mode.changed', { mode: tr(v === 'ficha' ? 'mode.ficha' : 'mode.libre') }));
+      ok(tr('mode.changed', { mode: tr('mode.' + v) }));
       return true;
     }
     case 'log':
@@ -607,7 +618,11 @@ async function runCommand(line) {
 const RES_ICON = { food: '🍖', wood: '🪵', gold: '🪙', stone: '🪨' };
 const SHEETS = new Map(); // sheet id → sheet data (the buttons inside a rendered sheet look their data up here)
 let sheetSeq = 0;
-const sheetMode = () => (S.answerMode || 'ficha') === 'ficha';
+const answerMode = () => S.answerMode || 'local';
+const sheetMode = () => answerMode() !== 'libre'; // local and ficha both answer with the sheet
+const localMode = () => answerMode() === 'local'; // no AI at all
+/** The "missing key" banner only matters when the chosen mode uses an AI. */
+const keyBanner = () => $('#setupBanner').classList.toggle('hidden', localMode() || !(S.provider === 'anthropic' && !S.anthropicApiKey));
 /** Spanish profile text gets a marker so one click can translate every such span in a sheet (guide.translate). */
 const shtr = (text) => `<span class="shtr">${md(text)}</span>`;
 function sheetCivHtml(c, sh) {
@@ -803,7 +818,7 @@ function sheetHtml(sh, { compact = false, extracted = false } = {}) {
     if (k === 'counters' && sh.counters && sh.counters.rows.length) add('counters', sheetCountersHtml(sh.counters, sh));
     if (k === 'builds' && sh.builds && !sh.builds.none) add('builds', sheetBuildsHtml(sh.builds, sh));
   }
-  const canAdvise = hasKey();
+  const canAdvise = hasKey() && !localMode();
   const canTranslate = (S.uiLanguage || 'es') !== 'es' && hasKey();
   return (
     `<div class="sheet" data-sheet="${id}">` +
@@ -816,9 +831,15 @@ function sheetHtml(sh, { compact = false, extracted = false } = {}) {
           `<details class="shd ${b.key}"${i === 0 || (!compact && i === 1) ? ' open' : ''}><summary>${b.title}</summary><div class="shb-body">${b.body}</div></details>`
       )
       .join('') +
-    `<div class="shf">${canAdvise ? `<button class="small" data-shadvise="${id}">💡 ${esc(tr('sheet.advise'))}</button>` : `<span class="muted small">${esc(tr('sheet.adviseNoKey'))}</span>`}${
+    `<div class="shf">${
+      canAdvise
+        ? `<button class="small" data-shadvise="${id}">💡 ${esc(tr('sheet.advise'))}</button>`
+        : localMode()
+          ? `<button class="ghost small" data-shsettings="1">💡 ${esc(tr('sheet.adviseLocal'))}</button>`
+          : `<span class="muted small">${esc(tr('sheet.adviseNoKey'))}</span>`
+    }${
       canTranslate ? `<button class="ghost small" data-shtr="${id}">🌐 ${esc(tr('g.translate'))}</button>` : ''
-    }<span class="muted small shmode">${esc(extracted ? tr('sheet.extracted') : tr('sheet.mode'))}</span></div></div>`
+    }<span class="muted small shmode">${esc(extracted ? tr('sheet.extracted') : localMode() ? tr('sheet.modeLocal') : tr('sheet.mode'))}</span></div></div>`
   );
 }
 /** Show a sheet as the answer to `q` (compact box + chat history) and read its summary aloud. */
@@ -842,10 +863,15 @@ function showSheet(q, r, meta = '') {
 }
 // buttons inside a sheet: load a build into the panel, open a guide in the catalog, ask the AI, translate the Spanish bits
 document.addEventListener('click', async (e) => {
-  const t = e.target.closest && e.target.closest('[data-shbo],[data-shguide],[data-shadvise],[data-shtr]');
+  const t = e.target.closest && e.target.closest('[data-shbo],[data-shguide],[data-shadvise],[data-shtr],[data-shsettings]');
   if (!t) return;
   e.preventDefault();
-  if (t.dataset.shbo) {
+  if (t.dataset.shsettings) {
+    setMode(false);
+    showTab('settings');
+    const el = $('#setAnswerMode');
+    if (el) el.scrollIntoView({ block: 'center' });
+  } else if (t.dataset.shbo) {
     await selectBo(t.dataset.shbo);
     if (document.body.classList.contains('full')) {
       showTab('bo');
@@ -1084,8 +1110,21 @@ function renderBo(announce = false) {
   const s = b.build_order[bo.step];
   const r = s.resources;
   const res = `👤${s.villager_count} 🍖${r.food} 🪵${r.wood} 🪙${r.gold} 🪨${r.stone}${r.builder ? ' 🔨' + r.builder : ''}`;
+  // compact overlay: a step card you can read mid-game — position, age, time, resources, the notes big, the next step small
+  const next = b.build_order[bo.step + 1];
+  const mini = S.boMini === true;
   line.classList.remove('hidden');
-  line.innerHTML = `<b>${esc(b.name)}</b> ${bo.step + 1}/${b.build_order.length} · ${esc(L.ages[s.age] || '')}${s.time ? ' @' + esc(s.time) : ''} · ${res} — ${esc(s.notes.join(' | '))}`;
+  line.classList.toggle('mini', mini);
+  line.innerHTML =
+    `<div class="bl1"><button class="bnav" data-d="-1" title="${esc(tr('t.boPrev.95', {}, 'F7'))}">‹</button>` +
+    `<span class="bpos"><b>${bo.step + 1}/${b.build_order.length}</b> <span class="agetag a${s.age}">${esc(L.ages[s.age] || '')}</span>${s.time ? ` <span class="bt">@${esc(s.time)}</span>` : ''}</span>` +
+    `<span class="bname" title="${esc(b.name)}">${esc(b.name)}</span>` +
+    `<button class="bclock" title="${esc(tr('bo.clockTitle'))}">${clock.running ? '❚❚' : '▶'} ${fmtTime(clockElapsed())}<i></i></button>` +
+    `<button class="bnav" data-d="1" title="${esc(tr('t.boNext.96', {}, 'F8'))}">›</button><button class="bfold" title="${esc(tr('bo.fold', {}, ''))}">${mini ? '▸' : '▾'}</button></div>` +
+    (mini
+      ? `<div class="bl3 one">${esc(s.notes[0] || '')}</div>`
+      : `<div class="bl2">${res}</div><div class="bl3">${s.notes.map((n) => `<div>• ${esc(n)}</div>`).join('')}</div>` +
+        (next ? `<div class="bl4">▸ ${next.time ? `<b>${esc(next.time)}</b> · ` : ''}${esc((next.notes || [])[0] || '')}</div>` : ''));
   line.title = s.notes.join('\n');
   $('#boPos').textContent = `${L.step} ${bo.step + 1}/${b.build_order.length}`;
   const ag = $('#boAge');
@@ -1102,8 +1141,28 @@ function renderBo(announce = false) {
   if (r.builder) chips.push(['builder', '🔨', r.builder]);
   $('#boRes').innerHTML = chips.map(([k, ic, v]) => `<span class="res ${k}">${ic}<b>${v}</b></span>`).join('');
   $('#boNotes').innerHTML = s.notes.map((n) => `<li>${esc(n)}</li>`).join('');
+  // the whole build as a list (full window): click a row to jump there
+  const list = $('#boStepsList');
+  if (list) {
+    list.innerHTML = b.build_order
+      .map(
+        (st, i) =>
+          `<li class="${i === bo.step ? 'cur' : ''}" data-i="${i}"><span class="agetag a${st.age}">${esc((L.ages[st.age] || '?').slice(0, 3))}</span><span class="tm">${esc(st.time || '')}</span><span class="vc">👤${st.villager_count}</span><span class="nt">${esc((st.notes || []).join(' · '))}</span></li>`
+      )
+      .join('');
+    const cur = list.querySelector('.cur');
+    if (cur && $('#boStepsList').closest('details').open) cur.scrollIntoView({ block: 'nearest' });
+  }
   if (announce && ($('#boSpeak').checked || S.boSpeak)) speak(`${L.step} ${bo.step + 1}. ${s.notes.join('. ')}`);
 }
+document.addEventListener('click', (e) => {
+  const li = e.target.closest && e.target.closest('#boStepsList li');
+  if (!li || !bo.current) return;
+  bo.step = Number(li.dataset.i) || 0;
+  if (clock.running) clock.manual = true;
+  renderBo(true);
+  renderClock();
+});
 function boMove(d) {
   if (!bo.current) {
     sysNotice(esc(L.boNone));
@@ -1141,6 +1200,18 @@ async function renderBoCivNotes() {
   }
 }
 
+// the compact step card's buttons: previous / next, clock, fold
+document.addEventListener('click', (e) => {
+  const t = e.target.closest && e.target.closest('#boLine .bnav, #boLine .bclock, #boLine .bfold');
+  if (!t) return;
+  e.preventDefault();
+  if (t.classList.contains('bnav')) boMove(Number(t.dataset.d));
+  else if (t.classList.contains('bclock')) clockToggle();
+  else {
+    save({ boMini: S.boMini !== true }).then(() => renderBo(false));
+  }
+});
+
 /* ----------------------------------------------------------------- build clock (steps advance by their time stamp) */
 const clock = { running: false, startedAt: 0, base: 0, manual: false, timer: null };
 const parseTime = (t) => {
@@ -1165,6 +1236,16 @@ function renderClock() {
     }
   }
   delta.textContent = txt;
+  // the compact card: same clock, plus the countdown to the next step's time stamp
+  const cb = $('#boLine .bclock');
+  if (cb && bo.current) {
+    const next = bo.current.build_order[bo.step + 1];
+    const nt = next ? parseTime(next.time) : null;
+    const left = nt != null && clock.running ? Math.round(nt - el) : null;
+    cb.firstChild.textContent = `${clock.running ? '❚❚' : '▶'} ${fmtTime(el)}`;
+    cb.querySelector('i').textContent = txt ? ` ${txt}` : left != null && left > 0 ? ` · ${tr('bo.nextIn', { t: fmtTime(left) })}` : '';
+    cb.classList.toggle('on', clock.running);
+  }
 }
 function clockTick() {
   if (!clock.running) return;
@@ -1364,13 +1445,14 @@ async function loadSettings() {
   if ($('#setScreenRead')) {
     $('#setScreenRead').checked = S.screenRead === true;
     $('#setScreenInterval').value = String(Number(S.screenReadInterval) || 15);
+    renderOcrEngine();
   }
   $('#expPrivacyBox').classList.toggle('hidden', S.experimentalPrivacy !== true);
   $('#setMatchDetect').checked = S.matchDetect === true;
   $('#setPatchWatch').checked = S.patchWatch !== false;
   $('#setLogDays').value = String(Number(S.logRetentionDays) || 0);
   $('#profileCur').textContent = S.profileId ? tr('profile.cur', { name: S.profileName || '', id: S.profileId }) : tr('profile.none');
-  $('#setupBanner').classList.toggle('hidden', !(S.provider === 'anthropic' && !S.anthropicApiKey));
+  keyBanner();
   document.body.classList.toggle('full', S.compact === false);
   document.body.classList.toggle('compact', S.compact !== false);
 }
@@ -1378,9 +1460,24 @@ async function save(patch) {
   S = await window.coach.settings.set(patch);
   return S;
 }
+function renderOcrEngine() {
+  const eng = S.ocrEngine === 'ai' ? 'ai' : 'local';
+  $$('#setOcrEngine button').forEach((b) => b.classList.toggle('on', b.dataset.v === eng));
+}
+let showAiAnyway = false;
 function renderAnswerMode() {
-  const mode = S.answerMode || 'ficha';
+  const mode = answerMode();
   $$('#setAnswerMode button').forEach((b) => b.classList.toggle('on', b.dataset.v === mode));
+  const info = $('#modeInfo');
+  if (info) {
+    info.innerHTML = tr('mode.' + mode + '.info') + (mode !== 'local' && !hasKey() ? `<br><b>${esc(tr('mode.needsKey'))}</b>` : '');
+    wireLinks(info);
+  }
+  const local = mode === 'local';
+  if ($('#aiBox')) $('#aiBox').classList.toggle('hidden', local && !showAiAnyway);
+  if ($('#aiLocalRow')) $('#aiLocalRow').classList.toggle('hidden', !local || showAiAnyway);
+  $$('#wModes .modecard').forEach((b) => b.classList.toggle('on', b.dataset.mode === mode));
+  keyBanner();
 }
 function onProviderChange() {
   renderProvInfo();
@@ -1389,7 +1486,7 @@ function bindSettings() {
   const bind = (sel, key, map = (v) => v, evt = 'change') =>
     $(sel).addEventListener(evt, async (e) => {
       await save({ [key]: map(e.target.value) });
-      $('#setupBanner').classList.toggle('hidden', !(S.provider === 'anthropic' && !S.anthropicApiKey));
+      keyBanner();
     });
   $('#setProvider').addEventListener('change', async (e) => {
     const id = e.target.value,
@@ -1405,7 +1502,7 @@ function bindSettings() {
     }
     await save(patch);
     onProviderChange();
-    $('#setupBanner').classList.toggle('hidden', !(S.provider === 'anthropic' && !S.anthropicApiKey));
+    keyBanner();
   });
   const keyInput = (sel, key) => {
     // plain mode: save once typing pauses (not on every keystroke → one encrypted write, not thirty); change/blur flushes at once
@@ -1414,7 +1511,7 @@ function bindSettings() {
       clearTimeout(timer);
       timer = null;
       await save({ [key]: v.trim() });
-      $('#setupBanner').classList.toggle('hidden', !(S.provider === 'anthropic' && !S.anthropicApiKey));
+      keyBanner();
     };
     $(sel).addEventListener('input', (e) => {
       if (S.experimentalPrivacy === true) return;
@@ -1448,10 +1545,15 @@ function bindSettings() {
   );
   $$('#setAnswerMode button').forEach((b) =>
     b.addEventListener('click', async () => {
-      await save({ answerMode: b.dataset.v });
+      await save({ answerMode: b.dataset.v, modeChosen: true });
       renderAnswerMode();
     })
   );
+  if ($('#btnShowAi'))
+    $('#btnShowAi').addEventListener('click', () => {
+      showAiAnyway = true;
+      renderAnswerMode();
+    });
   bind('#setTtsEngine', 'ttsEngine');
   bind('#setTtsVoice', 'ttsVoice');
   bind('#setFocusReturn', 'focusReturn');
@@ -1501,7 +1603,7 @@ function bindSettings() {
   $('#btnTestBrain').addEventListener('click', async () => {
     const m = $('#testBrainMsg');
     m.textContent = '…';
-    const r = await window.coach.chat.ask('Reply with exactly: OK');
+    const r = await window.coach.chat.advise('Reply with exactly: OK');
     if (r.ok) {
       m.textContent = `${L.testOk} (${r.model}, ${r.ms} ms${r.cost ? ', $' + r.cost.toFixed(4) : ''})`;
       save({ keyOk: true });
@@ -1640,31 +1742,102 @@ function bindExtras() {
   if ($('#setScreenRead')) {
     $('#setScreenRead').addEventListener('change', async (e) => {
       await save({ screenRead: e.target.checked });
-      if (e.target.checked && !hasKey()) toast(tr('screen.noKey'), 'warn');
+      if (e.target.checked && S.ocrEngine === 'ai' && !hasKey()) toast(tr('screen.noKey'), 'warn');
       else toast(e.target.checked ? tr('screen.on', { n: Number(S.screenReadInterval) || 15 }) : tr('screen.off'));
     });
     $('#setScreenInterval').addEventListener('change', (e) => save({ screenReadInterval: Number(e.target.value) || 15 }));
-    const screenRun = async (fn) => {
-      const out = $('#screenTestOut'),
-        prev = $('#screenPreview');
-      out.textContent = tr('screen.reading');
-      prev.classList.add('hidden');
-      $('#btnScreenTest').disabled = $('#btnScreenCalibrate').disabled = true;
-      const r = await fn();
-      $('#btnScreenTest').disabled = $('#btnScreenCalibrate').disabled = false;
-      if (r && r.crop) {
-        prev.innerHTML = `<img src="data:image/jpeg;base64,${r.crop}" alt="">`;
-        prev.classList.remove('hidden');
+    $$('#setOcrEngine button').forEach((b) =>
+      b.addEventListener('click', async () => {
+        await save({ ocrEngine: b.dataset.v });
+        renderOcrEngine();
+        if (b.dataset.v === 'ai' && !hasKey()) toast(tr('screen.noKey'), 'warn');
+      })
+    );
+    const screenButtons = (on) => ['#btnScreenTest', '#btnScreenCalibrate', '#btnScreenManual'].forEach((sel) => ($(sel).disabled = !on));
+    /** Show the crop the reader used and, when the local engine reports them, the words it found (boxes + text). */
+    const showCrop = (r) => {
+      const prev = $('#screenPreview');
+      if (!r || !r.crop) return;
+      prev.classList.remove('pick');
+      prev.innerHTML = `<img src="data:image/jpeg;base64,${r.crop}" alt="">`;
+      prev.classList.remove('hidden');
+      const words = r.debug && r.debug.words;
+      if (words && r.cropSize && r.cropSize.width) {
+        const img = prev.querySelector('img');
+        const place = () => {
+          const k = img.clientWidth / r.cropSize.width;
+          prev.querySelectorAll('.obox').forEach((x) => x.remove());
+          for (const w of words) {
+            const b = document.createElement('div');
+            b.className = 'obox';
+            b.style.cssText = `left:${w.x0 * k}px;top:${w.y0 * k}px;width:${(w.x1 - w.x0) * k}px;height:${(w.y1 - w.y0) * k}px`;
+            b.innerHTML = `<span>${esc(w.text || '?')}</span>`;
+            prev.appendChild(b);
+          }
+        };
+        if (img.complete) place();
+        else img.onload = place;
       }
+    };
+    const screenRun = async (fn) => {
+      const out = $('#screenTestOut');
+      out.textContent = tr('screen.reading');
+      $('#screenPreview').classList.add('hidden');
+      screenButtons(false);
+      const r = await fn();
+      screenButtons(true);
+      showCrop(r);
+      const eng =
+        r && r.engine
+          ? ` · ${tr('screen.engineUsed', { e: r.engine === 'ai' ? tr('ocr.ai') : tr('ocr.local'), ms: r.debug && r.debug.ms != null ? r.debug.ms : '?' })}`
+          : '';
       if (!r || !r.ok) {
-        out.textContent = '✗ ' + (r && r.notHud ? tr('screen.notHud') : r && r.notFound ? tr('screen.notHud') : (r && r.error) || '?');
+        out.textContent = '✗ ' + (r && (r.notHud || r.notFound) ? (r.region ? tr('screen.savedNoRead') : tr('screen.notHud')) : (r && r.error) || '?') + eng;
         return;
       }
       const line = hudText(r.reading);
-      out.textContent = r.region ? tr('screen.calibrated', { w: r.rect.width, h: r.rect.height, line }) : '✓ ' + line;
+      out.textContent = (r.region ? tr('screen.calibrated', { w: r.rect.width, h: r.rect.height, line }) : '✓ ' + line) + eng;
     };
     $('#btnScreenTest').addEventListener('click', () => screenRun(() => window.coach.screen.test()));
     $('#btnScreenCalibrate').addEventListener('click', () => screenRun(() => window.coach.screen.calibrate()));
+    // manual calibration: a screenshot, two clicks (top-left, bottom-right of the bar) → region in screen fractions
+    $('#btnScreenManual').addEventListener('click', async () => {
+      const out = $('#screenTestOut'),
+        prev = $('#screenPreview');
+      out.textContent = tr('screen.reading');
+      screenButtons(false);
+      const snap = await window.coach.screen.snapshot();
+      screenButtons(true);
+      if (!snap || !snap.ok) {
+        out.textContent = '✗ ' + ((snap && snap.error) || '?');
+        return;
+      }
+      prev.innerHTML = `<img src="data:image/jpeg;base64,${snap.jpeg}" alt="">`;
+      prev.classList.remove('hidden');
+      prev.classList.add('pick');
+      out.textContent = tr('screen.manualHint');
+      const img = prev.querySelector('img');
+      let first = null;
+      const onClick = async (e) => {
+        const rect = img.getBoundingClientRect();
+        const fx = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)),
+          fy = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+        if (!first) {
+          first = { fx, fy };
+          out.textContent = tr('screen.manualNext');
+          return;
+        }
+        img.removeEventListener('click', onClick);
+        prev.classList.remove('pick');
+        const box = { x: Math.min(first.fx, fx), y: Math.min(first.fy, fy), w: Math.abs(fx - first.fx), h: Math.abs(fy - first.fy) };
+        const rb = document.createElement('div');
+        rb.className = 'rbox';
+        rb.style.cssText = `left:${box.x * rect.width}px;top:${box.y * rect.height}px;width:${box.w * rect.width}px;height:${box.h * rect.height}px`;
+        prev.appendChild(rb);
+        await screenRun(() => window.coach.screen.calibrateManual(box));
+      };
+      img.addEventListener('click', onClick);
+    });
     if (window.coach.screen && window.coach.screen.onReading)
       window.coach.screen.onReading((ev) => {
         hud = ev.reading;
@@ -1808,14 +1981,22 @@ function hasKey() {
   return S.provider === 'openai' ? !!S.openaiBaseUrl : !!S.anthropicApiKey;
 }
 function maybeWelcome() {
-  if (S.welcomeHide || (hasKey() && S.keyOk)) return;
-  if (!hasKey()) {
-    setMode(false);
-    showTab('settings');
-  }
+  if (S.welcomeHide || S.modeChosen || (hasKey() && S.keyOk)) return;
   $('#welcome').classList.remove('hidden');
   setMode(false);
+  showTab('settings');
+  renderAnswerMode();
   wireLinks($('#welcome'));
+}
+/** A mode card in the welcome: local closes the popup; the AI modes reveal the key field (unless a key already works). */
+async function welcomePick(mode) {
+  await save({ answerMode: mode, modeChosen: true });
+  renderAnswerMode();
+  if (mode === 'local' || (hasKey() && S.keyOk)) {
+    closeWelcome();
+    return;
+  }
+  $('#wKeyBox').classList.remove('hidden');
   setTimeout(() => $('#wKey').focus(), 50);
 }
 function closeWelcome() {
@@ -1832,10 +2013,10 @@ async function welcomeTest() {
   }
   msg.textContent = tr('w.testing');
   await save({ provider: 'anthropic', providerPreset: 'claude', anthropicApiKey: v });
-  const r = await window.coach.chat.ask('Reply with exactly: OK');
+  const r = await window.coach.chat.advise('Reply with exactly: OK');
   await window.coach.chat.reset();
   if (r.ok) {
-    await save({ keyOk: true });
+    await save({ keyOk: true, modeChosen: true });
     msg.innerHTML = `<span class="ok">${tr('w.ok')}</span>`;
     loadSettings();
     setTimeout(() => {
@@ -1897,6 +2078,19 @@ function landAfterWelcome() {
 /* ----------------------------------------------------------------- build-order catalog (list, not a drop-down) */
 let CAT = null,
   boType = '';
+let RECO = { key: '', data: null };
+/** The sheet's build recommender for the registered match (local, no model); cached per civ / map / age. */
+async function recommendedBuilds() {
+  const key = `${state.myCiv || ''}|${state.map || ''}|${state.age || 0}`;
+  if (RECO.key === key) return RECO.data;
+  try {
+    const r = await window.coach.chat.sheet('');
+    RECO = { key, data: r && r.ok && r.sheet ? r.sheet.builds : null };
+  } catch {
+    RECO = { key, data: null };
+  }
+  return RECO.data;
+}
 const TIER_LABEL = { meta: 'META', 'anti-meta': 'ANTI-META', meme: 'MEME' };
 async function renderCatalog(force = false) {
   if (!CAT || force) CAT = await window.coach.bo.catalog();
@@ -1926,14 +2120,25 @@ async function renderCatalog(force = false) {
     (!boType || e.types.includes(boType)) &&
     (!civ || e.civs.includes('Any') || e.civs.some((c) => civNames.some((n) => norm(n) === norm(c)))) &&
     (!q || norm([e.title, e.author, e.civs.join(' '), e.types.join(' '), e.date].join(' ')).includes(q));
-  const steps = CAT.steps.filter(match),
+  // relevance: my civ's builds first, then generic ones, then the rest; meta before anti-meta before meme; a title hit before a tag hit
+  const myNames = state.myCiv
+    ? civs
+        .filter((c) => c.key === state.myCiv)
+        .flatMap((c) => [c.name_en, c.name_es, c.key])
+        .map(norm)
+    : [];
+  const tierRank = (e) => (e.tier === 'meta' ? 0 : e.tier === 'anti-meta' ? 1 : 2);
+  const civRank = (e) => (myNames.length && e.civs.some((c) => myNames.includes(norm(c))) ? 0 : e.civs.includes('Any') || !e.civs.length ? 1 : 2);
+  const hitRank = (e) => (q && norm(e.title).includes(q) ? 0 : 1);
+  const steps = CAT.steps
+      .filter(match)
+      .sort((a, b) => hitRank(a) - hitRank(b) || civRank(a) - civRank(b) || tierRank(a) - tierRank(b) || a.title.localeCompare(b.title)),
     notes = CAT.notes
       .filter(match)
-      .sort(
-        (a, b) =>
-          (a.tier === 'meta' ? 0 : a.tier === 'anti-meta' ? 1 : 2) - (b.tier === 'meta' ? 0 : b.tier === 'anti-meta' ? 1 : 2) ||
-          String(b.date).localeCompare(String(a.date))
-      );
+      .sort((a, b) => hitRank(a) - hitRank(b) || civRank(a) - civRank(b) || tierRank(a) - tierRank(b) || String(b.date).localeCompare(String(a.date)));
+  // "Para tu partida": what the sheet's recommender picks for the registered civ / map (only on the unfiltered list)
+  let reco = null;
+  if (!q && !src && !tier && !boType && !civ && (state.myCiv || state.map)) reco = await recommendedBuilds();
   $('#boCount').textContent = tr('bo.count', { s: steps.length, n: notes.length, t: CAT.counts.steps + CAT.counts.notes });
   const civKeyOf = (n) => {
     const c = civs.find((x) => x.name_en === n || x.name_es === n || x.key === n);
@@ -1947,8 +2152,20 @@ async function renderCatalog(force = false) {
       .join(
         ''
       )}${esc(e.title)}</div><div class="s">${e.kind === 'steps' ? `<span class="tag gold">${tr('bo.stepTag')}</span>${e.extracted ? `<span class="tag" title="${esc(tr('bo.extracted'))}">${esc(tr('bo.extractedTag'))}</span>` : ''}` : e.pasos ? `<span class="tag gold">${esc(tr('bo.hasSteps'))}</span>` : ''}${e.tier !== 'meta' ? `<span class="tag ${e.tier === 'meme' ? 'bad' : 'warn'}">${TIER_LABEL[e.tier]}</span>` : ''}<span>${esc(e.civs.map((c) => (c === 'Any' ? tr('bo.anyCiv') : c)).join(', ') || tr('bo.anyCiv'))}</span>${e.types.length ? `<span class="muted">· ${esc(e.types.slice(0, 3).join(', '))}</span>` : ''}<span class="muted">· ${esc(e.author || '')}${e.date ? ' ' + esc(String(e.date).slice(0, 7)) : ''}${e.steps ? ` · ${e.steps} ${tr('bo.steps')}` : ''}</span></div></div>`;
+  const recoHtml =
+    reco && (reco.steps.length || reco.guides.length)
+      ? `<div class="grp">${tr('bo.forMatch')} <span class="muted" style="text-transform:none;letter-spacing:0">· ${esc(tr('bo.forMatchHint'))}</span></div>${[
+          ...reco.steps,
+          ...reco.guides,
+        ]
+          .map((r) => CAT.steps.find((x) => x.id === r.id) || CAT.notes.find((x) => x.id === r.id))
+          .filter(Boolean)
+          .map(card)
+          .join('')}`
+      : '';
   $('#boList').innerHTML =
-    (steps.length ? `<div class="grp">${tr('bo.grpSteps')}</div>${steps.map(card).join('')}` : '') +
+    recoHtml +
+      (steps.length ? `<div class="grp">${tr('bo.grpSteps')}</div>${steps.map(card).join('')}` : '') +
       (notes.length
         ? `<div class="grp">${tr('bo.grpNotes')}</div>${notes.slice(0, 300).map(card).join('')}${notes.length > 300 ? `<div class="muted small">${tr('bo.more', { n: notes.length - 300 })}</div>` : ''}`
         : '') || `<p class="muted">${tr('bo.none')}</p>`;
@@ -2095,7 +2312,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   $('#wKey').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') welcomeTest();
   });
-  $('#wSkip').addEventListener('click', closeWelcome);
+  $('#wSkip').addEventListener('click', () => welcomePick('local'));
+  $$('#wModes .modecard').forEach((b) => b.addEventListener('click', () => welcomePick(b.dataset.mode)));
   $('#btnHide').addEventListener('click', () => window.coach.window.hide());
   $('#btnMode').addEventListener('click', () => setMode(document.body.classList.contains('full')));
   $('#btnGuide').addEventListener('click', () => openGuide(window.coach.web ? {} : { civ: state.myCiv || '', map: state.map || '' }));
@@ -2137,6 +2355,29 @@ window.addEventListener('DOMContentLoaded', async () => {
     else if (name === 'boNext') boMove(1);
   });
   window.coach.onToast(({ kind, text }) => toast(text, kind));
+  // the guide (own window on desktop, iframe / own tab on the web) can load a build into the panel or open a catalog entry
+  const loadFromGuide = async (id) => {
+    if (!id) return;
+    await selectBo(id, false);
+    toast(tr('g.metaLoaded', {}, 'Build cargado'));
+    if (document.body.classList.contains('full') && $('#tabs button.active') && $('#tabs button.active').id !== 'btnGuide') showTab('bo');
+    else if (document.body.classList.contains('full') && !window.coach.web) showTab('bo');
+  };
+  const openFromGuide = async (id) => {
+    if (!id) return;
+    setMode(false);
+    showTab('bo');
+    await renderCatalog();
+    openCatalogEntry(id);
+  };
+  if (window.coach.bo.onLoad) window.coach.bo.onLoad((p) => loadFromGuide(p && p.id));
+  if (window.coach.bo.onOpen) window.coach.bo.onOpen((p) => openFromGuide(p && p.id));
+  window.addEventListener('message', (e) => {
+    if (/^https?:$/.test(location.protocol) && e.origin !== location.origin) return;
+    const d = e.data || {};
+    if (d.type === 'sp:loadBuild') loadFromGuide(d.id);
+    else if (d.type === 'sp:openCatalog') openFromGuide(d.id);
+  });
   window.coach.onMode(({ compact }) => {
     document.body.classList.toggle('full', !compact);
     document.body.classList.toggle('compact', compact);

@@ -1,13 +1,13 @@
 'use strict';
 /**
- * Screen reader (opt-in, desktop only): every N seconds it grabs the game's resource bar from the screen, sends that crop
- * to the AI provider's vision model and turns the answer into a HUD reading
- *   { food, wood, gold, stone, pop: 'current/limit', idle, villagers: { food, wood, gold, stone }, age: 1-4, time: 'm:ss', at }
- * Only the crop of the bar leaves the PC. Nothing here touches the UI: main.js forwards each reading to the window and
- * to the brain (brain.setLive), and the settings decide whether the loop runs at all (settings.screenRead).
+ * Screen reader (opt-in, desktop only): every N seconds it grabs the game's resource bar from the screen and turns it
+ * into a HUD reading { food, wood, gold, stone, pop: 'current/limit', idle, villagers: { food, wood, gold, stone }, age: 1-4, time: 'm:ss', at }.
+ * Two engines: 'local' (default; Tesseract in a worker thread, see ocr/local.js — nothing leaves the PC) and 'ai'
+ * (the crop goes to the AI provider's vision model). Nothing here touches the UI: main.js forwards each reading to the
+ * window and to the brain (brain.setLive), and the settings decide whether the loop runs at all (settings.screenRead).
  *
- * Costs: one small image (~50 tokens) per reading; readings are skipped while the crop does not change (menus, pause)
- * and the loop backs off when the bar is not on screen, so an idle app costs nothing.
+ * Readings are skipped while the crop does not change (menus, pause) and the loop backs off when the bar is not on
+ * screen, so an idle app costs nothing (and, with the vision model, one small image ≈ US$0.0003 per reading).
  */
 const { visionComplete } = require('./brain/providers');
 
@@ -113,18 +113,86 @@ function changed(a, b) {
 }
 
 /**
+ * Find the resource bar on a full screenshot without any model: the HUD is a dark strip glued to the top-left corner
+ * with light text on it. Rows are "bar rows" while most pixels of the left half are dark; the bar's right edge is where
+ * the dark run along those rows ends. Returns a region in screen fractions, or null.
+ */
+function findBarLocal({ width, height, data, bgra = false }) {
+  const lum = (x, y) => {
+    const p = (y * width + x) * 4;
+    return bgra ? (data[p + 2] * 299 + data[p + 1] * 587 + data[p] * 114) / 1000 : (data[p] * 299 + data[p + 1] * 587 + data[p + 2] * 114) / 1000;
+  };
+  const maxRows = Math.floor(height * 0.15);
+  const half = Math.floor(width * 0.45);
+  const darkRow = (y) => {
+    let dark = 0,
+      n = 0;
+    for (let x = 4; x < half; x += 3) {
+      n++;
+      if (lum(x, y) < 70) dark++;
+    }
+    return dark / n;
+  };
+  let bottom = -1;
+  for (let y = 0; y < maxRows; y++) {
+    if (darkRow(y) >= 0.6) bottom = y;
+    else if (bottom >= 0 && y - bottom > 3) break; // past the strip
+  }
+  if (bottom < 8) return null;
+  // right edge: along the bar rows, the first long run of columns that are not dark any more
+  const rows = [];
+  for (let y = 2; y < bottom - 1; y += Math.max(1, Math.floor(bottom / 6))) rows.push(y);
+  let right = half;
+  let bright = 0;
+  for (let x = half; x < width; x += 2) {
+    const dark = rows.filter((y) => lum(x, y) < 70).length / rows.length;
+    if (dark < 0.4) {
+      bright++;
+      if (bright >= 12) break; // ~24 px of non-bar → the bar ended before this run
+    } else {
+      bright = 0;
+      right = x;
+    }
+  }
+  // a little extra to the right: the clock / age sit at the end of the strip (a bit of terrain in the crop is harmless)
+  return { x: 0, y: 0, w: Math.min(1, ((right + 8) / width) * 1.12), h: Math.min(1, (bottom + 6) / height) };
+}
+
+/**
  * @param {object} o
  * @param o.electron { desktopCapturer, screen, systemPreferences } (injected so the module can be unit-tested without Electron)
  * @param o.getSettings full settings with the real keys
  * @param o.providerArgs (settings) → { provider, apiKey, model, baseUrl, strictTransport } for the vision call
+ * @param o.localOcr ocr/local.js reader (createLocalOcr) or null when Tesseract is not available
+ * @param o.engine (settings) → 'local' | 'ai' (which reader the automatic loop uses)
  * @param o.enabled () → boolean: whether the automatic loop may read right now
  * @param o.getDisplay () → Electron display to capture (the one the overlay is on)
  * @param o.onReading (reading) → void, for every accepted automatic or manual reading
  * @param o.saveRegion (region) → void, after a successful calibration
  */
-function createScreenReader({ electron, getSettings, providerArgs, enabled, getDisplay, onReading = () => {}, saveRegion = () => {}, log = () => {} }) {
+function createScreenReader({
+  electron,
+  getSettings,
+  providerArgs,
+  localOcr = null,
+  engine = () => 'local',
+  enabled,
+  getDisplay,
+  onReading = () => {},
+  saveRegion = () => {},
+  log = () => {},
+}) {
   const { desktopCapturer, screen, systemPreferences } = electron;
   const st = { timer: null, busy: false, lastAt: 0, lastSig: null, notHud: 0, last: null, lastError: null, reads: 0, cost: 0 };
+  const jpeg = (image, rect) =>
+    image
+      .resize({ width: Math.min(900, rect.width) })
+      .toJPEG(70)
+      .toString('base64');
+  const bitmapOf = (image) => {
+    const size = image.getSize();
+    return { width: size.width, height: size.height, data: image.toBitmap(), bgra: true };
+  };
 
   function macPermissionError() {
     if (process.platform !== 'darwin' || !systemPreferences || !systemPreferences.getMediaAccessStatus) return null;
@@ -172,10 +240,29 @@ function createScreenReader({ electron, getSettings, providerArgs, enabled, getD
     return r;
   }
 
+  /** Read one crop with the chosen engine → { reading | null, raw, cost }. reading.hud === false when it is not the bar. */
+  async function readCrop(image, which) {
+    if (which === 'ai') {
+      const r = await askVision(READ_SYSTEM, 'Read this HUD crop.', image.toPNG());
+      const reading = parseReading(r.text);
+      if (reading && reading.hud) reading.engine = 'ai';
+      return { reading, raw: r.text, cost: r.cost || null };
+    }
+    if (!localOcr) throw Object.assign(new Error('local OCR not available'), { code: 'no-local-ocr' });
+    const reading = await localOcr.read(bitmapOf(image));
+    return {
+      reading,
+      raw: reading && reading.debug ? reading.debug.words.map((w) => w.text || '?').join(' ') : '',
+      cost: null,
+      debug: reading && reading.debug,
+    };
+  }
+
   /** One reading now. { manual } readings ignore the change detector and the back-off and return the crop for the UI. */
-  async function readOnce({ manual = false } = {}) {
+  async function readOnce({ manual = false, engine: forced = null } = {}) {
     const perm = macPermissionError();
     if (perm) throw Object.assign(new Error('screen recording permission'), { code: perm });
+    const which = forced || engine(getSettings()) || 'local';
     const full = await capture();
     const { image, rect } = crop(full, region());
     const sig = signature(image);
@@ -184,78 +271,111 @@ function createScreenReader({ electron, getSettings, providerArgs, enabled, getD
       return { ok: true, unchanged: true, reading: st.last };
     }
     st.lastSig = sig;
-    const png = image.toPNG();
-    const r = await askVision(READ_SYSTEM, 'Read this HUD crop.', png);
+    const r = await readCrop(image, which);
     st.reads++;
     st.lastAt = Date.now();
-    const reading = parseReading(r.text);
+    const reading = r.reading;
     if (!reading || reading.hud === false) {
       st.notHud = Math.min(st.notHud + 1, BACKOFF.length - 1);
       st.lastError = 'not-hud';
       return {
         ok: false,
         notHud: true,
-        crop: manual
-          ? image
-              .resize({ width: Math.min(900, rect.width) })
-              .toJPEG(70)
-              .toString('base64')
-          : null,
-        raw: r.text,
+        engine: which,
+        crop: manual ? jpeg(image, rect) : null,
+        cropSize: image.getSize(),
+        raw: r.raw,
+        debug: manual ? r.debug : undefined,
+        rect,
       };
     }
     st.notHud = 0;
     st.lastError = null;
     reading.at = Date.now();
-    reading.cost = r.cost || null;
-    st.last = reading;
-    onReading(reading);
+    reading.cost = r.cost;
+    const { debug, ...clean } = reading;
+    st.last = clean;
+    onReading(clean);
     return {
       ok: true,
-      reading,
-      crop: manual
-        ? image
-            .resize({ width: Math.min(900, rect.width) })
-            .toJPEG(70)
-            .toString('base64')
-        : null,
+      reading: clean,
+      engine: which,
+      crop: manual ? jpeg(image, rect) : null,
+      cropSize: image.getSize(),
+      debug: manual ? debug : undefined,
+      rect,
     };
   }
 
-  /** Find the bar on a full screenshot, verify by reading it, save the region. */
-  async function calibrate() {
+  /** Verify a candidate region by reading it; on success save it and return the reading. */
+  async function adopt(full, reg, which) {
+    const { image, rect } = crop(full, reg);
+    const r = await readCrop(image, which);
+    const reading = r.reading;
+    if (!reading || reading.hud === false)
+      return { ok: false, notFound: true, raw: r.raw, rect, crop: jpeg(image, rect), cropSize: image.getSize(), debug: r.debug };
+    saveRegion(reg);
+    st.lastSig = null;
+    reading.at = Date.now();
+    const { debug, ...clean } = reading;
+    st.last = clean;
+    onReading(clean);
+    return { ok: true, region: reg, rect, reading: clean, engine: which, crop: jpeg(image, rect), cropSize: image.getSize(), debug };
+  }
+
+  /**
+   * Find the bar on a full screenshot and save the region. Local first (the dark strip at the top-left), the vision
+   * model when that fails and the engine is 'ai' (or forced). Either way the region is only kept when a reading works.
+   */
+  async function calibrate({ engine: forced = null } = {}) {
+    const perm = macPermissionError();
+    if (perm) throw Object.assign(new Error('screen recording permission'), { code: perm });
+    const which = forced || engine(getSettings()) || 'local';
+    const full = await capture();
+    const pad = 0.004;
+    const clamp = (box) => {
+      const reg = { x: Math.max(0, box.x - pad), y: Math.max(0, box.y - pad), w: Math.min(1, box.w + 2 * pad), h: Math.min(1, box.h + 3 * pad) };
+      if (reg.x + reg.w > 1) reg.w = 1 - reg.x;
+      if (reg.y + reg.h > 1) reg.h = 1 - reg.y;
+      return reg;
+    };
+    let last = null;
+    const guess = findBarLocal(bitmapOf(full));
+    if (guess) {
+      last = await adopt(full, clamp(guess), which);
+      if (last.ok) return { ...last, how: 'local' };
+    }
+    if (which === 'ai') {
+      const s = full.getSize();
+      const small = s.width > 1400 ? full.resize({ width: 1400, quality: 'best' }) : full;
+      const r = await askVision(FIND_SYSTEM, 'Locate the resource bar in this screenshot.', small.toPNG());
+      const box = parseBox(r.text);
+      if (!box) return { ok: false, notFound: true, raw: r.text };
+      last = await adopt(full, clamp(box), which);
+      if (last.ok) return { ...last, how: 'ai' };
+    }
+    return last || { ok: false, notFound: true };
+  }
+
+  /** Manual calibration: the player marked the bar on a screenshot (fractions) → verify, save. */
+  async function calibrateManual(box) {
+    const b = box && ['x', 'y', 'w', 'h'].every((k) => Number.isFinite(box[k])) ? box : null;
+    if (!b || b.w <= 0.02 || b.h <= 0.005) return { ok: false, notFound: true };
+    const full = await capture();
+    const reg = { x: Math.max(0, b.x), y: Math.max(0, b.y), w: Math.min(1 - Math.max(0, b.x), b.w), h: Math.min(1 - Math.max(0, b.y), b.h) };
+    const r = await adopt(full, reg, engine(getSettings()) || 'local');
+    if (!r.ok) saveRegion(reg); // keep what the player marked even if this frame did not read (menu open, game paused…)
+    return { ...r, region: reg, how: 'manual' };
+  }
+
+  /** The whole screen, small, for the manual calibration picker. */
+  async function snapshot() {
     const perm = macPermissionError();
     if (perm) throw Object.assign(new Error('screen recording permission'), { code: perm });
     const full = await capture();
     const s = full.getSize();
-    const small = s.width > 1400 ? full.resize({ width: 1400, quality: 'best' }) : full;
-    const r = await askVision(FIND_SYSTEM, 'Locate the resource bar in this screenshot.', small.toPNG());
-    const box = parseBox(r.text);
-    if (!box) return { ok: false, notFound: true, raw: r.text };
-    // a little margin, clamped to the screen
-    const pad = 0.004;
-    const reg = { x: Math.max(0, box.x - pad), y: Math.max(0, box.y - pad), w: Math.min(1, box.w + 2 * pad), h: Math.min(1, box.h + 3 * pad) };
-    if (reg.x + reg.w > 1) reg.w = 1 - reg.x;
-    if (reg.y + reg.h > 1) reg.h = 1 - reg.y;
-    const { image, rect } = crop(full, reg);
-    const check = await askVision(READ_SYSTEM, 'Read this HUD crop.', image.toPNG());
-    const reading = parseReading(check.text);
-    if (!reading || reading.hud === false) return { ok: false, notFound: true, raw: check.text, rect };
-    saveRegion(reg);
-    st.lastSig = null;
-    reading.at = Date.now();
-    st.last = reading;
-    onReading(reading);
-    return {
-      ok: true,
-      region: reg,
-      rect,
-      reading,
-      crop: image
-        .resize({ width: Math.min(900, rect.width) })
-        .toJPEG(70)
-        .toString('base64'),
-    };
+    const small = full.resize({ width: Math.min(1280, s.width), quality: 'good' });
+    return { ok: true, jpeg: small.toJPEG(72).toString('base64'), width: s.width, height: s.height, region: region() };
   }
 
   async function tick() {
@@ -285,6 +405,8 @@ function createScreenReader({ electron, getSettings, providerArgs, enabled, getD
     },
     readOnce,
     calibrate,
+    calibrateManual,
+    snapshot,
     /** forget the change detector so the next tick reads again (settings toggled, window shown) */
     poke() {
       st.lastSig = null;
@@ -293,9 +415,17 @@ function createScreenReader({ electron, getSettings, providerArgs, enabled, getD
     },
     status() {
       const fresh = st.last && Date.now() - st.last.at < STALE_MS ? st.last : null;
-      return { last: fresh, lastError: st.lastError, reads: st.reads, cost: +st.cost.toFixed(4), region: region() };
+      return {
+        last: fresh,
+        lastError: st.lastError,
+        reads: st.reads,
+        cost: +st.cost.toFixed(4),
+        region: region(),
+        engine: engine(getSettings()) || 'local',
+        localReady: !!(localOcr && localOcr.ready()),
+      };
     },
   };
 }
 
-module.exports = { createScreenReader, parseReading, parseBox, DEFAULT_REGION, STALE_MS };
+module.exports = { createScreenReader, parseReading, parseBox, findBarLocal, DEFAULT_REGION, STALE_MS };

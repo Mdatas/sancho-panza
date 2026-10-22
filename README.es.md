@@ -1,7 +1,7 @@
 # Sancho Panza · Age of Empires 2 Fan Companion
 
-**Un coach con IA que se sienta al lado tuyo mientras jugás Age of Empires II: Definitive Edition.**
-Escribís (o preguntás) qué está pasando en tu partida — "Soy francos vs mongoles en Edad de los Castillos y él hace Mangudai" — y en pocos segundos te responde qué hacer en los próximos dos minutos, en base a datos actuales del juego, ~1.000 videos y guías de jugadores top, y matemática de duelos. Puede leerte la respuesta en voz alta.
+**Un coach que se sienta al lado tuyo mientras jugás Age of Empires II: Definitive Edition.**
+Escribís (o preguntás) qué está pasando en tu partida — "Soy francos vs mongoles en Edad de los Castillos y él hace Mangudai" — y al instante te responde con la **ficha de partida**: qué le gana a qué, las dos civs, el mapa y los builds que encajan, todo a partir de datos actuales del juego, ~1.000 videos y guías de jugadores top, y matemática de duelos. Funciona sin IA y sin ninguna key (nada sale de tu PC); con tu propia key de IA además te interpreta los mensajes y te da un plan concreto como coach libre. Puede leerte la respuesta en voz alta.
 
 Leelo en: [English](README.md) · **Español**
 
@@ -27,8 +27,8 @@ Leelo en: [English](README.md) · **Español**
 <p align="center"><em>El overlay compacto (470 × 262) que queda arriba del juego: paso actual del build, última respuesta, línea de pregunta</em></p>
 
 <p align="center"><img src="screenshots/guide-civ.png" width="49%" alt="Guía: página de civ"> <img src="screenshots/guide-map.png" width="49%" alt="Guía: página de mapa con el minimapa del juego"></p>
-<p align="center"><img src="screenshots/guide-units.png" width="49%" alt="Guía: qué le gana a una unidad"> <img src="screenshots/guide-themes.png" width="49%" alt="Guía: resúmenes por tema"></p>
-<p align="center"><em>La guía: civs, mapas con su imagen, «¿qué le gana a…?» y los 24 resúmenes por tema</em></p>
+<p align="center"><img src="screenshots/guide-units.png" width="32%" alt="Guía: qué le gana a una unidad"> <img src="screenshots/guide-meta.png" width="32%" alt="Guía: meta por civ — la apertura meta de la civ por tipo de mapa con los builds que la siguen"> <img src="screenshots/guide-themes.png" width="32%" alt="Guía: consejos pro, 24 resúmenes por tema"></p>
+<p align="center"><em>La guía: civs, mapas con su imagen, «¿qué le gana a…?», <strong>Meta por civ</strong> (apertura por tipo de mapa + builds cargables) y los 24 <strong>Consejos pro</strong></em></p>
 
 <p align="center"><img src="screenshots/build-orders.png" width="31%" alt="Build orders: catálogo y paso actual"> <img src="screenshots/settings-appearance.png" width="31%" alt="Ajustes: apariencia"> <img src="screenshots/phone-guide.png" width="27%" alt="La versión web en un teléfono"></p>
 <p align="center"><em>Build orders (catálogo + panel de pasos) · Ajustes → Apariencia · la versión web en un teléfono</em></p>
@@ -45,7 +45,7 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 
 ## Lo que no es
 
-* **No es un cheat ni un bot.** Nunca lee la memoria del juego, el tráfico de red ni la pantalla, y nunca hace clic ni escribe en el juego. Solo responde lo que *vos* le contás. La licencia prohíbe usarlo para hacer trampa o cualquier juego desleal.
+* **No es un cheat ni un bot.** Nunca lee la memoria del juego ni el tráfico de red, y nunca hace clic ni escribe en el juego. Solo responde lo que *vos* le contás; la lectura de pantalla opcional (apagada por defecto) mira la barra de recursos de tu propia pantalla — los mismos números que ve un espectador — y nada más. La licencia prohíbe usarlo para hacer trampa o cualquier juego desleal.
 * **No está afiliado** a Microsoft, World's Edge, Forgotten Empires ni a ningún creador de los que se acreditan más abajo.
 * **No siempre tiene razón.** Es una IA: los números salen de herramientas con datos del juego, pero los consejos pueden estar mal. Te avisa cuando un tip es viejo, está fuera del meta o es un meme.
 
@@ -53,18 +53,21 @@ Es gratis, no tiene publicidad, no recolecta nada y va a seguir siendo no comerc
 
 ## Cómo funciona
 
-Dos modos de respuesta, se cambian en Ajustes → Cerebro (o con `/modo`):
+Tres modos de respuesta, se eligen en la ventana de bienvenida o en Ajustes → Cerebro (o con `/modo`). Cada uno explica qué hace, qué sale de tu PC y cuánto cuesta antes de que lo elijas:
 
 ```
- Ficha (por defecto) ─ vos ──► app ──► 1. lee los datos de la partida en tu mensaje (la IA lo interpreta si hay key; palabras clave si no)
-                                       2. arma la ficha con los datos: counters a lo que te hacen, tu civ, la civ rival, el mapa, los builds que encajan
-                                       3. ningún modelo escribe nada: cada línea sale del árbol tecnológico, los perfiles, el cálculo de duelos o el catálogo
-                                       4. «Pedir consejo a la IA» convierte la ficha en un plan concreto cuando vos lo pedís
+ Local (por defecto, sin IA) ─ vos ──► app ──► 1. un lector de palabras clave saca los datos de la partida de tu mensaje (civs, mapa, edad, qué te hacen)
+                                               2. arma la ficha con los datos: counters a lo que te hacen, tu civ, la civ rival, el mapa, los builds que encajan
+                                               3. ningún modelo escribe nada y nada sale de tu PC: cada línea sale del árbol tecnológico, los perfiles,
+                                                  el cálculo de duelos o el catálogo. Sin key, sin costo.
 
- Libre ─ vos ──(texto o voz)──► app ──► 1. extrae los datos de la partida (civs, edad, mapa, ejércitos, restricciones)
-                                        2. elige el conocimiento relevante (perfiles de civ y mapa, notas, counters de equipo)
-                                        3. le pregunta a la IA con herramientas: counters, info de civ, stats, plan de eco, builds, búsqueda de notas
-                                        4. respuesta = resumen de 3 líneas + detalle corto, leída en voz alta
+ Ficha + IA ─ vos ──► app ──► la misma ficha, pero tu mensaje lo interpreta un modelo barato (Claude Haiku): entiende texto libre, errores de tipeo,
+                              mezclas de español e inglés y «me está yendo a caballeros» — ~US$0,0002 por mensaje; «Pedir consejo» queda a un clic
+
+ Coach libre (IA) ─ vos ──(texto o voz)──► app ──► 1. extrae los datos de la partida (civs, edad, mapa, ejércitos, restricciones)
+                                                   2. elige el conocimiento relevante (perfiles de civ y mapa, notas, counters de equipo)
+                                                   3. le pregunta a la IA con herramientas: counters, info de civ, stats, plan de eco, builds, búsqueda de notas
+                                                   4. respuesta = resumen de 3 líneas + detalle corto, leída en voz alta (~US$0,03–0,05 con Claude Sonnet)
 ```
 
 * **Datos del juego** (todas las civs, unidades, tecnologías, bonus, costos, clases de armadura) salen de los archivos oficiales del juego tal como los publica [SiegeEngineers/aoe2techtree](https://github.com/SiegeEngineers/aoe2techtree), actualizados en cada parche. A la IA se le indica que nunca cite números de memoria: tiene que consultar las herramientas.
@@ -75,10 +78,10 @@ Dos modos de respuesta, se cambian en Ajustes → Cerebro (o con `/modo`):
 
 ## Funciones
 
-**Ficha de partida** (modo de respuesta por defecto, v0.22)
-* Cada mensaje recibe una **ficha armada sólo con los datos**: counters a las unidades que nombrás (o al ejército rival que registraste, o a las unidades típicas de la civ rival), **tu civ** (fuerza por edad, bonos, unidad y tecnologías únicas, lo que no tiene, la apertura del perfil para este tipo de mapa), **la civ rival** (lo mismo más «cómo se le juega»), **el mapa** (qué gana ahí, aperturas estándar, timings, la línea sobre la civ de tu rival) y **builds sugeridos**: 3 builds meta paso a paso que encajan con tu civ, el tipo de mapa y la apertura del perfil — un clic los carga en el panel — más guías anti-meta para tu civ.
-* Determinista y barato: con API key la IA sólo interpreta tu mensaje (Haiku, ~US$0,0005); sin key lo hace un lector de palabras clave, así que la ficha funciona también en la web sin ninguna key.
-* No aventura un plan concreto por su cuenta: **«Pedir consejo a la IA»** (o `/consejo`) se lo pide al coach libre con la ficha en el prompt, para que el consejo la cite en vez de arrancar de cero. `/ficha` muestra la ficha de la partida actual; también aparece cuando se detecta una partida.
+**Ficha de partida** (modos local y ficha + IA, v0.22–0.23)
+* Cada mensaje recibe una **ficha armada sólo con los datos**: counters a las unidades que nombrás (o al ejército rival que registraste, o a las unidades típicas de la civ rival) con tarjetas de unidad, **tu civ** (fuerza por edad, bonos, unidad y tecnologías únicas, lo que no tiene, la apertura del perfil para este tipo de mapa), **la civ rival** (lo mismo más «cómo se le juega»), **el mapa** (qué gana ahí, aperturas estándar, timings, su imagen, la línea sobre la civ de tu rival) y **builds sugeridos**: 3 builds meta paso a paso que encajan con tu civ, el tipo de mapa y la apertura del perfil — un clic los carga en el panel — más guías anti-meta para tu civ.
+* **Modo local (por defecto)**: no necesita key y no manda nada a ningún lado: un lector de palabras clave interpreta tu mensaje (conoce los nombres de civs, mapas y unidades en español e inglés, «soy X vs Y», aliados y rivales, edades, ELO). **Ficha + IA** reemplaza ese lector por Claude Haiku (~US$0,0002 por mensaje) para texto libre y errores de tipeo; el lector local completa lo que el modelo deje en blanco. La ficha funciona también en la web sin ninguna key.
+* No aventura un plan concreto por su cuenta: **«Pedir consejo a la IA»** (o `/consejo`, con key) se lo pide al coach libre con la ficha en el prompt, para que el consejo la cite en vez de arrancar de cero. `/ficha` muestra la ficha de la partida actual; también aparece cuando se detecta una partida.
 
 **Coach por chat** (modo libre)
 * Overlay compacto que queda arriba del juego (ventana sin bordes), o ventana completa.
@@ -95,6 +98,8 @@ Dos modos de respuesta, se cambian en Ajustes → Cerebro (o con `/modo`):
 
 **Build orders**
 * 66 builds paso a paso que avanzan con F7/F8 y se pueden leer en voz alta: 41 de rtsbuilds (Hera, Morley Games, DauT, TaToH…) y 25 **extraídos por IA de las propias notas de guías del proyecto** — cada paso lleva la frase de la nota que lo respalda, y un build se conservó solo cuando todas las citas se encontraron textualmente en la nota (etiquetados *extraído*, con su nivel meta/meme).
+* **Tarjeta del paso** (v0.23), pensada para leerse en medio de la partida en el overlay: flechas ‹ ›, número de paso, edad y reloj del paso, el reparto de aldeanos como íconos (👤 🍖 🪵 🪙 🪨), el texto del paso, el **paso siguiente** en letra chica, una cuenta regresiva hasta él cuando corre el reloj y un botón ▾ que pliega la tarjeta a una línea. El panel completo además lista **todos los pasos** del build (clic en uno para saltar ahí).
+* **Encontrar un build** (v0.23): el catálogo se ordena por relevancia para tu partida (primero los builds de tu civ, después los meta) y, con civ y mapa cargados, un grupo **«Para tu partida»** arriba de todo muestra los builds que encajan con tu civ, el tipo de mapa y la apertura del perfil — los mismos que sugiere la ficha. La página *Meta por civ* de la Guía carga un build en el panel con un clic.
 * **Reloj del build**: tocás ▶ cuando empieza la partida y los pasos avanzan solos según su tiempo; si movés un paso a mano te dice cuántos segundos vas adelantado o atrasado respecto del build. Un build genérico muestra los bonus de inicio/economía de la civ que registraste.
 * **Benchmarks** de tiempos con nota (A+ … E) para los builds estándar (clic a Feudal/Castillos, primer ejército), tomados de la referencia de builds de Cicero, disponibles para el coach como herramienta.
 * ~640 guías de builds/estrategia sacadas de videos, navegables como tarjetas con filtros: civ, tipo (Scouts, Arqueros, Drush, Fast Castle, Torres, TC drop, Castle drop, Agua, Boom…), fuente y meta/anti-meta/meme. Cada una se abre con un bloque **"En la partida"** (3–6 líneas con los números que importan, con las correcciones de parche ya aplicadas, condensado por IA a partir de la nota) y la nota completa plegada debajo.
@@ -105,8 +110,8 @@ Dos modos de respuesta, se cambian en Ajustes → Cerebro (o con `/modo`):
 * 129 mapas con perfiles y la imagen del minimapa del juego para casi todos (de las wikis Liquipedia y Fandom; los pocos que no la tienen muestran un emblema según su tipo).
 * Calculadora de counters "¿Qué le gana a…?" con stats de unidades.
 * Íconos de civs, unidades y tecnologías (tecnologías únicas y todo lo que le falta a cada civ).
-* Tabla del meta (porcentaje de victorias y de elección por civ, parche actual).
-* **Temas**: 24 resúmenes por temática — scouts, arqueros, hombres de armas/drush, fast castle y boom, caballeros, torres, TC/castle drop, monjes, asedio, agua, elefantes, rush de aldeanos, economía de Edad Oscura, defensa contra rushes, muros, exploración, composiciones, mapas cerrados, Nomad, equipos, late game, micro, errores por ELO, benchmarks de macro — cada uno con lo esencial, cómo se hace, **alternativas cuando las guías no coinciden**, errores típicos y contras; cada línea cita su guía. El coach los lee para las preguntas generales.
+* **Meta por civ** (v0.23): elegís una civ y ves su apertura meta en mapas abiertos, cerrados y de agua con los builds paso a paso que la siguen (un clic los carga en el panel), su plan en Castillos e Imperial, sus composiciones, cómo se le juega, su porcentaje de victorias del parche y sus guías por nivel (meta, anti-meta, memes). La tabla completa de victorias y elección del parche queda plegada debajo.
+* **Consejos pro**: 24 resúmenes por temática — scouts, arqueros, hombres de armas/drush, fast castle y boom, caballeros, torres, TC/castle drop, monjes, asedio, agua, elefantes, rush de aldeanos, economía de Edad Oscura, defensa contra rushes, muros, exploración, composiciones, mapas cerrados, Nomad, equipos, late game, micro, errores por ELO, benchmarks de macro — cada uno con lo esencial, cómo se hace, **alternativas cuando las guías no coinciden**, errores típicos y contras; cada línea cita su guía. El coach los lee para las preguntas generales.
 * Un solo buscador para todo: civs, mapas, unidades y notas.
 * Búsqueda de texto completo en todas las notas (índice BM25 con stemming bilingüe y sinónimos: "malienses", "malians" y "malíes" son un mismo término).
 * La interfaz está traducida a los 7 idiomas. Los perfiles de civs y mapas y las notas están escritos en castellano: en cualquier otro idioma, un botón 🌐 *Traducir* en cada sección la traduce con tu propia API key (una fracción de centavo por sección; queda guardada en tu dispositivo).
@@ -115,18 +120,20 @@ Dos modos de respuesta, se cambian en Ajustes → Cerebro (o con `/modo`):
 * Desactivada por defecto. Si configurás tu perfil público de AoE2, lee tu partida actual (civs, mapa, equipos) desde el servicio comunitario aoe2companion y completa lo que no escribiste. Lo que vos ingresás siempre tiene prioridad.
 
 **Lectura de pantalla opcional (OCR, escritorio, experimental)**
-* Apagada por defecto. Cada 10–60 s captura la **barra de recursos** del juego (madera, comida, oro, piedra, aldeanos en cada uno, población, ociosos, edad, reloj), manda sólo ese recorte al modelo de visión de tu proveedor de IA (Claude Haiku: ~US$0,0003 por lectura, unos US$0,07 por hora cada 15 s) y muestra los números debajo de la línea de estado. El paso del build cargado compara su reparto de aldeanos con lo que dice la barra («+2 🪵 para el paso»), el **reloj del build se sincroniza solo con el reloj del juego**, la edad registrada avanza cuando la barra muestra una nueva, y el coach recibe los números frescos en su prompt. *Calibrar* encuentra la barra en tu pantalla una vez; las lecturas se saltean mientras la imagen no cambia y el ciclo se frena cuando el juego no está en pantalla. Necesita el juego en ventana sin bordes y la app visible; en Mac, permiso de grabación de pantalla.
+* Apagada por defecto. Cada 5–120 s captura la **barra de recursos** del juego (madera, comida, oro, piedra, aldeanos en cada uno, población, ociosos, edad, reloj) y muestra los números debajo de la línea de estado. El paso del build cargado compara su reparto de aldeanos con lo que dice la barra («+2 🪵 para el paso»), el **reloj del build se sincroniza solo con el reloj del juego**, la edad registrada avanza cuando la barra muestra una nueva, y el coach recibe los números frescos en su prompt.
+* Dos motores (Ajustes → Avanzado): **Local** (por defecto, v0.23) lee los dígitos en tu propia PC con [Tesseract](https://github.com/naptha/tesseract.js): el recorte nunca sale de la máquina, no cuesta nada y tarda ~0,3 s; la app aísla cada número por su cuenta (umbral adaptativo, componentes conexas, reconocimiento palabra por palabra con lista blanca de dígitos) porque los dígitos blancos y chicos sobre la franja oscura le ganan al OCR de línea entera. **IA** manda sólo ese recorte al modelo de visión de tu proveedor (Claude Haiku: ~US$0,0003 por lectura, unos US$0,07 por hora cada 15 s) y entiende cualquier escala de HUD o mod. *Calibrar* encuentra la barra en tu pantalla una vez (en local, por su franja oscura); si no la encuentra, *Marcar a mano* te deja hacer clic en las dos esquinas de la barra sobre una captura; *Probar* muestra el recorte con los recuadros de cada palabra leída. Las lecturas se saltean mientras la imagen no cambia y el ciclo se frena cuando el juego no está en pantalla. Necesita el juego en ventana sin bordes y la app visible; en Mac, permiso de grabación de pantalla. El motor local se afinó hasta ahora con capturas sintéticas del HUD: el próximo paso son capturas reales a distintas resoluciones y escalas de HUD.
 
 **La IA que elijas**
-* Claude (Anthropic) por defecto — con la que se construyó y se probó.
+* Ninguna hace falta: el modo local y el lector de pantalla local funcionan sin IA.
+* Claude (Anthropic) por defecto cuando agregás una — con la que se construyó y se probó.
 * También OpenAI, Google Gemini, Groq, OpenRouter, NVIDIA NIM, modelos locales (Ollama / LM Studio / llama.cpp / Hermes) o cualquier endpoint compatible con OpenAI. Algunos tienen planes gratuitos.
 
 **Apariencia**
 * Cuatro aspectos, se cambian en Ajustes → Apariencia: **Taverna** (predeterminado: una calle de mercado de día, carteles de roble colgados de un riel de hierro, hojas de pergamino, botones de latón y un toldo a rayas como barra de título), **Taverna de noche** (la misma calle de noche: piedra, luz de farol, botones carmesí), **Clásico oscuro** (el aspecto anterior) y **Clásico claro**. Dibujado solo con CSS, sin arte del juego; la ventana de la Guía sigue la elección.
 
 **Privacidad**
-* La app viene **sin API key**. Cada usuario trae la suya; queda en su dispositivo (cifrada en escritorio; en el almacenamiento local del navegador en la versión web).
-* Lo que sale de tu dispositivo: tus preguntas y las notas relevantes van al proveedor de IA que elegiste; el texto de las respuestas va a Microsoft solo si usás la voz de Edge; tu id de perfil va a aoe2companion solo si activás la detección de partida; al abrir, la app de escritorio consulta GitHub por datos del juego (aoe2techtree) y builds (rtsbuilds) más nuevos, y una vez por día ageofempires.com por noticias de parches (las dos cosas se apagan en Ajustes). Los logs de conversación quedan en tu dispositivo y se borran a los 30 días por defecto. No se le envía nada al autor.
+* La app viene **sin API key** y no la necesita: en el modo local por defecto no sale nada de tu dispositivo. Si agregás una key para los modos con IA, queda en tu dispositivo (cifrada en escritorio; en el almacenamiento local del navegador en la versión web), y la bienvenida / Ajustes explican qué manda y cuánto cuesta cada modo antes de cambiar.
+* Lo que sale de tu dispositivo (sólo en los modos con IA): tus preguntas y las notas relevantes van al proveedor de IA que elegiste; con el motor de lectura de pantalla por IA, también el recorte de la barra de recursos; el texto de las respuestas va a Microsoft solo si usás la voz de Edge; tu id de perfil va a aoe2companion solo si activás la detección de partida; al abrir, la app de escritorio consulta GitHub por datos del juego (aoe2techtree) y builds (rtsbuilds) más nuevos, y una vez por día ageofempires.com por noticias de parches (las dos cosas se apagan en Ajustes). Los logs de conversación quedan en tu dispositivo y se borran a los 30 días por defecto. No se le envía nada al autor.
 * Los registros de conversación quedan en tu computadora, con borrado automático opcional.
 
 ## Versiones
@@ -137,12 +144,13 @@ Dos modos de respuesta, se cambian en Ajustes → Cerebro (o con `/modo`):
 | Atajos globales F6–F10 | ✅ | ✅ (con `fn` o "teclas de función estándar") | — |
 | Voz | Edge neuronal + Windows SAPI | Edge neuronal + macOS `say` | voz del navegador / sistema |
 | Chat, barra de equipo, build orders, guía | ✅ | ✅ | ✅ |
+| Lectura de pantalla (OCR) | ✅ local o IA | ✅ local o IA (permiso de grabación de pantalla) | — |
 | Seguimiento de parches | ✅ | ✅ | notas revisadas hasta la versión publicada |
 | Instalación | descomprimí + `Instalar.bat` | descomprimí → Aplicaciones → *Privacidad y seguridad* → "Abrir de todos modos" (la app no está notarizada) | abrí el link → "Agregar a la pantalla principal" |
 | Actualizar | correr el nuevo `Instalar.bat`: reemplaza la versión anterior (ajustes, key y logs quedan) | arrastrar la app nueva sobre la vieja | automático en la próxima carga |
 | Desinstalar | Ajustes → Datos → *Desinstalar…*, o Windows → Aplicaciones instaladas, o `Desinstalar.bat` (pregunta si borrar también tus ajustes y la key) | Ajustes → Datos → *Desinstalar…* muestra la app para arrastrarla a la Papelera y puede borrar tus datos | quitar el ícono; los datos quedan en el navegador |
 
-**Comandos** (o simplemente decilo en tu pregunta): `/civ franks` · `/vs mongols` · `/age castle` · `/map arabia` · `/elo 1100` · `/allies mayans, britons` · `/enemies mongols, aztecs` · `/counters` · `/ficha` · `/consejo` · `/modo ficha|libre` · `/bo scouts` · `/n` `/p` · `/guide` · `/repeat` · `/match` · `/patch` · `/new` · `/help`
+**Comandos** (o simplemente decilo en tu pregunta): `/civ franks` · `/vs mongols` · `/age castle` · `/map arabia` · `/elo 1100` · `/allies mayans, britons` · `/enemies mongols, aztecs` · `/counters` · `/ficha` · `/consejo` · `/modo local|ficha|libre` · `/bo scouts` · `/n` `/p` · `/guide` · `/repeat` · `/match` · `/patch` · `/new` · `/help`
 (en castellano también: `/civ francos` · `/vs mongoles` · `/edad castillos` · `/mapa arabia` · `/aliados` · `/rivales` · `/repetir` · `/partida` · `/parche` · `/nueva` · `/ayuda`)
 
 ---
@@ -154,6 +162,7 @@ Cada fuente está acreditada dentro de las notas, video por video, con su link y
 **Datos del juego y build orders**
 * [SiegeEngineers/aoe2techtree](https://github.com/SiegeEngineers/aoe2techtree) — civs, unidades, tecnologías, stats e íconos de los archivos del juego (MIT).
 * [CraftySalamander/rtsbuilds](https://github.com/CraftySalamander/rtsbuilds) — build orders paso a paso de Hera, Morley Games, DauT, TaToH y otros (GPL-3.0, autores acreditados en cada archivo).
+* [tesseract.js](https://github.com/naptha/tesseract.js) (Apache-2.0) con el modelo `eng` de [tessdata_fast](https://github.com/tesseract-ocr/tessdata_fast) (Apache-2.0) — el lector de pantalla local (`data/ocr`).
 * Notas de parche y noticias oficiales — [ageofempires.com](https://www.ageofempires.com/) y [forums.ageofempires.com](https://forums.ageofempires.com/); historial completo de parches 2019–2026 contrastado con [ageofempires.fandom.com](https://ageofempires.fandom.com/).
 * Imágenes de mapas — los íconos de mapa del juego publicados en la [wiki Liquipedia Age of Empires](https://liquipedia.net/ageofempires/) y, para unos pocos mapas, los minimapas de la [Age of Empires Series Wiki](https://ageofempires.fandom.com/) (Fandom). Imágenes © Microsoft, usadas según sus Game Content Usage Rules; la página de origen de cada imagen está en `data/img/Maps/SOURCES.json`. Las baja `tools/fetch_map_images.py` por las APIs públicas de las wikis (un pedido cada 2 segundos), sin scraping.
 
@@ -191,15 +200,16 @@ Construido en 2026 por **M** **conversando con Claude (Anthropic)**, dentro de l
 | El "cerebro" | **Claude API** (tool use) por defecto, cualquier proveedor compatible con OpenAI como opción | En las pruebas, Claude fue el que usó de forma más confiable las herramientas del coach (counters, info de civs, builds); las opciones gratuitas/locales lo mantienen accesible. |
 | La verdad sobre los números | Datos del juego de aoe2techtree + motor de duelos propio | Los parches cambian los números todo el tiempo; la memoria de los modelos está desactualizada, así que los números tienen que salir de los datos. |
 | Voz | TTS neuronal de Microsoft Edge (vía `msedge-tts`), SAPI / `say` sin conexión, voz del navegador en la web | Voces naturales en todos los idiomas gratis, con alternativa sin conexión. |
+| Leer la barra de recursos | **Tesseract.js** (WebAssembly) en la PC del jugador por defecto, con segmentación propia de la barra; el modelo de visión del proveedor como opción | Gratis, privado y ~0,3 s por lectura; un modelo de visión cuesta centavos por hora pero lee cualquier HUD sin afinar nada. |
 | Web / celulares | El mismo renderer + un shim para navegador, empaquetado con **esbuild**, alojado en **GitHub Pages** como PWA | Una sola base de código, sin servidor, sin costo, instalable en Android e iOS. |
 | Empaquetado | electron-builder; el instalador de Windows descarga el runtime de Electron, verifica su SHA-256 y cierra los "fuses" de Electron (sin `ELECTRON_RUN_AS_NODE`, `NODE_OPTIONS` ni `--inspect` contra la app instalada); las apps de Mac llevan los mismos fuses y firma ad-hoc | Descargas chicas; no hacen falta certificados pagos. |
-| Tests | Scripts de test en Node (motor, notas, integraciones, estrategia, cerebro, streaming, equipos), un smoke test headless de la app real (Electron + xvfb) y un test Playwright de la versión web (vista de compu y de celular); ESLint + Prettier | Cada versión corre todo eso en CI antes de publicarse, incluido un escaneo de que no haya ninguna API key dentro de ningún paquete. |
+| Tests | Scripts de test en Node (motor, notas, integraciones, estrategia, cerebro, streaming, equipos, ficha, OCR), un smoke test headless de la app real (Electron + xvfb) y un test Playwright de la versión web (vista de compu y de celular); ESLint + Prettier | Cada versión corre todo eso en CI antes de publicarse, incluido un escaneo de que no haya ninguna API key dentro de ningún paquete. |
 
 ## Compilar desde el código fuente
 
 ```bash
 npm install
-npm test                 # tests de motor, notas, integraciones, estrategia, cerebro, streaming y equipos
+npm test                 # tests de motor, notas, integraciones, estrategia, cerebro, streaming, equipos, ficha y OCR
 npm run lint             # ESLint
 npm run smoke            # smoke test headless de la app real (necesita xvfb)
 npm run test:web         # test Playwright de la versión web (después de build:web; una vez: `npx playwright install chromium`)

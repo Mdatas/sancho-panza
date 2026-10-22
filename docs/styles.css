@@ -39,8 +39,19 @@ button.ico:hover { background: var(--panel2); color: var(--text); opacity: 1; }
 button.ico.on { filter: none; opacity: 1; }
 
 /* ---------- build-order line ---------- */
-.boLine { padding: 3px 10px; font-size: 12px; background: var(--gold-soft); border-bottom: 1px solid var(--border); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.35; }
-.boLine b { color: var(--gold); } .boLine .res { margin: 0 3px; }
+.boLine { padding: 3px 8px 4px; font-size: 12px; background: var(--gold-soft); border-bottom: 1px solid var(--border); line-height: 1.35; }
+.boLine b { color: var(--gold); }
+.boLine .bl1 { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.boLine .bnav { width: 26px; height: 24px; padding: 0; font-size: 18px; line-height: 1; background: var(--panel2); color: var(--gold); border: 1px solid var(--border2); border-radius: 5px; flex: 0 0 auto; }
+.boLine .bpos { flex: 0 0 auto; white-space: nowrap; } .boLine .bpos .agetag { font-size: 9.5px; padding: 0 5px; vertical-align: 1px; } .boLine .bt { color: var(--muted); }
+.boLine .bname { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 11.5px; }
+.boLine .bclock { flex: 0 0 auto; background: transparent; color: var(--text); border: 1px solid var(--border2); border-radius: 5px; padding: 1px 7px; font-size: 11.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.boLine .bclock.on { border-color: var(--gold); color: var(--gold); } .boLine .bclock i { font-style: normal; color: var(--muted); }
+.boLine .bfold { flex: 0 0 auto; width: 22px; padding: 0 2px; background: transparent; border: 0; color: var(--muted); font-size: 12px; }
+.boLine .bl2 { margin-top: 2px; font-size: 12px; letter-spacing: .02em; }
+.boLine .bl3 { margin-top: 2px; font-size: 13.5px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.boLine .bl3.one { font-size: 12px; -webkit-line-clamp: 1; } .boLine .bl3 div { margin: 1px 0; }
+.boLine .bl4 { margin-top: 2px; font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .boLine .bl4 b { color: var(--muted); }
 
 /* ---------- compact answer ---------- */
 .answer { flex: 1; min-height: 0; overflow-y: auto; padding: 6px 10px; user-select: text; line-height: 1.45; }
@@ -209,3 +220,22 @@ body.full #tab-bo.active { display: flex !important; flex-direction: column; ove
 #screenBox .row select { flex: 0 0 auto; width: auto; }
 .hudLine b { color: var(--text); font-weight: 600; } .hudLine .idle { color: var(--warn); font-weight: 700; } .hudLine .need { color: var(--gold); }
 .screenPreview img { max-width: 100%; border: 1px solid var(--border2); border-radius: 4px; margin-top: 4px; image-rendering: auto; }
+
+/* ---------- v0.23: modes (local / sheet + AI / free coach), welcome mode cards, manual OCR calibration ---------- */
+.modeInfo { margin-top: 6px; font-size: 12px; line-height: 1.45; } .modeInfo b { color: var(--gold); }
+.modes { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin: 8px 0; }
+.modecard { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left; padding: 9px 11px; background: var(--panel2); border: 1px solid var(--border2); border-radius: 8px; color: var(--text); cursor: pointer; font: inherit; }
+.modecard:hover { border-color: var(--gold-dim); } .modecard.on { border-color: var(--gold); background: var(--gold-soft); }
+.modecard b { color: var(--gold); font-size: 13.5px; } .modecard span { font-size: 12px; line-height: 1.4; color: var(--muted); } .modecard i { font-style: normal; font-size: 10.5px; color: var(--ok); font-weight: 700; }
+.screenPreview { position: relative; display: inline-block; max-width: 100%; }
+.screenPreview.pick img { cursor: crosshair; }
+.screenPreview .obox { position: absolute; border: 1px solid #ff5; box-shadow: 0 0 0 1px rgba(0,0,0,.6); pointer-events: none; }
+.screenPreview .obox span { position: absolute; left: 0; top: 100%; font-size: 9px; background: rgba(0,0,0,.7); color: #ff5; padding: 0 2px; white-space: nowrap; }
+.screenPreview .rbox { position: absolute; border: 2px dashed var(--gold); pointer-events: none; }
+/* v0.23: build panel — the whole build as a list */
+.bosteps { margin: 6px 0; } .bosteps > summary { cursor: pointer; color: var(--muted); font-size: 12px; }
+.bolist2 { list-style: none; margin: 4px 0 0; padding: 0; max-height: 40vh; overflow: auto; font-size: 12px; }
+.bolist2 li { display: flex; align-items: baseline; gap: 6px; padding: 3px 6px; border-top: 1px solid var(--border); cursor: pointer; }
+.bolist2 li:hover { background: var(--panel2); } .bolist2 li.cur { background: var(--gold-soft); box-shadow: inset 3px 0 0 var(--gold); }
+.bolist2 .agetag { font-size: 9px; padding: 0 4px; } .bolist2 .tm { color: var(--muted); min-width: 36px; font-variant-numeric: tabular-nums; } .bolist2 .vc { min-width: 36px; }
+.bolist2 .nt { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

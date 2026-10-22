@@ -11,6 +11,7 @@ for (const f of [
   'stream.test.js',
   'team.test.js',
   'sheet.test.js',
+  'ocr.test.js',
 ]) {
   process.stdout.write(f + ': ');
   execFileSync(process.execPath, [path.join(__dirname, f)], { stdio: 'inherit' });

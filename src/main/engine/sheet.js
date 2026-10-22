@@ -743,4 +743,46 @@ function sheetSpoken(sheet) {
   return lines.slice(0, 3).map(clip).join('. ');
 }
 
-module.exports = { buildSheet, parseMessage, sheetText, sheetSpoken, suggestBuilds, openingFor, MAP_TYPES, armyUnits };
+/**
+ * The "meta" page of one civ for the guide: the profile's openings per map type with the step builds that fit each,
+ * plus every guide (video note) about the civ by tier. Same recommender as the sheet, so both agree.
+ */
+function civMeta({ gd, strategy, catalog, key }) {
+  const civ = gd.findCiv(key);
+  if (!civ) return null;
+  const p = strategy ? strategy.civ(civ.key) : null;
+  const names = [civ.key, civ.name_en, civ.name_es].map(norm);
+  const forType = (mapType) => {
+    const o = openingFor(p, mapType);
+    const b = suggestBuilds({ catalog, gd, myCiv: civ.key, mapType, openingTypes: o.types, openingPrimary: o.primaryTypes, limit: { meta: 4, anti: 2 } });
+    return { mapType, line: o.line, types: o.primaryTypes, steps: b.steps, guides: b.guides };
+  };
+  const notes = (catalog && catalog.notes) || [];
+  const mine = notes.filter((n) => n.civs.some((c) => names.includes(norm(c))));
+  const byTier = (tier) =>
+    mine
+      .filter((n) => n.tier === tier)
+      .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')))
+      .slice(0, 8)
+      .map((n) => ({
+        id: n.id,
+        kind: n.kind,
+        title: n.title,
+        author: n.author,
+        date: n.date,
+        types: n.types,
+        tier: n.tier,
+        civs: n.civs,
+        pasos: n.pasos || null,
+      }));
+  return {
+    key: civ.key,
+    open: forType('abierto'),
+    closed: forType('cerrado'),
+    water: forType('agua'),
+    guides: { meta: byTier('meta'), antiMeta: byTier('anti-meta'), meme: byTier('meme') },
+    counts: { guides: mine.length },
+  };
+}
+
+module.exports = { buildSheet, parseMessage, sheetText, sheetSpoken, suggestBuilds, openingFor, civMeta, MAP_TYPES, armyUnits };

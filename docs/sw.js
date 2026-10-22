@@ -1,6 +1,6 @@
 // Offline support for the web app. Network first (so a new version shows up on the next load), cache as fallback.
 // AI / API calls are never cached (only same-origin GETs).
-const CACHE = 'sancho-panza-0.22.1';
+const CACHE = 'sancho-panza-0.23.0';
 const SHELL = [
   './',
   'index.html',
@@ -13,9 +13,9 @@ const SHELL = [
   'app.js',
   'guide.js',
   'coach-web.js',
-  'data/bundle.json?v=0.22.1',
-  'data/rtsbuilds.json?v=0.22.1',
-  'data/notes.json?v=0.22.1',
+  'data/bundle.json?v=0.23.0',
+  'data/rtsbuilds.json?v=0.23.0',
+  'data/notes.json?v=0.23.0',
   'manifest.webmanifest',
   'assets/icon.png',
   'assets/icon-192.png',

@@ -221,7 +221,10 @@ const mockO = http.createServer(async (req, res) => {
   assert.strictEqual(f1.sheet.me.name, 'Francos');
   assert.ok(f1.sheet.opp.against.length > 20, 'opponent block carries "Jugando CONTRA esta civ"');
   assert.strictEqual(f1.sheet.counters.rows[0].unit_en, 'Mangudai');
-  assert.ok(f1.sheet.counters.rows[0].options.some((o) => o.unit_en === 'Elite Skirmisher'), JSON.stringify(f1.sheet.counters.rows[0].options));
+  assert.ok(
+    f1.sheet.counters.rows[0].options.some((o) => o.unit_en === 'Elite Skirmisher'),
+    JSON.stringify(f1.sheet.counters.rows[0].options)
+  );
   assert.ok(f1.text.includes('## Mi civ') && f1.spoken.length > 10);
   assert.ok(/^ficha\+claude-haiku/.test(f1.model), f1.model);
   assert.ok(f1.cost > 0, 'the extraction cost is reported');
@@ -233,6 +236,17 @@ const mockO = http.createServer(async (req, res) => {
   const f2 = await brain.ask('britanos contra mayas en arena, estoy en feudal');
   assert.strictEqual(f2.kind, 'sheet');
   assert.strictEqual(seen.anthropic.length, 0);
+  // local mode: even with a key, nothing is sent (the keyword parser does the work)
+  settings.anthropicApiKey = 'sk-test';
+  settings.answerMode = 'local';
+  brain.newGame();
+  const f2b = await brain.ask('soy francos vs mongoles en arabia');
+  assert.strictEqual(f2b.kind, 'sheet');
+  assert.strictEqual(seen.anthropic.length, 0, 'local mode never calls the API');
+  assert.deepStrictEqual([f2b.state.myCiv, f2b.state.oppCiv, f2b.state.map], ['Franks', 'Mongols', 'Arabia']);
+  assert.strictEqual(f2b.model, 'ficha');
+  settings.answerMode = 'ficha';
+  settings.anthropicApiKey = '';
   assert.deepStrictEqual([f2.state.myCiv, f2.state.oppCiv, f2.state.map, f2.state.age], ['Britons', 'Mayans', 'Arena', 2]);
   assert.strictEqual(f2.model, 'ficha');
   assert.strictEqual(f2.sheet.map.type, 'cerrado');

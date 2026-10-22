@@ -111,8 +111,10 @@ async function run({ win, guideWin: getGuideWin, openGuide, brain, settings, get
     probe.stepsLoaded = await js(`document.getElementById('boStep').textContent.slice(0, 80)`);
     await js(`document.querySelector('#tabs button[data-tab="settings"]').click()`);
     probe.settingsNew = await js(
-      `(document.querySelector('#setAnswerMode button.on') || {}).dataset?.v + ' | screen ' + !!document.getElementById('setScreenRead') + ' ' + document.getElementById('setScreenRead').checked`
+      `(document.querySelector('#setAnswerMode button.on') || {}).dataset?.v + ' | screen ' + !!document.getElementById('setScreenRead') + ' ' + document.getElementById('setScreenRead').checked + ' | ocr ' + (document.querySelector('#setOcrEngine button.on') || {}).dataset?.v + ' | aiBox hidden ' + document.getElementById('aiBox').classList.contains('hidden') + ' | info ' + document.getElementById('modeInfo').textContent.length`
     );
+    if (!/^local \| screen true false \| ocr local \| aiBox hidden true \| info [1-9]\d\d/.test(probe.settingsNew))
+      errors.push('settings (modes): ' + probe.settingsNew);
     await shot('settings');
     await js(`(() => { const s = document.getElementById('setProvider'); s.value = 'groq'; s.dispatchEvent(new Event('change')); })()`);
     await new Promise((r) => setTimeout(r, 600));
@@ -137,8 +139,17 @@ async function run({ win, guideWin: getGuideWin, openGuide, brain, settings, get
     await type('/modo ficha');
     probe.answerMode = settings.get().answerMode;
     // screen reader: without a key the manual read fails cleanly (the capture itself runs); a reading paints the HUD line and syncs the build clock
-    probe.screenTest = JSON.stringify(await js('window.coach.screen.test()'));
-    if (!/"ok":false/.test(probe.screenTest) || !/key/i.test(probe.screenTest)) errors.push('screen test without key: ' + probe.screenTest);
+    // local engine (default): the capture + Tesseract run on the xvfb screen, where there is no HUD → a clean "not the bar" answer
+    probe.screenTest = JSON.stringify(await js('window.coach.screen.test()')).slice(0, 300);
+    if (!/"ok":false/.test(probe.screenTest) || !/notHud|notFound/.test(probe.screenTest)) errors.push('local screen test: ' + probe.screenTest);
+    probe.screenStatus = JSON.stringify(await js('window.coach.screen.status()'));
+    if (!/"engine":"local"/.test(probe.screenStatus)) errors.push('screen status: ' + probe.screenStatus);
+    // AI engine without a key fails with the key message
+    await js(`window.coach.settings.set({ ocrEngine: 'ai' })`);
+    probe.screenTestAi = JSON.stringify(await js('window.coach.screen.test()')).slice(0, 300);
+    await js(`window.coach.settings.set({ ocrEngine: 'local' })`);
+    if (!/"ok":false/.test(probe.screenTestAi) || !/notHud|notFound/.test(probe.screenTestAi))
+      errors.push('screen test with ai engine and no key must fall back to local: ' + probe.screenTestAi);
     brain.setLive({
       food: 420,
       wood: 310,

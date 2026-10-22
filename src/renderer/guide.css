@@ -124,3 +124,13 @@ tr.click { cursor: pointer; } tr.click:hover td { background: var(--panel2); }
   .ctx { display: none; } .omni { flex: 1 1 auto; } #top { flex-wrap: wrap; padding-bottom: 6px; }
   .view .head { padding: 10px 12px 4px; } .card { margin: 0 10px 8px; } .lineup, .techs, .miss, .actions, .ages { padding-left: 10px; padding-right: 10px; }
 }
+
+/* v0.23: meta by civ — build cards inside the page */
+.bh { font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--gold); margin: 8px 0 4px; }
+.bcards { display: flex; flex-direction: column; gap: 4px; }
+.bcard { border: 1px solid var(--border); border-left: 3px solid var(--border2); border-radius: 6px; padding: 5px 9px; background: var(--panel); }
+.bcard.tier-meta { border-left-color: var(--gold); } .bcard.tier-anti-meta { border-left-color: var(--warn); } .bcard.tier-meme { border-left-color: var(--danger); }
+.bcard .t { font-weight: 600; font-size: 13px; } .bcard .s { display: flex; align-items: center; gap: 8px; margin-top: 2px; } .bcard .s button { margin-left: auto; }
+.pl { margin: 4px 0; } .pl b { color: var(--gold); }
+.form.mini { padding: 4px 8px 0; } .form.mini label { font-size: 11.5px; }
+#metaList .sub .tier { font-size: 10px; padding: 0 4px; border-radius: 3px; }

@@ -210,7 +210,10 @@ assert.strictEqual(parseBox('{"found": true, "x": 0.1, "y": 0.1, "w": 0.01, "h":
 assert.ok(DEFAULT_REGION.w > 0.5 && DEFAULT_REGION.h < 0.1);
 
 // --- settings: the new keys validate, bad values are dropped
-assert.strictEqual(DEFAULTS.answerMode, 'ficha');
+assert.strictEqual(DEFAULTS.answerMode, 'local');
+assert.strictEqual(DEFAULTS.ocrEngine, 'local');
+assert.strictEqual(sanitizePatch({ answerMode: 'local', ocrEngine: 'ai' }).rejected.length, 0);
+assert.deepStrictEqual(sanitizePatch({ ocrEngine: 'cloud' }).rejected, ['ocrEngine']);
 assert.strictEqual(DEFAULTS.screenRead, false);
 let sp = sanitizePatch({ answerMode: 'libre', screenRead: true, screenReadInterval: 30, screenReadRegion: { x: 0, y: 0, w: 0.6, h: 0.05 } });
 assert.deepStrictEqual(sp.rejected, []);

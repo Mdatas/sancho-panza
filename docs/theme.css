@@ -413,6 +413,11 @@ html[data-theme^="taverna"] .tldr { background: rgba(139,94,20,.08); border-left
 html[data-theme^="taverna"] .msg b, html[data-theme^="taverna"] .answer .a b { color: var(--gold); }
 html[data-theme^="taverna"] .boLine { background: var(--wood-dark); color: var(--sign-text); border-bottom: 2px solid var(--sign-edge); text-shadow: 0 1px 0 var(--sign-base); }
 html[data-theme^="taverna"] .boLine b { color: var(--sign-text-on); }
+html[data-theme^="taverna"] .boLine .bname, html[data-theme^="taverna"] .boLine .bt, html[data-theme^="taverna"] .boLine .bl4, html[data-theme^="taverna"] .boLine .bl4 b, html[data-theme^="taverna"] .boLine .bfold, html[data-theme^="taverna"] .boLine .bclock i { color: var(--plank-text); }
+html[data-theme^="taverna"] .boLine .bnav { background: var(--btn-grad); color: var(--btn-text); border: 1px solid var(--btn-edge); box-shadow: 0 1px 0 var(--btn-base); font-family: var(--display); }
+html[data-theme^="taverna"] .boLine .bclock { background: rgba(0,0,0,.25); color: var(--sign-text); border-color: var(--sign-edge); box-shadow: none; font-family: var(--font); font-weight: 600; text-shadow: none; }
+html[data-theme^="taverna"] .boLine .bclock.on { color: var(--sign-text-on); border-color: var(--brass); }
+html[data-theme^="taverna"] .boLine .bfold { background: transparent; border: 0; box-shadow: none; text-shadow: none; }
 html[data-theme^="taverna"] #inputRow { margin: 0 10px 10px; background: var(--parch), var(--panel); border: 1px solid var(--border2); border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.45), var(--shadow); padding: 4px 8px; }
 html[data-theme^="taverna"] body.compact #inputRow { margin: 0 6px 6px; }
 html[data-theme^="taverna"] #inputRow .prompt { color: var(--gold); }
@@ -480,3 +485,10 @@ html[data-theme^="taverna"] .sheet details.shd { border-radius: 3px; box-shadow:
 html[data-theme^="taverna"] .sheet details.shd > summary { font-family: var(--display); letter-spacing: .02em; }
 html[data-theme^="taverna"] .sheet .shtag { background: var(--gold-soft); color: var(--strong, var(--gold)); }
 html[data-theme="taverna-night"] .hudLine { color: var(--text); }
+
+/* v0.23: the welcome's mode cards are cards, not brass buttons */
+button.modecard, html[data-theme^="taverna"] button.modecard { background: var(--card2, var(--panel2)); color: var(--text); border: 1px solid var(--border2); border-radius: 6px; box-shadow: 0 2px 5px rgba(40,25,10,.15); text-shadow: none; font-family: var(--font, inherit); font-weight: 400; transform: none; filter: none; }
+button.modecard:hover, html[data-theme^="taverna"] button.modecard:hover { border-color: var(--gold-dim); filter: none; }
+button.modecard.on, html[data-theme^="taverna"] button.modecard.on { background: var(--gold-soft); border-color: var(--gold); box-shadow: inset 3px 0 0 var(--gold), 0 2px 5px rgba(40,25,10,.15); }
+button.modecard b, html[data-theme^="taverna"] button.modecard b { color: var(--strong, var(--gold)); font-family: var(--display, inherit); }
+button.modecard span { color: var(--text); opacity: .85; }

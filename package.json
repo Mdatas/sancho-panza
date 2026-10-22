@@ -1,7 +1,7 @@
 {
   "name": "aoe2coach",
   "productName": "Sancho Panza - Age of Empires 2 Fan Companion",
-  "version": "0.22.1",
+  "version": "0.23.0",
   "description": "Sancho Panza - Age of Empires 2 Fan Companion: companion para Age of Empires II DE — coach con IA, build orders, counters, voz",
   "main": "src/main/main.js",
   "author": "M",
@@ -19,7 +19,8 @@
     "test:web": "node test/web.spec.mjs"
   },
   "dependencies": {
-    "msedge-tts": "2.1.0"
+    "msedge-tts": "2.1.0",
+    "tesseract.js": "^7.0.0"
   },
   "devDependencies": {
     "@electron/fuses": "^2.1.3",
@@ -42,7 +43,16 @@
     },
     "files": [
       "src/**/*",
-      "package.json"
+      "package.json",
+      "!node_modules/tesseract.js-core/*.wasm.js",
+      "!node_modules/tesseract.js-core/tesseract-core.js",
+      "!node_modules/tesseract.js-core/tesseract-core.wasm",
+      "!node_modules/tesseract.js-core/tesseract-core-lstm.js",
+      "!node_modules/tesseract.js-core/tesseract-core-lstm.wasm",
+      "!node_modules/tesseract.js-core/tesseract-core-simd.js",
+      "!node_modules/tesseract.js-core/tesseract-core-simd.wasm",
+      "!node_modules/tesseract.js-core/tesseract-core-relaxedsimd.js",
+      "!node_modules/tesseract.js-core/tesseract-core-relaxedsimd.wasm"
     ],
     "extraResources": [
       {
@@ -84,7 +94,22 @@
         "LSApplicationCategoryType": "public.app-category.games"
       }
     },
-    "publish": null
+    "publish": null,
+    "asarUnpack": [
+      "node_modules/tesseract.js/**",
+      "node_modules/tesseract.js-core/**",
+      "node_modules/wasm-feature-detect/**",
+      "node_modules/node-fetch/**",
+      "node_modules/zlibjs/**",
+      "node_modules/bmp-js/**",
+      "node_modules/idb-keyval/**",
+      "node_modules/is-url/**",
+      "node_modules/regenerator-runtime/**",
+      "node_modules/whatwg-url/**",
+      "node_modules/tr46/**",
+      "node_modules/webidl-conversions/**",
+      "node_modules/opencollective-postinstall/**"
+    ]
   },
   "reviewedPatch": "185872",
   "homepage": "https://github.com/Mdatas/sancho-panza",

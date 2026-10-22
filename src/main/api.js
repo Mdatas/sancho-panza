@@ -9,6 +9,7 @@
  */
 const guideData = require('./guideData');
 const bocatalog = require('./bocatalog');
+const { civMeta } = require('./engine/sheet');
 const { makeDispatcher } = require('./brain/tools');
 
 const GUIDE_TOOLS = ['lookup_unit', 'find_counters', 'civ_matchup', 'compare_units', 'civ_info']; // read-only engine tools the UI may call directly
@@ -49,7 +50,7 @@ function createCore({ ctx, userBuildDir, knowledgeDirs, uiLanguage = () => 'es',
     },
 
     // ---- chat
-    /** One message → the sheet (answerMode 'ficha', default) or the coach answer ('libre'); opts.mode forces one. */
+    /** One message → the sheet (answerMode 'local' / 'ficha') or the coach answer ('libre'); opts.mode forces one. */
     async ask(text, onEvent, opts = {}) {
       const { brain } = ctx();
       const t0 = Date.now();
@@ -198,6 +199,13 @@ function createCore({ ctx, userBuildDir, knowledgeDirs, uiLanguage = () => 'es',
     },
     guideMap(key) {
       return guideData.mapView({ strategy: ctx().strategy, key });
+    },
+    /** Guide → Meta: one civ's openings per map type with the builds that fit, and its guides by tier. */
+    guideMeta(key) {
+      const { gd, strategy } = ctx();
+      const civ = guideData.civView({ gd, strategy, key, stats: civStats() });
+      if (!civ) return null;
+      return { civ, meta: civMeta({ gd, strategy, catalog: api.boCatalog(), key: civ.key }) };
     },
     guideStats() {
       return civStats();

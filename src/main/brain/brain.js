@@ -243,6 +243,7 @@ class Brain {
     return l === 'es' ? 'es' : 'en';
   }
   _canExtract(s) {
+    if ((s.answerMode || 'local') === 'local') return false; // local mode: the keyword parser only, no model call at all
     const a = this._providerArgs(s, { extraction: true });
     return s.extractState !== false && (a.provider === 'openai' || !!a.apiKey);
   }
@@ -355,8 +356,8 @@ class Brain {
 
   async _ask(userText, { onEvent, mode, getCatalog, getStats, withSheet = false } = {}) {
     const s = this.getSettings();
-    const answerMode = mode || s.answerMode || 'ficha';
-    if (answerMode === 'ficha') return this._askSheet(userText, { onEvent, getCatalog, getStats, s });
+    const answerMode = mode || s.answerMode || 'local';
+    if (answerMode === 'ficha' || answerMode === 'local') return this._askSheet(userText, { onEvent, getCatalog, getStats, s });
     const lang = s.language || 'auto';
     const t0 = Date.now();
     const stateBefore = { ...this.state };
