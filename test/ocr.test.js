@@ -43,6 +43,35 @@ const fixture = (n) => decodeBmp(fs.readFileSync(path.join(__dirname, 'fixtures'
   assert.strictEqual(mapWords([w('12', 100), w('7', 300)]).hud, false, 'two numbers are not the bar');
 }
 
+// Packaging guard: the desktop package ships only the Tesseract cores the Node worker actually loads. tesseract.js 7's Node
+// adapter picks the core from the `lstmOnly` boolean it receives (so it takes the full SIMD cores, not the "-lstm" ones);
+// run the real picker with the same argument createWorker sends and make sure electron-builder does not exclude that file.
+(async () => {
+  const Module = require('module');
+  const asked = [];
+  const origLoad = Module._load;
+  Module._load = function (req, ...rest) {
+    if (/^tesseract\.js-core\//.test(req)) asked.push(req.replace(/^tesseract\.js-core\//, ''));
+    return origLoad.call(this, req, ...rest);
+  };
+  try {
+    const getCore = require('tesseract.js/src/worker-script/node/getCore');
+    await getCore(true, undefined, { progress() {} }); // createWorker('eng', 1) → load payload { lstmOnly: true }
+  } finally {
+    Module._load = origLoad;
+  }
+  assert.strictEqual(asked.length, 1, 'core picker required ' + JSON.stringify(asked));
+  const excluded = require('../package.json').build.files.filter((f) => f.startsWith('!node_modules/tesseract.js-core/'));
+  for (const ext of ['.js', '.wasm']) {
+    const file = `!node_modules/tesseract.js-core/${asked[0]}${ext}`;
+    assert.ok(!excluded.includes(file), `${file} is excluded from the package but the worker loads it`);
+  }
+  console.log('ocr packaging guard: worker loads', asked[0]);
+})().catch((e) => {
+  console.error('FAIL', e);
+  process.exit(1);
+});
+
 (async () => {
   const ocr = createLocalOcr({ langPath: path.join(__dirname, '..', 'data', 'ocr'), cachePath: null });
   try {
