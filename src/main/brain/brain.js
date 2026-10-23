@@ -72,6 +72,7 @@ class Brain {
     const n = (v) => (v == null || v === '' ? '?' : v);
     const parts = [`food ${n(l.food)}`, `wood ${n(l.wood)}`, `gold ${n(l.gold)}`, `stone ${n(l.stone)}`];
     if (l.pop) parts.push(`pop ${l.pop}`);
+    if (l.villagersTotal != null) parts.push(`villagers ${l.villagersTotal}`);
     if (l.idle != null) parts.push(`idle villagers ${l.idle}`);
     if (l.villagers) parts.push(`villagers on food/wood/gold/stone ${['food', 'wood', 'gold', 'stone'].map((k) => n(l.villagers[k])).join('/')}`);
     if (l.age) parts.push(`age ${AGE_NAMES[l.age] || l.age}`);

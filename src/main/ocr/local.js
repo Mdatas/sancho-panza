@@ -12,7 +12,7 @@
 const { encodeBmp } = require('./bmp');
 
 const TARGET_H = 44; // glyph height Tesseract reads best at (px), words are rescaled to it
-const MAX_WORDS = 18;
+const MAX_WORDS = 24;
 const AGE_WORDS = [
   [1, /dark|oscur|escur|dunkl|sombre|ténèbr|tenebr/i],
   [2, /feudal|feodal|lehn|féodal/i],
@@ -22,34 +22,59 @@ const AGE_WORDS = [
 
 /* ------------------------------------------------------------------ pixels */
 /**
- * Luminance + "is light, unsaturated text" mask. HUD numbers are white / light grey (small villager counts have thin,
- * anti-aliased strokes that never reach pure white; the idle count may be yellowish); the icons are coloured. The
- * threshold adapts to the bar's background: dark strip → anything clearly lighter than it counts.
+ * "Is HUD text" mask. In the game's bar (Definitive Edition, default UI) the stockpiles, the population, the idle count
+ * and the clock are bold white with a dark outline; the villager counts under the icons and the age name are yellow
+ * (255,214,0); the total villager count under the population icon is cyan (127,255,255). Everything else — the wooden
+ * frame (brown/beige, saturated), the resource icons (coloured or thick), the red idle bell, the age badge — is kept out
+ * by colour: white/grey must be unsaturated, yellow must have no blue, cyan no red. The brightness threshold adapts to
+ * the background (a dark strip wants ~160; a lighter one, more) so the outlined glyphs come out as clean components.
  */
 function maskOf({ width, height, data, bgra = false }, { bright = null } = {}) {
   const gray = new Uint8Array(width * height);
-  const mx = new Uint8Array(width * height);
-  const sat = new Uint8Array(width * height);
+  const mask = new Uint8Array(width * height);
+  const R = new Uint8Array(width * height),
+    G = new Uint8Array(width * height),
+    B = new Uint8Array(width * height);
   for (let i = 0, p = 0; i < width * height; i++, p += 4) {
-    const r = bgra ? data[p + 2] : data[p];
-    const g = data[p + 1];
-    const b = bgra ? data[p] : data[p + 2];
-    gray[i] = (r * 299 + g * 587 + b * 114) / 1000;
-    const hi = Math.max(r, g, b),
-      lo = Math.min(r, g, b);
-    mx[i] = hi;
-    sat[i] = hi - lo;
+    R[i] = bgra ? data[p + 2] : data[p];
+    G[i] = data[p + 1];
+    B[i] = bgra ? data[p] : data[p + 2];
+    gray[i] = (R[i] * 299 + G[i] * 587 + B[i] * 114) / 1000;
   }
-  // background level: median luminance of the left 60 % of the crop (the bar itself), text sits well above it
+  // background level: median luminance of the left 60 % of the crop (the bar itself); text sits far above it
   const sample = [];
   for (let y = 0; y < height; y += 2) for (let x = 0; x < Math.floor(width * 0.6); x += 3) sample.push(gray[y * width + x]);
   sample.sort((a, b) => a - b);
   const bg = sample.length ? sample[Math.floor(sample.length / 2)] : 0;
-  const thr = bright != null ? bright : Math.max(100, Math.min(170, bg + 75));
-  const mask = new Uint8Array(width * height);
-  for (let i = 0; i < width * height; i++) if (mx[i] >= thr && sat[i] <= Math.max(40, mx[i] * 0.55)) mask[i] = 1;
-  return { gray, mask, bg, thr };
+  const thr = bright != null ? bright : Math.max(160, Math.min(200, bg + 128));
+  // soft: the same test with a lower bar, graded 0..255 up to the real threshold — the thin arcs of a small glyph
+  // are anti-aliased below it and would leave cracks in the glyph image Tesseract reads (mask pixels are 255)
+  const soft = new Uint8Array(width * height);
+  const low = thr - 60;
+  for (let i = 0; i < width * height; i++) {
+    const r = R[i],
+      g = G[i],
+      b = B[i];
+    const hi = Math.max(r, g, b),
+      lo = Math.min(r, g, b);
+    if (hi < low) continue;
+    let cls = 0;
+    if (hi - lo <= 40)
+      cls = WHITE; // white / light grey
+    else if (r >= low && g >= r * 0.72 && b <= r * 0.3)
+      cls = YELLOW; // yellow text (villager counts, age name)
+    else if (g >= low && b >= g * 0.9 && r <= g * 0.6) cls = CYAN; // cyan (total villagers)
+    if (!cls) continue;
+    if (hi >= thr) {
+      mask[i] = cls;
+      soft[i] = 255;
+    } else soft[i] = Math.round((255 * (hi - low)) / (thr - low));
+  }
+  return { gray, mask, soft, bg, thr };
 }
+const WHITE = 1,
+  YELLOW = 2,
+  CYAN = 3; // mask values: the text colour class of the pixel (0 = not text)
 
 /** 4-connected components of the mask → boxes { x0, y0, x1, y1, n } (x1/y1 exclusive). */
 function components(mask, width, height, { minPx = 2 } = {}) {
@@ -65,11 +90,13 @@ function components(mask, width, height, { minPx = 2 } = {}) {
       x1 = -1,
       y1 = -1,
       n = 0;
+    const tally = [0, 0, 0, 0];
     while (stack.length) {
       const i = stack.pop();
       const x = i % width,
         y = (i - x) / width;
       n++;
+      tally[mask[i]]++;
       if (x < x0) x0 = x;
       if (x > x1) x1 = x;
       if (y < y0) y0 = y;
@@ -79,7 +106,7 @@ function components(mask, width, height, { minPx = 2 } = {}) {
       if (y > 0 && mask[i - width] && !seen[i - width]) ((seen[i - width] = 1), stack.push(i - width));
       if (y < height - 1 && mask[i + width] && !seen[i + width]) ((seen[i + width] = 1), stack.push(i + width));
     }
-    if (n >= minPx) out.push({ x0, y0, x1: x1 + 1, y1: y1 + 1, n });
+    if (n >= minPx) out.push({ x0, y0, x1: x1 + 1, y1: y1 + 1, n, cls: tally.indexOf(Math.max(tally[1], tally[2], tally[3])) });
   }
   return out;
 }
@@ -100,7 +127,7 @@ function splitStacked(comps, mask, width, H) {
       bestInk = Infinity;
     for (let y = c.y0 + Math.floor(h * 0.3); y < c.y0 + Math.ceil(h * 0.8); y++) {
       let ink = 0;
-      for (let x = c.x0; x < c.x1; x++) ink += mask[y * width + x];
+      for (let x = c.x0; x < c.x1; x++) ink += mask[y * width + x] ? 1 : 0;
       if (ink < bestInk) {
         bestInk = ink;
         bestY = y;
@@ -121,7 +148,7 @@ function splitStacked(comps, mask, width, H) {
             if (x < x0) x0 = x;
             if (x + 1 > x1) x1 = x + 1;
           }
-      return n ? { x0, y0, x1, y1, n } : null;
+      return n ? { x0, y0, x1, y1, n, cls: c.cls } : null;
     };
     const top = box(c.y0, bestY),
       bottom = box(bestY + 1, c.y1);
@@ -159,20 +186,33 @@ function thickness(c, mask, width) {
   return 2 * k + 1;
 }
 
+/**
+ * Dominant glyph height: the most populated height cluster (±20 %) among digit-shaped components (not wider than
+ * they are tall, not specks). The bar's stockpile digits are the biggest such group; frame texture and icon crumbs are
+ * many but tiny or wide, so a plain median would land on them.
+ */
+function glyphHeight(comps) {
+  const hs = comps.filter((c) => c.n >= 12 && c.y1 - c.y0 >= 5 && c.x1 - c.x0 <= (c.y1 - c.y0) * 1.3).map((c) => c.y1 - c.y0);
+  let best = 0,
+    bestN = 0;
+  for (const h0 of new Set(hs)) {
+    const members = hs.filter((h) => Math.abs(h - h0) <= h0 * 0.2);
+    if (members.length > bestN || (members.length === bestN && h0 > best)) {
+      bestN = members.length;
+      members.sort((a, b) => a - b);
+      best = members[Math.floor(members.length / 2)];
+    }
+  }
+  return bestN >= 3 ? best : 0;
+}
+
 /** Glyph boxes → word boxes: neighbours on the same line closer than ~half a glyph height belong together. */
 function groupWords(comps, width, mask = null) {
-  const heights = (cs) =>
-    cs
-      .filter((c) => c.n >= 12)
-      .map((c) => c.y1 - c.y0)
-      .sort((a, b) => a - b);
-  let hs = heights(comps);
-  let H = hs.length ? hs[Math.floor(hs.length / 2)] : 0; // dominant glyph height
+  let H = glyphHeight(comps);
   if (!H) return { words: [], H: 0 };
   if (mask) {
     comps = splitStacked(comps, mask, width, H);
-    hs = heights(comps);
-    H = hs[Math.floor(hs.length / 2)] || H;
+    H = glyphHeight(comps) || H;
   }
   const glyphs = comps
     .filter((c) => {
@@ -207,12 +247,22 @@ function groupWords(comps, width, mask = null) {
       home.glyphs.push(g);
     } else words.push({ x0: g.x0, y0: g.y0, x1: g.x1, y1: g.y1, h: g.y1 - g.y0, glyphs: [g] });
   }
-  // a word needs a real glyph in it (not just specks) and is kept left-to-right
-  return { words: words.filter((w) => w.glyphs.some((g) => g.y1 - g.y0 >= H * 0.35)).sort((a, b) => a.x0 - b.x0), H };
+  // a word needs a real glyph in it (icon crumbs and frame specks are all small) and carries its colour class
+  const kept = words.filter((w) => w.glyphs.some((g) => g.y1 - g.y0 >= H * 0.6)).sort((a, b) => a.x0 - b.x0);
+  for (const w of kept) {
+    const tally = [0, 0, 0, 0];
+    for (const g of w.glyphs) tally[g.cls || 0] += g.n;
+    w.cls = tally.indexOf(Math.max(tally[1], tally[2], tally[3]));
+  }
+  return { words: kept, H };
 }
 
-/** One word → padded, rescaled (bilinear), inverted 24-bit BMP (dark text on white: what Tesseract likes). */
-function wordImage(gray, width, height, w, pad = 2) {
+/**
+ * One word → padded, rescaled (bilinear), inverted 24-bit BMP (dark text on white: what Tesseract likes). The source is
+ * the text mask, not the grey image: the HUD glyphs are outlined and may sit on wood (the clock) or on a red bell (the
+ * idle count), and the mask already separates the glyph from all of that; the bilinear upscale smooths the edges.
+ */
+function wordImage(soft, width, height, w, pad = 2) {
   const x0 = Math.max(0, w.x0 - pad),
     y0 = Math.max(0, w.y0 - pad),
     x1 = Math.min(width, w.x1 + pad),
@@ -226,18 +276,7 @@ function wordImage(gray, width, height, w, pad = 2) {
   const W = dw + 2 * margin,
     Hh = dh + 2 * margin;
   const out = new Uint8Array(W * Hh * 4).fill(255);
-  // normalise the word's own contrast: its darkest pixels become the background, its brightest the full stroke
-  // (small villager counts are thin, anti-aliased strokes that never reach white)
-  let lo = 255,
-    hi = 0;
-  for (let y = y0; y < y1; y++)
-    for (let x = x0; x < x1; x++) {
-      const v = gray[y * width + x];
-      if (v < lo) lo = v;
-      if (v > hi) hi = v;
-    }
-  const span = Math.max(40, hi - lo);
-  const norm = (v) => Math.max(0, Math.min(255, ((v - lo) / span) * 255));
+  const ink = (i) => soft[i];
   for (let y = 0; y < dh; y++) {
     const sy = Math.min(sh - 1, y / scale);
     const iy = Math.floor(sy),
@@ -248,13 +287,12 @@ function wordImage(gray, width, height, w, pad = 2) {
       const ix = Math.floor(sx),
         fx = sx - ix,
         ix2 = Math.min(sw - 1, ix + 1);
-      const g00 = gray[(y0 + iy) * width + x0 + ix],
-        g10 = gray[(y0 + iy) * width + x0 + ix2],
-        g01 = gray[(y0 + iy2) * width + x0 + ix],
-        g11 = gray[(y0 + iy2) * width + x0 + ix2];
+      const g00 = ink((y0 + iy) * width + x0 + ix),
+        g10 = ink((y0 + iy) * width + x0 + ix2),
+        g01 = ink((y0 + iy2) * width + x0 + ix),
+        g11 = ink((y0 + iy2) * width + x0 + ix2);
       const v = g00 * (1 - fx) * (1 - fy) + g10 * fx * (1 - fy) + g01 * (1 - fx) * fy + g11 * fx * fy;
-      // invert (Tesseract likes dark text on white) after the per-word normalisation; a mild gamma thickens thin strokes
-      const inv = 255 - Math.round(255 * Math.pow(norm(v) / 255, 0.7));
+      const inv = 255 - Math.round(v); // invert: Tesseract likes dark text on white
       const d = ((y + margin) * W + x + margin) * 4;
       out[d] = out[d + 1] = out[d + 2] = inv;
     }
@@ -293,27 +331,49 @@ function scalePx({ width, height, data, bgra = false }, k = 2) {
 /* ------------------------------------------------------------------ mapping */
 const NUM = /^\d{1,6}$/,
   POP = /^\d{1,3}\/\d{1,3}$/,
-  TIME = /^\d{1,3}:\d{2}$/;
+  TIME = /^\d{1,2}:\d{2}(?::\d{2})?$/;
 
-/** Words (with their OCR text) → HUD reading by position. Exported for tests. */
-function mapWords(words) {
+/** "h:mm:ss" / "mm:ss" / "m:ss" → "m:ss" with the hours folded into the minutes ("1:02:30" → "62:30"). */
+function clockText(t) {
+  const parts = t.split(':').map(Number);
+  if (parts.some((n) => !Number.isFinite(n)) || parts[parts.length - 1] >= 60) return null;
+  if (parts.length === 3 && parts[1] >= 60) return null;
+  const secs = parts[parts.length - 1];
+  const mins = parts.length === 3 ? parts[0] * 60 + parts[1] : parts[0];
+  return `${mins}:${String(secs).padStart(2, '0')}`;
+}
+
+/**
+ * Words (with their OCR text) → HUD reading by position. The Definitive Edition bar, left to right:
+ *   [wood ▾villagers] [food ▾] [gold ▾] [stone ▾] [▾total pop a/b] [idle] [age badge + name] … clock (top centre)
+ * The stockpiles, the population, the idle count and the clock are white; the villager counts are yellow, one under
+ * each icon (left of and below the stockpile, same font size), the total villager count is cyan under the population
+ * icon. Words carry that colour class (cls) from the segmentation; without it (older layouts, tests) the numbers on
+ * the lower row of the bar are taken as the villager counts. H = the stockpile glyph height (from the segmentation);
+ * without it, the tallest numbers' height is used. Exported for tests.
+ */
+function mapWords(words, H = 0) {
   const numeric = words.filter((w) => NUM.test(w.text) || POP.test(w.text) || TIME.test(w.text));
   const pop = numeric.find((w) => POP.test(w.text));
-  let time = numeric.find((w) => TIME.test(w.text));
+  let time = numeric.find((w) => TIME.test(w.text) && clockText(w.text));
   const left = numeric.filter((w) => NUM.test(w.text) && (!pop || w.x0 < pop.x0));
   if (!left.length) return { hud: false };
-  // the stockpile font height = the median of the numbers' heights (a stockpile glued to the villager count below it is taller, a lone digit is not shorter)
-  const hs = left.map((w) => w.h).sort((a, b) => a - b);
-  const H = hs[Math.floor(hs.length / 2)];
-  const big = left.filter((w) => w.h >= H * 0.72);
-  const small = left.filter((w) => w.h < H * 0.72);
-  // the stockpiles are the big numbers before the population: 4 = wood food gold stone, 5 = idle + those four
-  let idle = null;
-  let stock = big;
-  if (big.length >= 5) {
-    idle = Number(big[0].text);
-    stock = big.slice(1, 5);
-  } else if (big.length === 4) stock = big;
+  if (!H) H = Math.max(...left.map((w) => w.h));
+  const coloured = words.some((w) => w.cls);
+  let big, small;
+  if (coloured) {
+    big = left.filter((w) => w.cls === WHITE && w.h >= H * 0.85);
+    small = left.filter((w) => w.cls !== WHITE || w.h < H * 0.85);
+  } else {
+    // no colour: the stockpiles are the top row of full-size numbers; smaller numbers or a lower row are the counts
+    const tall = left.filter((w) => w.h >= H * 0.85);
+    const top = tall.length ? Math.min(...tall.map((w) => (w.y0 + w.y1) / 2)) : 0;
+    big = tall.filter((w) => (w.y0 + w.y1) / 2 <= top + H * 0.5);
+    small = left.filter((w) => !big.includes(w));
+  }
+  // the stockpiles are the last four big numbers before the population (anything further left is icon crumbs)
+  let stock;
+  if (big.length >= 4) stock = big.slice(-4);
   else if (big.length === 3 && small.length === 0)
     stock = big; // one number lost: partial, low confidence
   else return { hud: false, partial: true };
@@ -324,45 +384,47 @@ function mapWords(words) {
     wood: null,
     gold: null,
     stone: null,
-    idle,
+    idle: null,
     villagers: null,
+    villagersTotal: null,
     pop: null,
     age: 0,
     time: null,
     confidence: stock.length === 4 ? 0.8 : 0.5,
   };
   stock.forEach((w, i) => (r[keys[i]] = Number(w.text)));
-  // small numbers: idle count left of the first stockpile; villagers under/next to the stockpile whose panel they fall in
+  // small numbers: each stockpile owns the panel from ~2.4 glyph heights left of it to its own right edge; a small
+  // number between the last stockpile and the population is the total villager count
   if (small.length) {
     const v = { food: null, wood: null, gold: null, stone: null };
     for (const s of small) {
       const cx = (s.x0 + s.x1) / 2;
-      if (cx < stock[0].x0 - stock[0].h) {
-        if (idle == null) idle = Number(s.text);
-        continue;
-      }
-      let k = -1;
-      for (let i = 0; i < stock.length; i++)
-        if (cx >= stock[i].x0 - stock[i].h * 1.5 && (i === stock.length - 1 || cx < stock[i + 1].x0 - stock[i + 1].h * 1.5)) k = i;
+      const k = stock.findIndex((w) => cx >= w.x0 - H * 2.4 && cx <= w.x1);
       if (k >= 0) v[keys[k]] = Number(s.text);
+      else if (pop && cx > stock[3].x1 && cx < pop.x0 && s.text.length <= 3) r.villagersTotal = Number(s.text);
     }
     if (Object.values(v).some((x) => x != null)) r.villagers = v;
-    r.idle = idle;
   }
   if (pop) {
     const [a, b] = pop.text.split('/').map(Number);
     if (a <= 600 && b <= 600) r.pop = `${a}/${b}`;
+    // the idle count: the first big number right of the population (the red bell), before the age / clock
+    const idle = numeric.find((w) => NUM.test(w.text) && w.x0 > pop.x1 && w.h >= H * 0.85 && w.text.length <= 3 && w.x0 - pop.x1 < H * 12);
+    if (idle) r.idle = Number(idle.text);
+    // a clock whose colons were missed reads as 3-6 digits at the far right ("1230", "001230"), or as two numbers ("12" "30")
+    if (!time) {
+      const tail = numeric.filter((w) => NUM.test(w.text) && w.x0 > pop.x1 && w !== idle);
+      const last = tail[tail.length - 1],
+        prev = tail[tail.length - 2];
+      if (last && /^\d{3,6}$/.test(last.text)) {
+        const d = last.text.padStart(6, '0');
+        const t = clockText(`${d.slice(0, 2)}:${d.slice(2, 4)}:${d.slice(4)}`);
+        if (t) time = { text: t };
+      } else if (last && prev && /^\d{2}$/.test(last.text) && Number(last.text) < 60 && /^\d{1,3}$/.test(prev.text) && last.x0 - prev.x1 < last.h * 1.5)
+        time = { text: `${Number(prev.text)}:${last.text}` };
+    }
   }
-  // a clock whose colon was missed reads as 3-4 digits at the far right ("1230"), or as two numbers ("12" "30")
-  if (!time && pop) {
-    const tail = numeric.filter((w) => NUM.test(w.text) && w.x0 > pop.x1);
-    const last = tail[tail.length - 1],
-      prev = tail[tail.length - 2];
-    if (last && /^\d{3,4}$/.test(last.text) && Number(last.text.slice(-2)) < 60) time = { text: `${Number(last.text.slice(0, -2))}:${last.text.slice(-2)}` };
-    else if (last && prev && /^\d{2}$/.test(last.text) && Number(last.text) < 60 && /^\d{1,3}$/.test(prev.text) && last.x0 - prev.x1 < last.h * 1.5)
-      time = { text: `${Number(prev.text)}:${last.text}` };
-  }
-  if (time) r.time = time.text.replace(/^0+(\d)/, '$1');
+  if (time) r.time = clockText(time.text);
   for (const w of words) {
     const m = w.text && AGE_WORDS.find(([, re]) => re.test(w.text));
     if (m && (!pop || w.x0 > pop.x1)) r.age = m[0];
@@ -389,10 +451,11 @@ function createLocalOcr({ tesseract = null, langPath, cachePath, log = () => {} 
       });
     return loading;
   }
-  async function ocrWord(w, img, letters, single = false) {
+  /** mode: 'line' (keeps the "/" of "4/5" and the colons of the clock), 'word' (reliable for a lone digit), 'char'. */
+  async function ocrWord(w, img, letters, mode = 'line') {
     const { PSM } = lib();
     await w.setParameters({
-      tessedit_pageseg_mode: single ? PSM.SINGLE_CHAR : PSM.SINGLE_WORD,
+      tessedit_pageseg_mode: mode === 'char' ? PSM.SINGLE_CHAR : mode === 'word' ? PSM.SINGLE_WORD : PSM.SINGLE_LINE,
       tessedit_char_whitelist: letters ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzáéíóúÁÉÍÓÚäöüÄÖÜ' : '0123456789/:',
     });
     const { data } = await w.recognize(img);
@@ -404,16 +467,17 @@ function createLocalOcr({ tesseract = null, langPath, cachePath, log = () => {} 
    */
   async function read(px, opts = {}) {
     const t0 = Date.now();
-    const { gray, mask, bg, thr } = maskOf(px, opts);
+    const { mask, soft, bg, thr } = maskOf(px, opts);
     const comps = components(mask, px.width, px.height);
     const { words, H } = groupWords(comps, px.width, mask);
     const w = await getWorker();
     const out = [];
     let lettersLeft = 3;
     for (const word of words.slice(0, MAX_WORDS)) {
-      const img = wordImage(gray, px.width, px.height, word);
-      let { text, conf } = await ocrWord(w, img, false);
-      if (!text && word.glyphs.length === 1) ({ text, conf } = await ocrWord(w, img, false, true)); // a lone digit: single-character mode
+      const img = wordImage(soft, px.width, px.height, word);
+      const lone = word.glyphs.length === 1;
+      let { text, conf } = await ocrWord(w, img, false, lone ? 'word' : 'line');
+      if (!text) ({ text, conf } = await ocrWord(w, img, false, lone ? 'char' : 'word')); // second try in the next mode
       if (!(NUM.test(text) || POP.test(text) || TIME.test(text)) && lettersLeft > 0 && word.glyphs.length >= 3) {
         // not a number: maybe the age name ("Feudal Age") — one letters pass, a few times at most
         lettersLeft--;
@@ -423,9 +487,9 @@ function createLocalOcr({ tesseract = null, langPath, cachePath, log = () => {} 
           conf = r.conf;
         }
       }
-      out.push({ x0: word.x0, y0: word.y0, x1: word.x1, y1: word.y1, h: word.h, text, conf: Math.round(conf || 0) });
+      out.push({ x0: word.x0, y0: word.y0, x1: word.x1, y1: word.y1, h: word.h, cls: word.cls, text, conf: Math.round(conf || 0) });
     }
-    const reading = mapWords(out);
+    const reading = mapWords(out, H);
     reading.engine = 'local';
     reading.debug = { words: out, glyphHeight: H, ms: Date.now() - t0, components: comps.length, bg, thr };
     return reading;
@@ -439,4 +503,4 @@ function createLocalOcr({ tesseract = null, langPath, cachePath, log = () => {} 
   return { read, terminate, ready: () => !!worker };
 }
 
-module.exports = { createLocalOcr, mapWords, maskOf, components, groupWords, scalePx, TARGET_H };
+module.exports = { createLocalOcr, mapWords, maskOf, components, groupWords, scalePx, wordImage, TARGET_H };

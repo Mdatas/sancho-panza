@@ -19,18 +19,21 @@ const STALE_MS = 120 * 1000; // a reading older than this is dropped from the UI
 const READ_SYSTEM = `You read the top resource bar of Age of Empires II: Definitive Edition from a cropped screenshot.
 Return ONLY a JSON object, no prose:
 {"hud": true, "food": int, "wood": int, "gold": int, "stone": int, "pop": "current/limit", "idle": int or null,
- "villagers": {"food": int or null, "wood": int or null, "gold": int or null, "stone": int or null},
- "age": "dark" | "feudal" | "castle" | "imperial" | null, "time": "m:ss" or null, "confidence": 0.0-1.0}
-The bar shows, left to right: the idle-villager button (its number = idle villagers, when any), then the four resources, ALWAYS in this order in
-Definitive Edition: wood (tree icon), food (meat icon), gold (nuggets icon), stone (grey rocks icon) — each with the stockpile (big number) and,
-next to or under it, a smaller number = villagers gathering that resource; then population "current/limit"; further right the current age
-(icon or name) and the game clock. Read the digits exactly as printed; never guess a number you cannot read (use null).
+ "villagers": {"food": int or null, "wood": int or null, "gold": int or null, "stone": int or null}, "villagersTotal": int or null,
+ "age": "dark" | "feudal" | "castle" | "imperial" | null, "time": "h:mm:ss" or "m:ss" or null, "confidence": 0.0-1.0}
+The bar shows, left to right, ALWAYS in this order in Definitive Edition: wood (logs icon), food (meat icon), gold (nuggets icon),
+stone (grey block icon) — each box has the stockpile as a big white number right of the icon and a small YELLOW number under the icon =
+villagers gathering that resource; then the population box: "current/limit" in white with a small CYAN number under its icon = total
+villagers; then the idle-villager bell (red when there are idle villagers; its white number = idle villagers); then the age badge and the
+age name (yellow). The game clock is white text at the top centre of the screen, outside the bar, possibly followed by the speed and
+difficulty in parentheses. Read the digits exactly as printed; never guess a number you cannot read (use null).
 If the image is not this HUD (menu, loading screen, desktop, another game), return {"hud": false}.`;
 
 const FIND_SYSTEM = `You locate the top resource bar of Age of Empires II: Definitive Edition in a full screenshot (it may be downscaled).
-The bar is a dark horizontal strip, usually at the very top-left, showing food, wood, gold, stone and population numbers with icons, and the game clock / age to its right.
-Return ONLY JSON: {"found": true, "x": 0-1, "y": 0-1, "w": 0-1, "h": 0-1} with the box that encloses the whole strip from the idle-villager button
-to the game clock, as fractions of the image width/height, or {"found": false} if the game HUD is not visible.`;
+The bar is a dark horizontal strip in a wooden frame at the very top-left, showing wood, food, gold, stone and population numbers with icons, then the
+idle-villager bell and the age; the game clock is at the top centre of the screen, outside the strip.
+Return ONLY JSON: {"found": true, "x": 0-1, "y": 0-1, "w": 0-1, "h": 0-1} with the box that encloses the whole strip AND the game clock,
+as fractions of the image width/height, or {"found": false} if the game HUD is not visible.`;
 
 const AGES = { dark: 1, feudal: 2, castle: 3, imperial: 4 };
 
@@ -58,6 +61,7 @@ function parseReading(text) {
     stone: int(j.stone),
     idle: int(j.idle, 500),
     villagers: null,
+    villagersTotal: int(j.villagersTotal, 300),
     age: 0,
     time: null,
     pop: null,
@@ -71,8 +75,8 @@ function parseReading(text) {
   }
   const age = String(j.age || '').toLowerCase();
   r.age = AGES[age] || 0;
-  const t = String(j.time || '').match(/^(\d{1,3}):(\d{2})$/);
-  if (t && Number(t[2]) < 60) r.time = `${Number(t[1])}:${t[2]}`;
+  const t = String(j.time || '').match(/^(?:(\d{1,2}):)?(\d{1,3}):(\d{2})$/);
+  if (t && Number(t[3]) < 60 && (t[1] == null || Number(t[2]) < 60)) r.time = `${Number(t[2]) + (t[1] ? Number(t[1]) * 60 : 0)}:${t[3]}`;
   r.confidence = typeof j.confidence === 'number' ? j.confidence : null;
   if (r.confidence != null && r.confidence < 0.3) return { hud: false, lowConfidence: true };
   return r;
@@ -133,15 +137,25 @@ function findBarLocal({ width, height, data, bgra = false }) {
     }
     return dark / n;
   };
-  let bottom = -1;
+  // the resource boxes are a band of dark rows under the bar's wooden top edge (which is not dark); the band ends at
+  // the bottom edge of the frame — a few non-dark rows — even when the map under it is still black fog
+  let top = -1,
+    bottom = -1,
+    gap = 0;
   for (let y = 0; y < maxRows; y++) {
-    if (darkRow(y) >= 0.6) bottom = y;
-    else if (bottom >= 0 && y - bottom > 3) break; // past the strip
+    if (darkRow(y) >= 0.5) {
+      if (top < 0) top = y;
+      bottom = y;
+      gap = 0;
+    } else if (top >= 0 && ++gap > 3) {
+      if (bottom - top >= 8) break; // past the band
+      top = bottom = -1; // a dark line at the very top (screen edge) is not the band
+    }
   }
-  if (bottom < 8) return null;
-  // right edge: along the bar rows, the first long run of columns that are not dark any more
+  if (top < 0 || bottom - top < 8) return null;
+  // right edge: along the band's rows, the first long run of columns that are not dark any more
   const rows = [];
-  for (let y = 2; y < bottom - 1; y += Math.max(1, Math.floor(bottom / 6))) rows.push(y);
+  for (let y = top + 2; y < bottom - 1; y += Math.max(1, Math.floor((bottom - top) / 6))) rows.push(y);
   let right = half;
   let bright = 0;
   for (let x = half; x < width; x += 2) {
@@ -154,8 +168,9 @@ function findBarLocal({ width, height, data, bgra = false }) {
       right = x;
     }
   }
-  // a little extra to the right: the clock / age sit at the end of the strip (a bit of terrain in the crop is harmless)
-  return { x: 0, y: 0, w: Math.min(1, ((right + 8) / width) * 1.12), h: Math.min(1, (bottom + 6) / height) };
+  // the clock sits at the top centre of the screen, outside the bar: the region always reaches past the middle
+  const w = Math.max(0.6, Math.min(0.7, ((right + 8) / width) * 1.12));
+  return { x: 0, y: 0, w, h: Math.min(1, (bottom + 6) / height) };
 }
 
 /**

@@ -1704,7 +1704,7 @@ function renderHud() {
     (k) =>
       `<span>${RES_ICON[k]}<b>${n(hud[k])}</b>${hud.villagers && hud.villagers[k] != null ? `<small class="muted">·${hud.villagers[k]}</small>` : ''}</span>`
   );
-  if (hud.pop) parts.push(`<span>👤<b>${esc(hud.pop)}</b></span>`);
+  if (hud.pop) parts.push(`<span>👤<b>${esc(hud.pop)}</b>${hud.villagersTotal != null ? `<small class="muted">·${hud.villagersTotal}</small>` : ''}</span>`);
   if (hud.idle) parts.push(`<span class="idle">${esc(tr('hud.idle', { n: hud.idle }))}</span>`);
   // the loaded build's current step: villagers per resource still missing (rtsbuilds "resources" = villagers on each resource)
   if (bo.current && hud.villagers) {

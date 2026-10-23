@@ -1,7 +1,7 @@
 {
   "name": "aoe2coach",
   "productName": "Sancho Panza - Age of Empires 2 Fan Companion",
-  "version": "0.23.0",
+  "version": "0.23.1",
   "description": "Sancho Panza - Age of Empires 2 Fan Companion: companion para Age of Empires II DE — coach con IA, build orders, counters, voz",
   "main": "src/main/main.js",
   "author": "M",

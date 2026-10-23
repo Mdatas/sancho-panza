@@ -10,7 +10,7 @@ const { catalog } = require('../src/main/bocatalog');
 const { parseCivStats } = require('../src/main/guideData');
 const sheet = require('../src/main/engine/sheet');
 const { parseReading, parseBox, DEFAULT_REGION } = require('../src/main/screenread');
-const { sanitizePatch, DEFAULTS } = require('../src/main/settings');
+const { Settings, sanitizePatch, DEFAULTS } = require('../src/main/settings');
 
 const root = path.join(__dirname, '..', 'data');
 const gd = new GameData(path.join(root, 'game')).load();
@@ -221,4 +221,29 @@ assert.strictEqual(sp.patch.answerMode, 'libre');
 sp = sanitizePatch({ answerMode: 'chaos', screenReadInterval: 1, screenReadRegion: { x: 2, y: 0, w: 0.6, h: 0.05 } });
 assert.deepStrictEqual(sp.rejected.sort(), ['answerMode', 'screenReadInterval', 'screenReadRegion']);
 assert.strictEqual(sanitizePatch({ screenReadRegion: null }).patch.screenReadRegion, null);
-console.log('sheet tests passed: 56 civs, parser, builds, screen reader parsing');
+// the vision reading accepts the clock with hours and the total villager count
+assert.strictEqual(parseReading('{"hud": true, "food": 100, "time": "00:12:30"}').time, '12:30');
+assert.strictEqual(parseReading('{"hud": true, "food": 100, "time": "1:02:30"}').time, '62:30');
+assert.strictEqual(parseReading('{"hud": true, "food": 100, "villagersTotal": 27}').villagersTotal, 27);
+
+// --- settings migration (v0.23): a settings file written before the answer modes keeps the AI sheet when it has a key,
+// a fresh install starts local, and a file that already names a mode keeps it
+{
+  const fs = require('fs');
+  const os = require('os');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sp-settings-'));
+  const load = (raw) => {
+    const file = path.join(dir, 'settings.json');
+    if (raw === undefined) fs.rmSync(file, { force: true });
+    else fs.writeFileSync(file, JSON.stringify(raw));
+    return new Settings(file).get();
+  };
+  assert.strictEqual(load(undefined).answerMode, 'local', 'fresh install');
+  assert.strictEqual(load({ anthropicApiKey: 'enc:abc' }).answerMode, 'ficha', 'a key from v0.22 → sheet + AI');
+  assert.strictEqual(load({ keyOk: true }).answerMode, 'ficha', 'a key that once worked → sheet + AI');
+  assert.strictEqual(load({ theme: 'taverna' }).answerMode, 'local', 'no key → local');
+  assert.strictEqual(load({ anthropicApiKey: 'enc:abc', answerMode: 'libre' }).answerMode, 'libre', 'a chosen mode is kept');
+  assert.strictEqual(load({ anthropicApiKey: 'enc:abc', answerMode: 'local' }).answerMode, 'local', 'a chosen local mode is kept');
+  fs.rmSync(dir, { recursive: true, force: true });
+}
+console.log('sheet tests passed: 56 civs, parser, builds, screen reader parsing, settings migration');

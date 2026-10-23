@@ -465,7 +465,13 @@ function buildCard(b, { loadable = true } = {}) {
       ? `<button class="small" data-load="${esc(b.id)}">${esc(G('g.metaLoad'))}</button>`
       : `<button class="small ghost" data-open="${esc(b.id)}">${esc(G('g.metaOpenGuide'))}</button>`;
   return `<div class="bcard tier-${esc(b.tier)}"><div class="t">${esc(b.title)}${b.tier !== 'meta' ? ` <span class="tag ${b.tier === 'meme' ? 'bad' : 'warn'}">${TIER_LABEL[b.tier]}</span>` : ''}${why}</div><div class="s"><span class="muted small">${esc(
-    [(b.types || []).slice(0, 2).join(', '), b.author, b.feudalPop ? `${b.feudalPop} pop` : '', b.date ? String(b.date).slice(0, 7) : '']
+    [
+      (b.types || []).slice(0, 2).join(', '),
+      b.author,
+      b.steps ? G('g.metaSteps', { n: b.steps }) : '',
+      b.feudalPop ? G('g.metaFeudalPop', { n: b.feudalPop }) : '',
+      b.date ? String(b.date).slice(0, 7) : '',
+    ]
       .filter(Boolean)
       .join(' · ')
   )}</span>${btn}</div></div>`;

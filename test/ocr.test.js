@@ -1,5 +1,5 @@
 'use strict';
-/** Local screen reader: BMP codec, text segmentation + Tesseract on synthetic HUD fixtures, field mapping, the local bar finder. No network. */
+/** Local screen reader: BMP codec, text segmentation + Tesseract on real Definitive Edition HUD crops, field mapping, the local bar finder. No network. */
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
@@ -18,27 +18,41 @@ const fixture = (n) => decodeBmp(fs.readFileSync(path.join(__dirname, 'fixtures'
   assert.deepStrictEqual([...back.data.slice(12, 16)], [10, 20, 30, 255]);
 }
 
-// --- field mapping from word boxes (independent of Tesseract)
+// --- field mapping from word boxes (independent of Tesseract): the Definitive Edition bar
 {
-  const w = (text, x0, h = 30) => ({ text, x0, x1: x0 + text.length * 14, y0: 0, y1: h, h });
-  let r = mapWords([
-    w('310', 100),
-    w('9', 110, 14),
-    w('1204', 300),
-    w('12', 310, 14),
-    w('120', 500),
-    w('4', 510, 14),
-    w('200', 700),
-    w('0', 710, 14),
-    w('34/40', 900),
-    w('Feudal', 1100),
-    w('12:30', 1300),
-  ]);
-  assert.deepStrictEqual([r.hud, r.wood, r.food, r.gold, r.stone, r.pop, r.time, r.age, r.idle], [true, 310, 1204, 120, 200, '34/40', '12:30', 2, null]);
-  assert.deepStrictEqual(r.villagers, { food: 12, wood: 9, gold: 4, stone: 0 });
-  // five big numbers before the population: the first is the idle count; a clock whose colon was missed still reads
-  r = mapWords([w('3', 20), w('310', 100), w('1204', 300), w('120', 500), w('200', 700), w('34/40', 900), w('1230', 1300)]);
-  assert.deepStrictEqual([r.idle, r.wood, r.stone, r.time], [3, 310, 200, '12:30']);
+  // words as the segmentation produces them: cls 1 = white, 2 = yellow (villager counts, age name), 3 = cyan (total villagers)
+  const w = (text, x0, y0 = 60, h = 31, cls = 1) => ({ text, x0, x1: x0 + text.length * 22, y0, y1: y0 + h, h, cls });
+  const bar = [
+    w('0', 99, 89, 30, 2),
+    w('200', 140),
+    w('0', 366, 89, 30, 2),
+    w('200', 408),
+    w('0', 632, 89, 30, 2),
+    w('100', 674),
+    w('7', 899, 89, 30, 2),
+    w('150', 942),
+    w('3', 1168, 89, 28, 3),
+    w('4/5', 1214),
+    w('2', 1454),
+    w('DarkAg', 1823, 58, 45, 2),
+    w('00:12:30', 2269, 25, 38),
+    w('17', 2488, 24, 39),
+  ];
+  let r = mapWords(bar, 31);
+  assert.deepStrictEqual(
+    [r.hud, r.wood, r.food, r.gold, r.stone, r.pop, r.time, r.age, r.idle, r.villagersTotal],
+    [true, 200, 200, 100, 150, '4/5', '12:30', 1, 2, 3]
+  );
+  assert.deepStrictEqual(r.villagers, { food: 0, wood: 0, gold: 0, stone: 7 });
+  // hours fold into the minutes; a clock whose colons were missed still reads; icon crumbs left of the bar are ignored
+  r = mapWords([w('1', 20), ...bar.filter((x) => !x.text.includes(':')), w('010230', 2269, 25, 38)], 31);
+  assert.deepStrictEqual([r.wood, r.stone, r.time, r.idle], [200, 150, '62:30', 2]);
+  // without colour classes (older layouts, the vision model's words): the top row of full-size numbers are the stockpiles,
+  // the lower row the villager counts
+  const plain = bar.map((x) => ({ ...x, cls: undefined }));
+  r = mapWords(plain, 31);
+  assert.deepStrictEqual([r.wood, r.food, r.gold, r.stone, r.pop, r.idle], [200, 200, 100, 150, '4/5', 2]);
+  assert.deepStrictEqual(r.villagers, { food: 0, wood: 0, gold: 0, stone: 7 });
   assert.strictEqual(mapWords([w('34/40', 900)]).hud, false, 'no stockpiles → not a HUD');
   assert.strictEqual(mapWords([w('12', 100), w('7', 300)]).hud, false, 'two numbers are not the bar');
 }
@@ -75,21 +89,28 @@ const fixture = (n) => decodeBmp(fs.readFileSync(path.join(__dirname, 'fixtures'
 (async () => {
   const ocr = createLocalOcr({ langPath: path.join(__dirname, '..', 'data', 'ocr'), cachePath: null });
   try {
-    // 1080p synthetic bar, fed at 2× like the app does → every field
+    // the real Definitive Edition bar (2560×1600 capture, default region), fed at 2× like the app does → every field
+    const expect = (r, label) => {
+      assert.strictEqual(r.hud, true, label + ' ' + JSON.stringify(r.debug && r.debug.words.map((x) => x.text)));
+      assert.deepStrictEqual(
+        [r.wood, r.food, r.gold, r.stone, r.pop, r.time, r.age, r.idle, r.villagersTotal],
+        [200, 200, 100, 200, '4/5', '0:06', 1, 3, 3],
+        label
+      );
+      assert.deepStrictEqual(r.villagers, { food: 0, wood: 0, gold: 0, stone: 0 }, label);
+      assert.strictEqual(r.engine, 'local');
+    };
     const t0 = Date.now();
-    let r = await ocr.read(scalePx(fixture('hud-synthetic-1080p.bmp'), 2));
+    let r = await ocr.read(scalePx(fixture('hud-de-2560x1600.bmp'), 2));
     const ms1 = Date.now() - t0;
-    assert.strictEqual(r.hud, true, JSON.stringify(r.debug && r.debug.words.map((x) => x.text)));
-    assert.deepStrictEqual([r.wood, r.food, r.gold, r.stone, r.pop, r.time, r.age, r.idle], [310, 1204, 120, 200, '34/40', '12:30', 2, 2]);
-    assert.deepStrictEqual(r.villagers, { food: 12, wood: 9, gold: 4, stone: 0 });
-    assert.strictEqual(r.engine, 'local');
-    assert.ok(r.debug.words.length >= 10 && r.debug.ms >= 0);
-    // smaller HUD (864p-like): the stockpiles, population, age and clock still read; tiny villager counts may be missed
-    r = await ocr.read(scalePx(fixture('hud-synthetic-864p.bmp'), 2));
-    assert.deepStrictEqual([r.hud, r.wood, r.food, r.gold, r.stone, r.pop, r.time, r.age], [true, 310, 1204, 120, 200, '34/40', '12:30', 2]);
+    expect(r, '2560x1600');
+    assert.ok(r.debug.words.length >= 12 && r.debug.ms >= 0);
+    // the same screen captured at 1080p (smaller glyphs)
+    r = await ocr.read(scalePx(fixture('hud-de-1920x1080.bmp'), 2));
+    expect(r, '1920x1080');
     // warm reads are fast
     const t1 = Date.now();
-    await ocr.read(scalePx(fixture('hud-synthetic-1080p.bmp'), 2));
+    await ocr.read(scalePx(fixture('hud-de-2560x1600.bmp'), 2));
     const ms2 = Date.now() - t1;
     assert.ok(ms2 < 4000, 'warm read took ' + ms2 + ' ms');
     // a crop with no HUD (flat colour + noise) is reported as not the bar
@@ -103,21 +124,31 @@ const fixture = (n) => decodeBmp(fs.readFileSync(path.join(__dirname, 'fixtures'
     }
     r = await ocr.read(blank);
     assert.strictEqual(r.hud, false);
-    // the local bar finder on a synthetic full screen: the fixture pasted top-left on grass
-    const bar = fixture('hud-synthetic-1080p.bmp');
-    const W = 1920,
-      H = 1080;
-    const screen = { width: W, height: H, data: new Uint8Array(W * H * 4) };
-    for (let i = 0; i < screen.data.length; i += 4) {
-      screen.data[i] = 62;
-      screen.data[i + 1] = 84;
-      screen.data[i + 2] = 46;
-      screen.data[i + 3] = 255;
+    // the local bar finder on a full screen: the real crop pasted top-left on black fog (game start) and on grass
+    const bar = fixture('hud-de-2560x1600.bmp');
+    const W = 2560,
+      H = 1600;
+    for (const [bg, label] of [
+      [[0, 0, 0], 'black fog'],
+      [[62, 84, 46], 'grass'],
+    ]) {
+      const screen = { width: W, height: H, data: new Uint8Array(W * H * 4) };
+      for (let i = 0; i < screen.data.length; i += 4) {
+        screen.data[i] = bg[0];
+        screen.data[i + 1] = bg[1];
+        screen.data[i + 2] = bg[2];
+        screen.data[i + 3] = 255;
+      }
+      for (let y = 0; y < bar.height; y++)
+        for (let x = 0; x < bar.width; x++) for (let c = 0; c < 4; c++) screen.data[(y * W + x) * 4 + c] = bar.data[(y * bar.width + x) * 4 + c];
+      const reg = findBarLocal(screen);
+      assert.ok(reg && reg.x === 0 && reg.y === 0 && reg.w >= 0.6 && reg.w <= 0.7 && reg.h > 0.03 && reg.h < 0.06, label + ' ' + JSON.stringify(reg));
+      // the region it found reads the whole bar, clock included
+      const crop = { width: Math.round(W * reg.w), height: Math.round(H * reg.h), data: null };
+      crop.data = new Uint8Array(crop.width * crop.height * 4);
+      for (let y = 0; y < crop.height; y++) crop.data.set(screen.data.subarray(y * W * 4, (y * W + crop.width) * 4), y * crop.width * 4);
+      expect(await ocr.read(scalePx(crop, 2)), 'found region on ' + label);
     }
-    for (let y = 0; y < bar.height; y++)
-      for (let x = 0; x < bar.width; x++) for (let c = 0; c < 4; c++) screen.data[(y * W + x) * 4 + c] = bar.data[(y * bar.width + x) * 4 + c];
-    const reg = findBarLocal(screen);
-    assert.ok(reg && reg.x === 0 && reg.y === 0 && reg.w > 0.5 && reg.w < 0.7 && reg.h > 0.03 && reg.h < 0.06, JSON.stringify(reg));
     assert.strictEqual(findBarLocal({ width: 200, height: 100, data: new Uint8Array(200 * 100 * 4).fill(120) }), null, 'no dark strip → nothing found');
     console.log(`ocr tests passed (first read ${ms1} ms, warm ${ms2} ms)`);
   } finally {

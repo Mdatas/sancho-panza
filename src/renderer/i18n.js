@@ -531,7 +531,7 @@
   "ocr.ai": "IA (modelo de visión de tu proveedor)",
   "set.ocrHelp": "Local: Tesseract lee los números en tu PC (~0,3 s, gratis, nada sale); lee bien los recursos, población, edad y reloj, y a veces se le escapan los números chicos de aldeanos. IA: el recorte de la barra va al modelo de visión de tu proveedor (Claude Haiku: ~US$0,0003 por lectura, unos US$0,07 por hora cada 15 s), más preciso con texto chico.",
   "set.screenManual": "Marcar la barra a mano",
-  "screen.manualHint": "Hacé clic en la esquina superior izquierda de la barra de recursos y después en la inferior derecha (incluí el reloj).",
+  "screen.manualHint": "Hacé clic en la esquina superior izquierda de la barra de recursos y después abajo a la derecha, pasando el reloj del centro de la pantalla (queda un rectángulo ancho y bajo que incluye la barra y el reloj).",
   "screen.manualNext": "Ahora la esquina inferior derecha.",
   "screen.saved": "Región guardada ({w}×{h} px).",
   "screen.savedNoRead": "Región guardada, pero esta vez no pude leer números ahí: ¿está el juego en pantalla? Probá «Leer ahora».",
@@ -701,7 +701,9 @@
   "g.metaLoaded": "Build cargado en la ventana principal",
   "g.metaRank": "#{rank} de 56 · {wr}% de victorias · {pick}% de elección · tier {tier}",
   "g.metaAgainst": "Cómo se le juega en contra",
-  "g.metaMaps": "Mapas donde brilla / sufre"
+  "g.metaMaps": "Mapas donde brilla / sufre",
+  "g.metaSteps": "{n} pasos",
+  "g.metaFeudalPop": "Feudal a {n} pop"
  },
  "en": {
   "state.empty": "Tell me your ELO, civ, opponent and map (or just ask)",
@@ -1233,7 +1235,7 @@
   "ocr.ai": "AI (your provider's vision model)",
   "set.ocrHelp": "Local: Tesseract reads the numbers on your PC (~0.3 s, free, nothing leaves); it reads resources, population, age and clock well and sometimes misses the small villager counts. AI: the crop of the bar goes to your provider's vision model (Claude Haiku: ~US$0.0003 per reading, about US$0.07 per hour at 15 s), more accurate with small text.",
   "set.screenManual": "Mark the bar by hand",
-  "screen.manualHint": "Click the top-left corner of the resource bar, then the bottom-right one (include the clock).",
+  "screen.manualHint": "Click the top-left corner of the resource bar, then bottom-right past the clock at the top centre of the screen (a wide, low rectangle that holds the bar and the clock).",
   "screen.manualNext": "Now the bottom-right corner.",
   "screen.saved": "Region saved ({w}×{h} px).",
   "screen.savedNoRead": "Region saved, but no numbers could be read there this time: is the game on screen? Try \"Read now\".",
@@ -1403,7 +1405,9 @@
   "g.metaLoaded": "Build loaded in the main window",
   "g.metaRank": "#{rank} of 56 · {wr}% win rate · {pick}% pick rate · tier {tier}",
   "g.metaAgainst": "How to play against it",
-  "g.metaMaps": "Maps where it shines / struggles"
+  "g.metaMaps": "Maps where it shines / struggles",
+  "g.metaSteps": "{n} steps",
+  "g.metaFeudalPop": "Feudal at {n} pop"
  },
  "de": {
   "state.empty": "Sag mir dein ELO, deine Civ, deinen Gegner und die Map (oder frag einfach direkt)",
@@ -1935,7 +1939,7 @@
   "ocr.ai": "KI (Vision-Modell deines Anbieters)",
   "set.ocrHelp": "Lokal: Tesseract liest die Zahlen auf deinem PC (~0,3 s, kostenlos, nichts verlässt ihn); Ressourcen, Bevölkerung, Zeitalter und Uhr liest es gut, die kleinen Dorfbewohnerzahlen verfehlt es manchmal. KI: der Ausschnitt der Leiste geht an das Vision-Modell deines Anbieters (Claude Haiku: ~0,0003 US$ pro Lesung, etwa 0,07 US$ pro Stunde bei 15 s), genauer bei kleiner Schrift.",
   "set.screenManual": "Leiste von Hand markieren",
-  "screen.manualHint": "Klick auf die obere linke Ecke der Ressourcenleiste und dann auf die untere rechte (mit der Uhr).",
+  "screen.manualHint": "Klick auf die obere linke Ecke der Ressourcenleiste und dann unten rechts hinter der Uhr oben in der Bildschirmmitte (ein breites, niedriges Rechteck mit Leiste und Uhr).",
   "screen.manualNext": "Jetzt die untere rechte Ecke.",
   "screen.saved": "Bereich gespeichert ({w}×{h} px).",
   "screen.savedNoRead": "Bereich gespeichert, aber diesmal waren dort keine Zahlen lesbar: ist das Spiel auf dem Bildschirm? Versuch „Jetzt lesen“.",
@@ -2105,7 +2109,9 @@
   "g.metaLoaded": "Build im Hauptfenster geladen",
   "g.metaRank": "#{rank} von 56 · {wr}% Siegquote · {pick}% Pickrate · Tier {tier}",
   "g.metaAgainst": "Wie man dagegen spielt",
-  "g.metaMaps": "Karten, auf denen sie glänzt / leidet"
+  "g.metaMaps": "Karten, auf denen sie glänzt / leidet",
+  "g.metaSteps": "{n} Schritte",
+  "g.metaFeudalPop": "Feudal bei {n} Pop"
  },
  "pt": {
   "state.empty": "Me diga seu ELO, civ, adversário e mapa (ou pergunte direto)",
@@ -2637,7 +2643,7 @@
   "ocr.ai": "IA (modelo de visão do seu provedor)",
   "set.ocrHelp": "Local: o Tesseract lê os números no seu PC (~0,3 s, grátis, nada sai); lê bem recursos, população, era e relógio, e às vezes perde os números pequenos de aldeões. IA: o recorte da barra vai ao modelo de visão do seu provedor (Claude Haiku: ~US$0,0003 por leitura, uns US$0,07 por hora a cada 15 s), mais preciso com texto pequeno.",
   "set.screenManual": "Marcar a barra à mão",
-  "screen.manualHint": "Clique no canto superior esquerdo da barra de recursos e depois no inferior direito (inclua o relógio).",
+  "screen.manualHint": "Clique no canto superior esquerdo da barra de recursos e depois embaixo à direita, passando o relógio do centro da tela (fica um retângulo largo e baixo com a barra e o relógio).",
   "screen.manualNext": "Agora o canto inferior direito.",
   "screen.saved": "Região salva ({w}×{h} px).",
   "screen.savedNoRead": "Região salva, mas desta vez não consegui ler números ali: o jogo está na tela? Tente \"Ler agora\".",
@@ -2807,7 +2813,9 @@
   "g.metaLoaded": "Build carregado na janela principal",
   "g.metaRank": "#{rank} de 56 · {wr}% de vitórias · {pick}% de escolha · tier {tier}",
   "g.metaAgainst": "Como jogar contra",
-  "g.metaMaps": "Mapas onde brilha / sofre"
+  "g.metaMaps": "Mapas onde brilha / sofre",
+  "g.metaSteps": "{n} passos",
+  "g.metaFeudalPop": "Feudal com {n} pop"
  },
  "zh": {
   "state.empty": "告诉我你的 ELO、文明、对手和地图（或者直接提问）",
@@ -3339,7 +3347,7 @@
   "ocr.ai": "AI（服务商的视觉模型）",
   "set.ocrHelp": "本地：Tesseract 在本机读取数字（约 0.3 秒，免费，不外传）；资源、人口、时代和时钟读得好，偶尔漏掉小号的村民数字。AI：资源栏截图发送到服务商的视觉模型（Claude Haiku：每次约 0.0003 美元，每 15 秒一次约每小时 0.07 美元），对小字更准确。",
   "set.screenManual": "手动框选资源栏",
-  "screen.manualHint": "先点击资源栏的左上角，再点击右下角（包含时钟）。",
+  "screen.manualHint": "先点击资源栏的左上角，再点击右下角——要越过屏幕顶部中央的时钟（得到一个又宽又矮的矩形，包含资源栏和时钟）。",
   "screen.manualNext": "现在点击右下角。",
   "screen.saved": "区域已保存（{w}×{h} 像素）。",
   "screen.savedNoRead": "区域已保存，但这次没有读到数字：游戏在屏幕上吗？试试“立即读取”。",
@@ -3509,7 +3517,9 @@
   "g.metaLoaded": "已在主窗口载入建造顺序",
   "g.metaRank": "第 {rank}/56 · 胜率 {wr}% · 选用率 {pick}% · {tier} 级",
   "g.metaAgainst": "如何对付它",
-  "g.metaMaps": "擅长 / 吃力的地图"
+  "g.metaMaps": "擅长 / 吃力的地图",
+  "g.metaSteps": "{n} 步",
+  "g.metaFeudalPop": "{n} 人口升封建"
  },
  "vi": {
   "state.empty": "Cho mình biết ELO, civ, đối thủ và bản đồ của bạn (hoặc hỏi luôn)",
@@ -4041,7 +4051,7 @@
   "ocr.ai": "AI (mô hình thị giác của nhà cung cấp)",
   "set.ocrHelp": "Cục bộ: Tesseract đọc số trên PC của bạn (~0,3 s, miễn phí, không gì rời đi); đọc tốt tài nguyên, dân số, thời đại và đồng hồ, đôi khi sót số dân nhỏ. AI: ảnh cắt của thanh được gửi tới mô hình thị giác của nhà cung cấp (Claude Haiku: ~0,0003 USD mỗi lần, khoảng 0,07 USD mỗi giờ ở 15 s), chính xác hơn với chữ nhỏ.",
   "set.screenManual": "Đánh dấu thanh thủ công",
-  "screen.manualHint": "Bấm vào góc trên-trái của thanh tài nguyên, rồi góc dưới-phải (bao gồm đồng hồ).",
+  "screen.manualHint": "Nhấp vào góc trên bên trái của thanh tài nguyên, rồi nhấp phía dưới bên phải, qua khỏi đồng hồ ở giữa phía trên màn hình (một hình chữ nhật rộng và thấp chứa cả thanh và đồng hồ).",
   "screen.manualNext": "Giờ bấm góc dưới-phải.",
   "screen.saved": "Đã lưu vùng ({w}×{h} px).",
   "screen.savedNoRead": "Đã lưu vùng, nhưng lần này không đọc được số ở đó: game có trên màn hình không? Thử “Đọc ngay”.",
@@ -4211,7 +4221,9 @@
   "g.metaLoaded": "Đã nạp build vào cửa sổ chính",
   "g.metaRank": "#{rank}/56 · thắng {wr}% · chọn {pick}% · hạng {tier}",
   "g.metaAgainst": "Cách đánh lại",
-  "g.metaMaps": "Bản đồ mạnh / yếu"
+  "g.metaMaps": "Bản đồ mạnh / yếu",
+  "g.metaSteps": "{n} bước",
+  "g.metaFeudalPop": "Feudal ở {n} pop"
  },
  "ko": {
   "state.empty": "ELO, 문명, 상대, 맵을 알려 주세요 (또는 바로 질문하세요)",
@@ -4743,7 +4755,7 @@
   "ocr.ai": "AI (제공자의 비전 모델)",
   "set.ocrHelp": "로컬: Tesseract가 내 PC에서 숫자를 읽음 (약 0.3초, 무료, 외부 전송 없음); 자원·인구·시대·시계는 잘 읽고 작은 주민 숫자는 가끔 놓침. AI: 바의 잘라낸 이미지를 제공자의 비전 모델로 전송 (Claude Haiku: 1회 약 US$0.0003, 15초 간격 시 시간당 약 US$0.07), 작은 글씨에 더 정확.",
   "set.screenManual": "바를 직접 표시",
-  "screen.manualHint": "자원 바의 왼쪽 위 모서리를 클릭한 뒤 오른쪽 아래 모서리를 클릭하세요 (시계 포함).",
+  "screen.manualHint": "자원 바의 왼쪽 위 모서리를 클릭한 뒤, 화면 상단 중앙의 시계를 지나 오른쪽 아래를 클릭하세요 (바와 시계를 모두 담는 넓고 낮은 직사각형).",
   "screen.manualNext": "이제 오른쪽 아래 모서리를 클릭하세요.",
   "screen.saved": "영역 저장됨 ({w}×{h} px).",
   "screen.savedNoRead": "영역은 저장했지만 이번에는 숫자를 읽지 못했습니다: 게임이 화면에 있나요? '지금 읽기'를 눌러 보세요.",
@@ -4913,6 +4925,8 @@
   "g.metaLoaded": "메인 창에 빌드를 불러왔습니다",
   "g.metaRank": "56개 중 #{rank} · 승률 {wr}% · 선택률 {pick}% · 티어 {tier}",
   "g.metaAgainst": "상대하는 법",
-  "g.metaMaps": "강한 / 약한 맵"
+  "g.metaMaps": "강한 / 약한 맵",
+  "g.metaSteps": "{n}단계",
+  "g.metaFeudalPop": "{n} 인구에 봉건"
  }
 });

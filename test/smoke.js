@@ -202,6 +202,18 @@ async function run({ win, guideWin: getGuideWin, openGuide, brain, settings, get
     await new Promise((r) => setTimeout(r, 800));
     probe.guideMeta = await gjs(`document.querySelectorAll('#metaTable tr').length + ' rows'`);
     await gshot('meta');
+    // Meta by civ → "Load in the panel": the guide's button loads the build into the main window's panel
+    {
+      const before = await js(`document.getElementById('boLine').textContent`);
+      const picked = await gjs(
+        `(() => { const b = document.querySelector('#metaView [data-load]'); if (!b) return ''; const t = b.closest('.bcard').querySelector('.t').textContent.trim(); b.click(); return t; })()`
+      );
+      await new Promise((r) => setTimeout(r, 1200));
+      const after = await js(`document.getElementById('boLine').textContent`);
+      const title = picked.replace(/\s*\(.*$/, '').slice(0, 20);
+      probe.guideLoad = `${picked ? 'picked' : 'no button'} | ${title && after.includes(title) ? 'loaded' : 'NOT loaded'} | ${before === after ? 'unchanged' : 'changed'}`;
+      if (!picked || !after.includes(title)) errors.push('guide "Load in the panel" must load the build into the main window: ' + probe.guideLoad);
+    }
     await gjs(
       `document.querySelector('[data-tab="notes"]').click(); const i = document.getElementById('noteSearch'); i.value = 'men-at-arms'; i.dispatchEvent(new Event('input'))`
     );

@@ -35,12 +35,13 @@ se borra de esta lista y queda en las notas de la versión.
   partida** de la v0.22 ya cubre el caso determinista; esto es para el modo libre.)
 - **Entrada por voz** (hablarle al coach en vez de escribir): hotkey push-to-talk → Groq Whisper (gratis, ~1 s) o Whisper
   local; el texto reconocido entra como un mensaje más. Pendiente de decidir el proveedor y la privacidad del audio.
-- **Lectura de pantalla (v0.22–0.23) — siguientes pasos**: el motor local (Tesseract, v0.23) se afinó sólo con capturas
-  sintéticas del HUD a 1080p y 864p; falta validarlo con **capturas reales** (1080p/1440p/4K, escala de HUD 100 % y
-  distinta, modos de UI del juego, mods de HUD) y ajustar umbral/segmentación con ellas — pedirle al jugador 3–4 capturas.
-  Después: leer la barra de edad/tiempo cuando está separada; detectar el panel de aldeanos ociosos; versión web con
-  `getDisplayMedia`; cortar el ciclo cuando la app está en segundo plano mucho tiempo; probar el motor IA con proveedores
-  gratuitos (Groq/Gemini: sin key acá, no se probó).
+- **Lectura de pantalla (v0.22–0.23.1) — siguientes pasos**: el motor local (Tesseract) está afinado con una captura
+  real (2560×1600, UI por defecto, inglés) y sus reducciones a 1080p/768p (`test/fixtures/hud-de-*.bmp`). Falta: capturas
+  reales en otras resoluciones y con **escala de HUD** distinta de 100 %, con el juego en otro idioma (el nombre de la edad
+  se lee con el modelo inglés; las edades están en `AGE_WORDS`), en partida avanzada (números de 4–5 cifras, población
+  "150/200", ociosos ≥ 10) y con mods de interfaz; la campana de ociosos cuando no hay ociosos (¿muestra 0 o nada?).
+  Después: detectar el panel de aldeanos ociosos; versión web con `getDisplayMedia`; cortar el ciclo cuando la app está en
+  segundo plano mucho tiempo; probar el motor IA con proveedores gratuitos (Groq/Gemini: sin key acá, no se probó).
 - **Modos de respuesta (v0.23) — siguientes pasos**: un **proveedor por tarea** (uno gratis/local para interpretar el
   mensaje y el OCR, Claude para el consejo); mejorar el lector local de palabras clave con las frases que fallen en uso
   real (hoy cubre civs/mapas/unidades es+en, roles «soy/vs/aliados», edad, ELO, ejército rival).
