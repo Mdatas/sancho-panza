@@ -186,17 +186,6 @@ function speakWeb(text) {
 function imgIndex() {
   return IMG;
 }
-/** Message from the guide page to the main page (same origin): the iframe's parent, or the opener when the guide runs in its own tab. */
-function postToMain(msg) {
-  const target = window.parent !== window ? window.parent : window.opener;
-  if (!target) return false;
-  try {
-    target.postMessage(msg, location.origin === 'null' ? '*' : location.origin);
-    return true;
-  } catch {
-    return false;
-  }
-}
 function pickFile(accept) {
   return new Promise((resolve) => {
     const i = document.createElement('input');
@@ -227,8 +216,6 @@ window.coach = {
   },
   chat: {
     ask: RN((text) => core.ask(text, (ev) => emit('chat:event', ev))),
-    advise: RN((text) => core.advise(text, (ev) => emit('chat:event', ev))),
-    sheet: RN((question) => core.sheet(question || '')),
     reset: R(() => core.reset()),
     newGame: R(() => core.newGame()),
     flag: R((c) => core.flag(c)),
@@ -267,8 +254,6 @@ window.coach = {
     }),
     catalog: RN(() => core.boCatalog()),
     noteText: RN((a) => core.boNoteText(a || {})),
-    onLoad: on('bo:load'),
-    onOpen: on('bo:open'),
   },
   civs: R(() => core.civs()),
   maps: R(() => core.maps()),
@@ -301,10 +286,6 @@ window.coach = {
     index: R(() => core.guideIndex()),
     civ: R((key) => core.guideCiv(key)),
     map: R((key) => core.guideMap(key)),
-    meta: RN((key) => core.guideMeta(key)),
-    // the guide (iframe in the Guide tab, or its own tab) asks the main page to load a build / open a catalog entry
-    loadBuild: async (id) => postToMain({ type: 'sp:loadBuild', id }),
-    openCatalog: async (id) => postToMain({ type: 'sp:openCatalog', id }),
     stats: R(() => core.guideStats()),
     notes: RN((q) => core.guideNotes(q)),
     noteList: RN(() => core.guideNoteList()),
@@ -354,14 +335,6 @@ window.coach = {
     onDetected: on('match:detected'),
   },
   logs: { clear: async () => true },
-  screen: {
-    test: async () => ({ ok: false, error: tw('screen.webOnly') }),
-    calibrate: async () => ({ ok: false, error: tw('screen.webOnly') }),
-    calibrateManual: async () => ({ ok: false, error: tw('screen.webOnly') }),
-    snapshot: async () => ({ ok: false, error: tw('screen.webOnly') }),
-    status: async () => null,
-    onReading: on('screen:reading'),
-  },
   onHotkey: on('hotkey'),
   onToast: on('toast'),
   onMode: on('mode'),
@@ -392,7 +365,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (el) el.classList.add('desktopOnly');
   };
   ['set.hotkeys', 'set.hkHelp', 'set.window'].forEach((k) => hide(document.querySelector(`[data-i18n="${k}"]`)));
-  hide(document.querySelector('#screenBox'));
   ['#hkAsk', '#setFocusReturn', '#setOpacity', '#setOnTop'].forEach((sel) => {
     const el = document.querySelector(sel);
     hide(el && (el.closest('.grid2') || el.closest('label')));

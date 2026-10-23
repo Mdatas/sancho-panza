@@ -104,7 +104,6 @@ try {
     await page.click('#tabs button[data-tab="bo"]');
     await page.waitForSelector('#boList .bocard', { timeout: 20000 });
     check((await page.$$eval('#boList .bocard', (x) => x.length)) > 100, `${label}: catalog cards`);
-    check((await page.locator('#boList .grp').first().textContent()).includes('Para tu partida'), `${label}: "Para tu partida" group on top once a civ is registered`);
     await page.click('#boList .bocard.steps:not(:has(.cico))'); // a generic build (civ-specific ones sort first once a civ is registered)
     await page.waitForTimeout(600);
     check(/1\//.test(await page.textContent('#boPos')), `${label}: step 1 loaded`);
@@ -135,46 +134,15 @@ try {
     check((await frame.locator('#themeList .item').count()) === 24, `${label}: 24 topics listed`);
     check((await frame.locator('#themeView h2').textContent()).length > 3, `${label}: first topic opened`);
     check((await frame.locator('#themeView details.card').count()) >= 5, `${label}: topic shows its sections`);
-    // ficha mode (default): a question without a key gets the structured sheet from the data, no network
-    await page.click('#tabs button[data-tab="chat"]');
-    await page.fill('#cmd', 'me tira arqueros, estoy en feudal');
-    await page.press('#cmd', 'Enter');
-    await page.waitForSelector('#messages .sheetMsg .sheet', { timeout: 10000 });
-    check((await page.locator('#messages .sheetMsg details.shd.counters').count()) === 1, `${label}: sheet shows the counters block`);
-    check((await page.locator('#messages .sheetMsg details.shd.me').count()) === 1, `${label}: sheet shows my civ block`);
-    check((await page.locator('#messages .sheetMsg [data-shbo]').count()) >= 1, `${label}: sheet offers loadable builds`);
-    check(/Feudal|feudal/.test(await page.textContent('#stateLine')), `${label}: keyword parse set the age`);
-    await page.locator('#messages .sheetMsg details.shd.builds').last().evaluate((d) => (d.open = true)); // folded block: open it like a reader would
-    await page.locator('#messages .sheetMsg [data-shbo]').last().click();
-    await page.waitForTimeout(600);
-    check(/1\//.test(await page.textContent('#boPos')), `${label}: a suggested build loads into the panel`);
-    await page.click('#tabs button[data-tab="chat"]');
-    // local mode (default): the sheet footer points to the AI modes instead of asking for a key
-    check((await page.locator('#messages .sheetMsg [data-shsettings]').count()) >= 1, `${label}: local sheet offers the AI modes`);
-    // free mode: asking without a key explains what is missing (no network)
-    await page.click('#tabs button[data-tab="settings"]');
-    await page.click('#setAnswerMode button[data-v="libre"]');
-    await page.waitForTimeout(200);
+    // asking without a key explains what is missing (no network)
     await page.click('#tabs button[data-tab="chat"]');
     await page.fill('#cmd', 'hola');
     await page.press('#cmd', 'Enter');
     await page.waitForTimeout(500);
-    check(/API key/i.test(await page.textContent('#answer')), `${label}: missing-key explanation in free mode`);
-    await page.fill('#cmd', '/modo local');
-    await page.press('#cmd', 'Enter');
-    await page.waitForTimeout(300);
-    // settings: streaming toggle present and on by default, advanced folded, sheet mode marked, screen reading hidden on the web
+    check(/API key/i.test(await page.textContent('#answer')), `${label}: missing-key explanation`);
+    // settings: streaming toggle present and on by default, advanced folded
     await page.click('#tabs button[data-tab="settings"]');
     check(await page.$eval('#setStreaming', (e) => e.checked), `${label}: streaming on by default`);
-    check(await page.$eval('#setAnswerMode button[data-v="local"]', (b) => b.classList.contains('on')), `${label}: local mode marked in settings by default`);
-    check(await page.$eval('#aiBox', (e) => e.classList.contains('hidden')), `${label}: AI block hidden in local mode`);
-    check((await page.textContent('#modeInfo')).length > 100, `${label}: mode info box filled`);
-    await page.click('#setAnswerMode button[data-v="ficha"]');
-    await page.waitForTimeout(200);
-    check(!(await page.$eval('#aiBox', (e) => e.classList.contains('hidden'))), `${label}: AI block shown in sheet + AI mode`);
-    await page.click('#setAnswerMode button[data-v="local"]');
-    await page.waitForTimeout(200);
-    check(!(await page.$eval('#screenBox', (e) => e.offsetParent !== null)), `${label}: screen reading section hidden on the web`);
     check(!(await page.$eval('#advanced', (e) => e.open)), `${label}: advanced section folded`);
     // appearance: taverna by default; the picker switches the page and the guide iframe, and the choice survives a reload
     check((await page.$eval('html', (h) => h.dataset.theme)) === 'taverna', `${label}: tavern theme by default`);

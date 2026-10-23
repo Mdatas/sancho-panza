@@ -30,27 +30,8 @@ se borra de esta lista y queda en las notas de la versión.
   completa cuesta ~US$8–9 en API, así que conviene correrlos por lotes (`--only`, `--tier`).
 
 ## Interfaz
-- **Respuesta libre como campos de una herramienta** (resumen de 3 líneas + detalle estructurados en vez de texto con `---`):
-  más robusto que el parser actual, pero cambia un flujo que hoy funciona; evaluar con pruebas reales antes. (La **ficha de
-  partida** de la v0.22 ya cubre el caso determinista; esto es para el modo libre.)
-- **Entrada por voz** (hablarle al coach en vez de escribir): hotkey push-to-talk → Groq Whisper (gratis, ~1 s) o Whisper
-  local; el texto reconocido entra como un mensaje más. Pendiente de decidir el proveedor y la privacidad del audio.
-- **Lectura de pantalla (v0.22–0.23.1) — siguientes pasos**: el motor local (Tesseract) está afinado con una captura
-  real (2560×1600, UI por defecto, inglés) y sus reducciones a 1080p/768p (`test/fixtures/hud-de-*.bmp`). Falta: capturas
-  reales en otras resoluciones y con **escala de HUD** distinta de 100 %, con el juego en otro idioma (el nombre de la edad
-  se lee con el modelo inglés; las edades están en `AGE_WORDS`), en partida avanzada (números de 4–5 cifras, población
-  "150/200", ociosos ≥ 10) y con mods de interfaz; la campana de ociosos cuando no hay ociosos (¿muestra 0 o nada?).
-  Después: detectar el panel de aldeanos ociosos; versión web con `getDisplayMedia`; cortar el ciclo cuando la app está en
-  segundo plano mucho tiempo; probar el motor IA con proveedores gratuitos (Groq/Gemini: sin key acá, no se probó).
-- **Modos de respuesta (v0.23) — siguientes pasos**: un **proveedor por tarea** (uno gratis/local para interpretar el
-  mensaje y el OCR, Claude para el consejo); mejorar el lector local de palabras clave con las frases que fallen en uso
-  real (hoy cubre civs/mapas/unidades es+en, roles «soy/vs/aliados», edad, ELO, ejército rival).
-- **Ficha de partida (v0.22) — siguientes pasos**: mostrar la ficha en la pestaña Guía (hoy vive en el chat); builds
-  sugeridos por rival (hoy: civ + mapa + apertura del perfil); más builds paso a paso de agua, Nomad e híbridos en el
-  catálogo (hoy hay pocos y la ficha cae en guías); contraste de la ficha con el replay cuando exista el lector de replays.
-- **Build orders (v0.23) — siguientes pasos**: probar la tarjeta del paso en partidas reales (tamaño de letra en el
-  overlay a 1440p/4K); un filtro «sólo los que encajan» además del grupo «Para tu partida»; recordar el último build por
-  civ+mapa.
+- **Respuesta estructurada** (resumen de 3 líneas + detalle como campos de una herramienta en vez de texto con `---`):
+  más robusto que el parser actual, pero cambia un flujo que hoy funciona; evaluar con pruebas reales antes.
 - **Atajos por defecto**: F10 es el menú del juego en AoE2 DE. Hoy se avisa del choque en Ajustes; cambiar los valores
   por defecto afectaría la costumbre de quien ya los usa.
 - **Claves i18n semánticas** (`g.h.p.6` → `guide.pickCiv`): 418 claves × 7 idiomas; mucho riesgo de romper textos para
@@ -72,3 +53,9 @@ se borra de esta lista y queda en las notas de la versión.
   que las publique por parche. Revisarlas a mano en cada parche grande.
 - **Chequeo de VIGENCIA automático**: cuando sale un parche, listar las notas que mencionan unidades/civs tocadas (diff de
   los datos de aoe2techtree entre commits) para revisarlas primero. Hoy el parche se lee pero las notas se revisan a mano.
+
+## Guardado en la rama `local-ocr` (v0.22–0.23, fuera de la app desde la v0.24)
+- **Ficha de partida** (respuesta estructurada sólo con datos: counters, civs, mapa, builds sugeridos), **modo local** sin IA
+  (parser de palabras clave) y **lectura de pantalla** (OCR de la barra de recursos: motor local con Tesseract afinado con una
+  captura real a 2560×1600, y motor por modelo de visión). Todo probado y documentado en esa rama (`release-notes/v0.22.0.md`
+  a `v0.23.1.md`); se retoma desde ahí si vuelve a hacer falta.

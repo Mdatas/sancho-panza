@@ -425,115 +425,13 @@ async function runCounters() {
 }
 
 /* ------------------------------------------------------------ meta */
-/* ------------------------------------------------------------ meta by civ */
-let curMeta = '';
-const TIER_LABEL = { meta: 'META', 'anti-meta': 'ANTI-META', meme: 'MEME' };
-/** Left list: every civ with its patch win rate, sorted by win rate / pick / name; the right side is the chosen civ's meta page. */
 async function renderMeta() {
   if (!STATS) STATS = await window.coach.guide.stats();
+  $('#metaSrc').textContent = STATS.rows.length ? `· ${G('g.metaSrc')} · ${G('g.games', { n: STATS.sample })}` : '';
   const q = norm($('#metaSearch').value),
     sort = $('#metaSort').value;
-  const rowOf = (c) => STATS.rows.find((r) => norm(r.civ) === norm(c.name_en));
-  const civs = IDX.civs
-    .filter((c) => !q || norm(c.name_es + ' ' + c.name_en).includes(q))
-    .map((c) => ({ c, st: rowOf(c) }))
-    .sort((a, b) =>
-      sort === 'name'
-        ? civLabel(a.c).localeCompare(civLabel(b.c))
-        : sort === 'pick'
-          ? ((b.st || {}).pick || 0) - ((a.st || {}).pick || 0)
-          : ((b.st || {}).wr || 0) - ((a.st || {}).wr || 0)
-    );
-  $('#metaList').innerHTML = civs
-    .map(
-      ({ c, st }) =>
-        `<div class="item ${curMeta === c.key ? 'sel' : ''} ${STATE.myCiv === c.key ? 'mine' : ''} ${STATE.oppCiv === c.key ? 'theirs' : ''}" data-k="${esc(c.key)}">${ico('civs', c.key, 'ico civ')}<span>${esc(civLabel(c))}</span>${
-          st ? `<span class="sub"><span class="tier ${esc(st.tier)}">${esc(st.tier)}</span> ${st.wr}%</span>` : ''
-        }</div>`
-    )
-    .join('');
-  $$('#metaList .item').forEach((el) => el.addEventListener('click', () => openMeta(el.dataset.k)));
-  if (!curMeta) {
-    const first = STATE.myCiv || (civs[0] && civs[0].c.key);
-    if (first) openMeta(first);
-  }
-}
-function buildCard(b, { loadable = true } = {}) {
-  const why = (b.why || []).length ? '' : ` <span class="muted small">(${esc(G('g.generic', {}, 'genérico'))})</span>`;
-  const btn =
-    b.kind === 'steps' && loadable
-      ? `<button class="small" data-load="${esc(b.id)}">${esc(G('g.metaLoad'))}</button>`
-      : `<button class="small ghost" data-open="${esc(b.id)}">${esc(G('g.metaOpenGuide'))}</button>`;
-  return `<div class="bcard tier-${esc(b.tier)}"><div class="t">${esc(b.title)}${b.tier !== 'meta' ? ` <span class="tag ${b.tier === 'meme' ? 'bad' : 'warn'}">${TIER_LABEL[b.tier]}</span>` : ''}${why}</div><div class="s"><span class="muted small">${esc(
-    [
-      (b.types || []).slice(0, 2).join(', '),
-      b.author,
-      b.steps ? G('g.metaSteps', { n: b.steps }) : '',
-      b.feudalPop ? G('g.metaFeudalPop', { n: b.feudalPop }) : '',
-      b.date ? String(b.date).slice(0, 7) : '',
-    ]
-      .filter(Boolean)
-      .join(' · ')
-  )}</span>${btn}</div></div>`;
-}
-async function openMeta(key) {
-  const r = await window.coach.guide.meta(key);
-  if (!r || !r.civ) return;
-  const v = r.civ,
-    m = r.meta;
-  curMeta = v.key;
-  $$('#metaList .item').forEach((el) => el.classList.toggle('sel', el.dataset.k === key));
-  showTab('meta');
-  const st = v.stats;
-  const sec = (name) => {
-    const x = (v.sections || []).find((s) => s.name === name || s.name.startsWith(name));
-    return x ? x.text : '';
-  };
-  const openingBlock = (label, o) => {
-    const steps = (o.steps || []).filter((b) => (b.why || []).length);
-    const list = steps.length
-      ? steps.map((b) => buildCard(b)).join('')
-      : (o.guides || []).length
-        ? `<p class="muted small">${esc(G('g.metaNoBuilds'))}</p>` + o.guides.map((g) => buildCard(g)).join('')
-        : '';
-    return `<details class="card" open><summary>${esc(label)}</summary><div class="body">${o.line ? `<p>${md(o.line.replace(/^[^:]+:\s*/, ''))}</p>` : ''}${list ? `<div class="bh">${esc(G('g.metaBuilds'))}</div><div class="bcards">${list}</div>` : ''}</div></details>`;
-  };
-  const guideList = (label, arr, open = false) =>
-    arr && arr.length
-      ? `<details class="card" ${open ? 'open' : ''}><summary>${esc(label)} <span class="muted small">· ${arr.length}</span></summary><div class="body bcards">${arr.map((g) => buildCard(g)).join('')}</div></details>`
-      : '';
-  const plan = ['Plan en Castillos', 'Plan en Imperial', 'Composiciones fuertes', 'Errores comunes']
-    .map((n) => (sec(n) ? `<div class="pl"><b>${esc(secName(n))}:</b> ${md(sec(n))}</div>` : ''))
-    .join('');
-  $('#metaView').innerHTML = `
-    <div class="head">${ico('civs', v.key, 'ico big')}<h2>${esc(G('g.metaOf', { civ: civLabel(v) }))}</h2>${v.style ? `<span class="tag gold">${esc(G('g.style.' + v.style, {}, v.style))}</span>` : ''}
-      ${st ? `<span class="tag" title="${esc(G('g.games', { n: st.games }))}, ±${esc(st.err)}"><span class="tier ${esc(st.tier)}">${esc(st.tier)}</span> ${esc(G('g.metaRank', { rank: st.rank, wr: st.wr, pick: st.pick, tier: st.tier }))}</span>` : ''}</div>
-    <div class="actions"><button class="small ghost" data-civ="${esc(v.key)}">${esc(civLabel(v))} →</button></div>
-    ${ES() ? '' : `<p class="muted small trnote">${esc(G('g.esNote'))}</p>`}
-    <h3 style="padding:0 18px">${esc(G('g.metaOpenings'))}</h3>
-    ${openingBlock(G('g.metaOpen'), m.open)}${openingBlock(G('g.metaClosed'), m.closed)}${openingBlock(G('g.metaWater'), m.water)}
-    ${plan ? `<details class="card" open><summary>${esc(G('g.metaPlan'))}</summary><div class="body">${plan}</div></details>` : ''}
-    ${sec('Jugando CONTRA') ? `<details class="card"><summary>${esc(G('g.metaAgainst'))}</summary><div class="body">${md(sec('Jugando CONTRA'))}</div></details>` : ''}
-    ${sec('Mapas') ? `<details class="card"><summary>${esc(G('g.metaMaps'))}</summary><div class="body">${md(sec('Mapas'))}</div></details>` : ''}
-    <h3 style="padding:8px 18px 0">${esc(G('g.metaGuides'))} <span class="muted small">· ${m.counts.guides}</span></h3>
-    ${guideList('META', m.guides.meta, true)}${guideList(G('g.metaAnti'), m.guides.antiMeta)}${guideList(G('g.metaMeme'), m.guides.meme)}
-    <details class="card" id="metaTableBox"><summary>${esc(G('g.metaTable'))} <span class="muted small" id="metaSrc"></span></summary><div class="body"><div id="metaTable"></div><p class="muted small">${esc(G('g.h.p.23'))}</p></div></details>`;
-  $('#metaView').scrollTop = 0;
-  $$('#metaView [data-civ]').forEach((b) => b.addEventListener('click', () => openCiv(b.dataset.civ)));
-  $$('#metaView [data-load]').forEach((b) =>
-    b.addEventListener('click', async () => {
-      await window.coach.guide.loadBuild(b.dataset.load);
-      b.textContent = '✓ ' + G('g.metaLoaded');
-    })
-  );
-  $$('#metaView [data-open]').forEach((b) => b.addEventListener('click', () => window.coach.guide.openCatalog(b.dataset.open)));
-  renderMetaTable();
-}
-/** The patch win-rate table (every civ), folded under the meta page. */
-function renderMetaTable() {
-  if (!STATS || !$('#metaTable')) return;
-  $('#metaSrc').textContent = STATS.rows.length ? `· ${G('g.metaSrc')} · ${G('g.games', { n: STATS.sample })}` : '';
-  const rows = [...STATS.rows].sort((a, b) => b.wr - a.wr);
+  let rows = STATS.rows.filter((r) => !q || norm(r.civ).includes(q));
+  rows = [...rows].sort((a, b) => (sort === 'name' ? a.civ.localeCompare(b.civ) : sort === 'pick' ? b.pick - a.pick : b.wr - a.wr));
   if (!rows.length) {
     $('#metaTable').innerHTML = `<p class="muted">${esc(G('g.noData'))}</p>`;
     return;
@@ -549,7 +447,7 @@ function renderMetaTable() {
       })
       .join('') +
     '</table>';
-  $$('#metaTable tr.click').forEach((tr) => tr.addEventListener('click', () => tr.dataset.k && openMeta(tr.dataset.k)));
+  $$('#metaTable tr.click').forEach((tr) => tr.addEventListener('click', () => tr.dataset.k && openCiv(tr.dataset.k)));
 }
 
 /* ------------------------------------------------------------ notes */

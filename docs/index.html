@@ -39,8 +39,6 @@
 <div class="civPick hidden" id="civPick"><input autocomplete="off" data-i18n-ph="p.cpSearch" id="cpSearch" placeholder="Buscar civ…"/><div class="cpList" id="cpList"></div><div class="cpFoot"><button class="ghost small" data-i18n="h.cpClear.2" id="cpClear">Quitar</button><button class="ghost small" data-i18n="h.cpClose.3" id="cpClose">Cerrar</button></div></div>
 <!-- ===== build-order line (compact) ===== -->
 <div class="boLine hidden" id="boLine"></div>
-<!-- ===== live HUD reading (screen reader, desktop, opt-in) ===== -->
-<div class="hudLine hidden" id="hudLine"></div>
 <!-- ===== compact answer area ===== -->
 <div class="answer" id="answer"></div>
 <!-- ===== full view: tabs ===== -->
@@ -90,7 +88,6 @@
 <button class="ghost small" data-i18n="bo.off" id="boOff">Quitar build</button>
 </div>
 <p class="muted small hidden" id="boCivNotes"></p>
-<details class="bosteps"><summary data-i18n="bo.allSteps">Todos los pasos</summary><ol class="bolist2" id="boStepsList"></ol></details>
 </div>
 <details class="import">
 <summary data-i18n="bo.import">Importar build order (JSON de buildorderguide.com / RTS Overlay)</summary>
@@ -103,13 +100,6 @@
 <section class="tab fullOnly" id="tab-guide"><iframe id="guideFrame" title="Guía" src="about:blank"></iframe></section>
 <section class="tab fullOnly" id="tab-settings">
 <h3 data-i18n="set.brain">Cerebro</h3>
-<div class="field"><span data-i18n="set.mode">Modo</span>
-<div class="seg" id="setAnswerMode" role="group" aria-label="Modo"><button type="button" data-v="local" data-i18n="mode.local">Local (sin IA)</button><button type="button" data-v="ficha" data-i18n="mode.ficha">Ficha + IA</button><button type="button" data-v="libre" data-i18n="mode.libre">Coach libre (IA)</button></div>
-<div class="banner modeInfo" id="modeInfo"></div>
-<p class="muted small" data-i18n="set.answerModeHelp" style="margin:2px 0 0">Local: la ficha con los datos, sin IA (nada sale de tu PC). Ficha + IA: la IA interpreta tu mensaje y podés pedir consejos. Coach libre: respuestas en texto libre con IA. El detalle de cada modo (qué sale de tu PC, costo, riesgos) está en el recuadro.</p>
-<div class="row wrap hidden" id="aiLocalRow"><span class="small ok" data-i18n="mode.localOn">Modo local: la IA está apagada y nada sale de tu PC.</span><button class="ghost small" data-i18n="mode.showAi" id="btnShowAi">Configurar la IA igual (para usarla después)</button></div>
-</div>
-<div id="aiBox">
 <label class="field"><span data-i18n="set.provider">Proveedor</span>
 <select id="setProvider">
 <option data-i18n="h.option.14" value="claude">Claude (Anthropic) — recomendado, por defecto</option>
@@ -155,7 +145,6 @@
 <select id="setLanguage"><option data-i18n="h.option.48" value="auto">Automático (según la pregunta)</option><option data-i18n="h.option.49" value="es">Español</option><option data-i18n="h.option.50" value="en">English</option><option value="de">Deutsch</option><option value="pt">Português</option><option value="zh">中文</option><option value="vi">Tiếng Việt</option><option value="ko">한국어</option></select></label>
 <label class="check"><input id="setStreaming" type="checkbox"/> <span data-i18n="set.streaming">Mostrar la respuesta mientras se escribe (y leer el resumen apenas está listo)</span></label>
 <div class="row"><button class="ghost" data-i18n="set.test" id="btnTestBrain">Probar conexión</button><span class="small" id="testBrainMsg"></span></div>
-</div>
 <h3 data-i18n="set.voice">Voz</h3>
 <label class="field"><span data-i18n="set.ttsEngine">Voz de salida</span>
 <select id="setTtsEngine"><option data-i18n="h.option.72" value="edge">Microsoft Edge neural (gratis, online)</option><option data-i18n="h.option.73" value="sapi">Windows SAPI (offline, robótica)</option><option data-i18n="h.option.74" value="off">Apagada</option></select></label>
@@ -188,17 +177,6 @@
 <div class="keyrow"><input data-i18n-ph="p.profileQuery" id="profileQuery" placeholder="Tu nombre en AoE2 (como aparece en ranked)"/><button class="ghost small" data-i18n="h.profileSearch.54" id="profileSearch">Buscar</button></div>
 <div class="small" id="profileResults"></div>
 <div class="row wrap"><span class="small muted" id="profileCur"></span><button class="ghost small" data-i18n="h.btnMatchNow.55" id="btnMatchNow">Leer partida ahora (/partida)</button></div>
-<div class="desktopOnly" id="screenBox">
-<h3 data-i18n="set.screenTitle">Lectura de pantalla (OCR, experimental)</h3>
-<p class="muted small" data-i18n="set.screenHelp">Lee la barra de recursos del juego (comida, madera, oro, piedra, población, aldeanos ociosos, edad, tiempo) con el modelo de visión de tu proveedor de IA y la usa en la ficha, el consejo y el reloj del build. Sólo sale de tu PC un recorte de esa barra: ~US$0,0003 por lectura con Claude Haiku (unos US$0,07 por hora cada 15 s). Necesita el juego en «Ventana sin bordes» y la app visible; en Mac, permiso de grabación de pantalla.</p>
-<div class="row wrap"><label class="check"><input id="setScreenRead" type="checkbox"/> <span data-i18n="set.screenRead">Leer la barra de recursos del juego cada</span></label><select class="mini" id="setScreenInterval" style="max-width:110px"><option value="10">10 s</option><option value="15">15 s</option><option value="30">30 s</option><option value="60">60 s</option></select></div>
-<div class="field"><span data-i18n="set.ocrEngine">Motor de lectura</span>
-<div class="seg" id="setOcrEngine" role="group" aria-label="Motor"><button type="button" data-v="local" data-i18n="ocr.local">Local (Tesseract, en tu PC)</button><button type="button" data-v="ai" data-i18n="ocr.ai">IA (modelo de visión de tu proveedor)</button></div>
-<p class="muted small" data-i18n="set.ocrHelp" style="margin:2px 0 0">Local: Tesseract lee los números en tu PC (~0,3 s, gratis, nada sale); lee bien los recursos, población, edad y reloj, y a veces se le escapan los números chicos de aldeanos. IA: el recorte de la barra va al modelo de visión de tu proveedor (Claude Haiku: ~US$0,0003 por lectura, unos US$0,07 por hora cada 15 s), más preciso con texto chico.</p></div>
-<div class="row wrap"><button class="ghost small" data-i18n="set.screenCalibrate" id="btnScreenCalibrate">Calibrar (buscar la barra)</button><button class="ghost small" data-i18n="set.screenManual" id="btnScreenManual">Marcar la barra a mano</button><button class="ghost small" data-i18n="set.screenTest" id="btnScreenTest">Leer ahora</button></div>
-<div class="small" id="screenTestOut"></div>
-<div class="screenPreview hidden" id="screenPreview"></div>
-</div>
 <h3 data-i18n="h.h3.56">Parches</h3>
 <label class="check"><input id="setPatchWatch" type="checkbox"/> <span data-i18n="h.span.57">Buscar parches nuevos al abrir (noticias oficiales de ageofempires.com, 1 vez por día)</span></label>
 <div class="row wrap"><span class="small muted" id="patchInfo"></span><button class="ghost small" data-i18n="h.btnPatchCheck.58" id="btnPatchCheck">Buscar ahora</button></div>
@@ -231,23 +209,16 @@
 <div aria-modal="true" class="modal hidden" id="welcome" role="dialog">
 <div class="mbox">
 <h2 data-i18n-html="h.h2.80">Sancho Panza <span class="muted">· Age of Empires 2 Fan Companion</span></h2>
-<p data-i18n="w.pick">Elegí cómo usarlo (se cambia cuando quieras en Ajustes → Cerebro):</p>
-<div class="modes" id="wModes">
-<button class="modecard" data-mode="local" type="button"><b data-i18n="w.local.t">Local, sin IA</b><span data-i18n="w.local.d">Ficha de partida, builds, counters, guía y lectura de pantalla, todo en tu PC. Sin cuenta ni key.</span><i data-i18n="w.local.tag">Recomendado para empezar</i></button>
-<button class="modecard" data-mode="ficha" type="button"><b data-i18n="w.ficha.t">Ficha + IA</b><span data-i18n="w.ficha.d">La IA interpreta tus mensajes y podés pedirle consejos. ~US$0,0002 por mensaje. Necesita API key.</span></button>
-<button class="modecard" data-mode="libre" type="button"><b data-i18n="w.libre.t">Coach libre (IA)</b><span data-i18n="w.libre.d">Respuestas en texto libre, como un amigo fuerte en Discord. ~US$0,03–0,05 por pregunta. Necesita API key.</span></button>
-</div>
-<div class="hidden" id="wKeyBox">
-<p class="small" data-i18n="w.keyNeeded">Pegá tu API key de Claude (console.anthropic.com → API Keys; otras IAs en Ajustes → Cerebro):</p>
+<p data-i18n-html="h.p.81">Para usar el <b>chat</b> sólo hace falta una cosa: una <b>API key</b> de una IA. Recomendado: Claude (Anthropic), pago por uso, unos centavos de dólar por pregunta.</p>
 <ol class="small">
 <li data-i18n-html="h.li.82">Entrá a <a data-url="https://console.anthropic.com/settings/keys">console.anthropic.com → API Keys</a> (creá la cuenta y cargá saldo en Billing; sin saldo la key no funciona).</li>
 <li data-i18n-html="h.li.83">Tocá <b>Create Key</b>, copiala (empieza con <code>sk-ant-</code>) y pegala acá:</li>
 </ol>
 <div class="keyrow"><input autocomplete="off" data-i18n-ph="p.wKey" id="wKey" placeholder="sk-ant-…" type="password"/><button data-i18n="h.wTest.84" id="wTest">Guardar y probar</button></div>
 <div class="small" id="wMsg"></div>
-</div>
 <p class="muted small desktopOnly" data-i18n="w.borderless">En el juego elegí «Ventana sin bordes» (Opciones → Gráficos) para que el coach se vea encima de la partida.</p>
-<div class="row end"><label class="check small"><input id="wNoMore" type="checkbox"/> <span data-i18n="h.span.86">No mostrar más</span></label><button data-i18n="w.goLocal" id="wSkip">Empezar en modo local</button></div>
+<p class="muted small" data-i18n-html="h.p.85">Sin key igual podés usar: <b>Build orders</b>, la <b>Guía</b> (civs, mapas, counters), los comandos <code>/civ</code> <code>/vs</code> <code>/bo</code>. Otras IAs (algunas gratis) en Ajustes → Cerebro.</p>
+<div class="row end"><label class="check small"><input id="wNoMore" type="checkbox"/> <span data-i18n="h.span.86">No mostrar más</span></label><button data-i18n="h.wSkip.87" id="wSkip">Usar sin IA por ahora</button></div>
 </div>
 </div>
 <!-- ===== input line (always visible) ===== -->

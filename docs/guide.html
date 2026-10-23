@@ -21,8 +21,8 @@
 <button class="active" data-tab="civs"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><span data-i18n="g.h.button.1">Civs</span></button>
 <button data-tab="maps"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg><span data-i18n="g.h.button.2">Mapas</span></button>
 <button data-tab="units"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20L18 6M20 4l-2 2M4 20l3-1 1-3M20 20L6 6M4 4l2 2M20 20l-3-1-1-3"/></svg><span data-i18n="g.h.button.3">Unidades y counters</span></button>
-<button data-tab="meta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg><span data-i18n="g.h.button.4">Meta por civ</span></button>
-<button data-tab="themes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 12h10M4 19h7"/><circle cx="18" cy="16" r="3"/></svg><span data-i18n="g.h.button.6">Consejos pro</span></button>
+<button data-tab="meta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg><span data-i18n="g.h.button.4">Meta</span></button>
+<button data-tab="themes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 12h10M4 19h7"/><circle cx="18" cy="16" r="3"/></svg><span data-i18n="g.h.button.6">Temas</span></button>
 <button data-tab="notes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h6M9 16h6"/></svg><span data-i18n="g.h.button.5">Notas</span></button>
 </nav>
 <div class="omni" id="omni"><input autocomplete="off" data-i18n-ph="g.omniPh" id="omniQ" placeholder="Buscar civ, mapa, unidad o nota…" type="search"/><div class="omniOut hidden" id="omniOut"></div></div>
@@ -35,7 +35,7 @@
 <div class="chips" id="civChips"></div>
 <div class="items" id="civList"></div>
 </aside>
-<section class="view" id="civView"><p class="muted pad" data-i18n="g.h.p.6">Elegí una civ de la lista. En la Guía también tenés: Mapas (perfil e imagen de cada mapa), Unidades y counters (qué le gana a qué), Meta por civ (la apertura meta de cada civ por tipo de mapa, con sus builds y guías), Consejos pro (resúmenes por tema: eco, micro, aperturas…) y Notas (buscador de todas las guías).</p></section>
+<section class="view" id="civView"><p class="muted pad" data-i18n="g.h.p.6">Elegí una civ de la lista. En la Guía también tenés: Mapas (perfil e imagen de cada mapa), Unidades y counters (qué le gana a qué), Meta (porcentaje de victorias por civ) y Notas (buscador de todas las guías).</p></section>
 </main>
 <!-- MAPS -->
 <main class="tab split" id="tab-maps">
@@ -62,14 +62,15 @@
 <p class="muted small" data-i18n="g.h.p.17">Cálculo de duelo con los stats reales del parche (ataque, armadura, bonus); es una lista corta, no una ley: el micro, el terreno y las mejoras cambian el resultado.</p>
 </div>
 </main>
-<!-- META (per civ) -->
-<main class="tab split" id="tab-meta">
-<aside class="list">
-<input autocomplete="off" data-i18n-ph="g.p.metaSearch" id="metaSearch" placeholder="civ…" type="text"/>
-<div class="form mini"><label><span data-i18n="g.h.span.19">Orden</span><select id="metaSort"><option data-i18n="g.h.option.20" value="wr">Win rate</option><option data-i18n="g.h.option.21" value="pick">Popularidad</option><option data-i18n="g.h.option.22" value="name">Nombre</option></select></label></div>
-<div class="items" id="metaList"></div>
-</aside>
-<section class="view" id="metaView"><p class="muted pad" data-i18n="g.metaIntro">Elegí una civ: su apertura meta por tipo de mapa con los builds que la siguen, el plan en Castillos e Imperial, las composiciones, el win rate del parche y las guías (meta, anti-meta y memes) de esa civ.</p></section>
+<!-- META -->
+<main class="tab" id="tab-meta">
+<div class="view pad">
+<h2><span data-i18n="g.wrTitle">Win rate por civ</span> <span class="muted small" id="metaSrc"></span></h2>
+<div class="form"><label><span data-i18n="g.h.span.18">Buscar</span><input autocomplete="off" data-i18n-ph="g.p.metaSearch" id="metaSearch" placeholder="civ…" type="text"/></label>
+<label><span data-i18n="g.h.span.19">Orden</span><select id="metaSort"><option data-i18n="g.h.option.20" value="wr">Win rate</option><option data-i18n="g.h.option.21" value="pick">Popularidad</option><option data-i18n="g.h.option.22" value="name">Nombre</option></select></label></div>
+<div id="metaTable"></div>
+<p class="muted small" data-i18n="g.h.p.23">Muestra chica (el parche es de fines de septiembre): ±1-3 pts de error. Un win rate alto no te hace ganar si jugás mal la civ; usalo como pista de qué esperar del rival.</p>
+</div>
 </main>
 <!-- TOPICS -->
 <main class="tab split" id="tab-themes">

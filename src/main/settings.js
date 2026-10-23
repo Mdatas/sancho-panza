@@ -14,13 +14,6 @@ const DEFAULTS = {
   extractState: true, // extract match facts from each message (runs in parallel with the answer)
   extractModel: 'claude-haiku-5-5', // cheap model for that extraction step (Claude provider only)
   streaming: true, // stream the answer while the model writes it (falls back to one block when the server cannot)
-  // 'local' = the match sheet from the data, message parsed by keywords, no AI at all (default, nothing leaves the PC);
-  // 'ficha' = the sheet, but the AI parses the message (and advice is one click away); 'libre' = the free AI coach answer
-  answerMode: 'local',
-  screenRead: false, // opt-in (desktop): read the game's resource bar from the screen
-  ocrEngine: 'local', // 'local' = Tesseract on this PC (default) · 'ai' = the AI provider's vision model
-  screenReadInterval: 15, // seconds between readings while the game is on screen
-  screenReadRegion: null, // { x, y, w, h } as fractions of the screen; null = default top strip until "Calibrar" finds the bar
   language: 'auto', // answer language: 'auto' | 'es' | 'en'
   uiLanguage: 'es', // interface language
   theme: 'taverna', // 'taverna' | 'taverna-night' | 'classic-dark' | 'classic-light'
@@ -30,7 +23,6 @@ const DEFAULTS = {
   ttsRate: 1.15,
   boSpeak: false, // read build-order steps aloud
   boTimer: true, // build-order clock: auto-advance steps by their time stamp
-  boMini: false, // compact overlay: fold the step card to one line
   hotkeys: { toggle: 'F9', ask: 'F10', boPrev: 'F7', boNext: 'F8', guide: 'F6' },
   focusReturn: 'blur', // after sending: 'blur' | 'minimize' | 'none'
   opacity: 0.94,
@@ -53,7 +45,6 @@ const DEFAULTS = {
   keyOk: false, // set after the first successful answer / key test (hides the welcome popup)
   welcomeHide: false, // "No mostrar más" in the welcome popup
   modelChosen: false, // the player picked a model himself (migrations leave it alone)
-  modeChosen: false, // the player picked an answer mode (welcome popup / Settings); until then the welcome shows the three modes
   voiceChosen: false, // the player picked a voice himself
 };
 
@@ -70,12 +61,6 @@ const T = {
         ? { x: Math.round(v.x), y: Math.round(v.y), width: Math.round(v.width), height: Math.round(v.height) }
         : undefined,
   obj: (v) => (v && typeof v === 'object' && !Array.isArray(v) ? v : undefined),
-  region: (v) =>
-    v === null
-      ? null
-      : v && typeof v === 'object' && ['x', 'y', 'w', 'h'].every((k) => Number.isFinite(v[k]) && v[k] >= 0 && v[k] <= 1) && v.w > 0 && v.h > 0
-        ? { x: v.x, y: v.y, w: v.w, h: v.h }
-        : undefined,
   hotkeys: (v) => {
     if (!v || typeof v !== 'object') return undefined;
     const out = {};
@@ -95,11 +80,6 @@ const SCHEMA = {
   extractState: T.bool,
   extractModel: T.str,
   streaming: T.bool,
-  answerMode: T.enumOf(['local', 'ficha', 'libre']),
-  screenRead: T.bool,
-  ocrEngine: T.enumOf(['local', 'ai']),
-  screenReadInterval: T.num(5, 120),
-  screenReadRegion: T.region,
   language: T.str,
   uiLanguage: T.enumOf(['es', 'en', 'de', 'pt', 'zh', 'vi', 'ko']),
   theme: T.enumOf(['taverna', 'taverna-night', 'classic-dark', 'classic-light']),
@@ -109,7 +89,6 @@ const SCHEMA = {
   ttsRate: T.num(0.5, 2),
   boSpeak: T.bool,
   boTimer: T.bool,
-  boMini: T.bool,
   hotkeys: T.hotkeys,
   focusReturn: T.enumOf(['blur', 'minimize', 'none']),
   opacity: T.num(0.2, 1),
@@ -132,7 +111,6 @@ const SCHEMA = {
   keyOk: T.bool,
   welcomeHide: T.bool,
   modelChosen: T.bool,
-  modeChosen: T.bool,
   voiceChosen: T.bool,
 };
 
@@ -172,8 +150,6 @@ class Settings {
       if (raw.anthropicModel === 'claude-haiku-5-5' && !raw.modelChosen) this.data.anthropicModel = DEFAULTS.anthropicModel;
       // v0.13: default voice is Elena (es-AR); move the old default unless the player picked a voice himself
       if ((!raw.ttsVoice || raw.ttsVoice === 'es-AR-TomasNeural') && !raw.voiceChosen) this.data.ttsVoice = DEFAULTS.ttsVoice;
-      // v0.23: the default answer mode is the local sheet; someone who already set up an AI key before this version keeps the AI sheet
-      if (!raw.answerMode && (raw.anthropicApiKey || raw.openaiApiKey || raw.keyOk)) this.data.answerMode = 'ficha';
     } catch (e) {
       // a missing file is normal (first run); a corrupt one is kept aside so the player can recover the key by hand
       if (e && e.code !== 'ENOENT') {

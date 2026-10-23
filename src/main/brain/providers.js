@@ -512,72 +512,9 @@ async function plainComplete(provider, { apiKey, model, baseUrl, system, user, m
   return { text, usage: res.usage || {}, cost: estimateCost(model, res.usage), stop: res.stop_reason || null, model: res.model || model };
 }
 
-/** One image + a short instruction → text (the screen reader). Anthropic image block or OpenAI-style image_url, no tools. */
-async function visionComplete(
-  provider,
-  { apiKey, model, baseUrl, system, user, imageBase64, mediaType = 'image/png', maxTokens = 300, strictTransport = false, timeoutMs = 30000 }
-) {
-  if (!imageBase64) throw new Error('visionComplete: no image');
-  if (provider === 'openai') {
-    const url = (baseUrl || 'http://localhost:11434/v1').replace(/\/$/, '') + '/chat/completions';
-    assertSafeKeyTransport(url, apiKey);
-    const headers = { 'content-type': 'application/json', ...(apiKey ? { authorization: 'Bearer ' + apiKey } : {}) };
-    const res = await oaiPost(
-      url,
-      headers,
-      {
-        model,
-        max_tokens: maxTokens,
-        messages: [
-          { role: 'system', content: system },
-          {
-            role: 'user',
-            content: [
-              { type: 'text', text: user },
-              { type: 'image_url', image_url: { url: `data:${mediaType};base64,${imageBase64}` } },
-            ],
-          },
-        ],
-      },
-      timeoutMs
-    );
-    const msg = res.choices && res.choices[0] && res.choices[0].message;
-    return {
-      text: ((msg && msg.content) || '').trim(),
-      usage: { input_tokens: (res.usage && res.usage.prompt_tokens) || 0, output_tokens: (res.usage && res.usage.completion_tokens) || 0 },
-      cost: null,
-    };
-  }
-  if (!apiKey) throw new Error('No Claude API key set. Open Settings and paste your key (console.anthropic.com).');
-  const url = (baseUrl || 'https://api.anthropic.com').replace(/\/$/, '') + '/v1/messages';
-  assertSafeKeyTransport(url, apiKey);
-  const headers = { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json', ...BROWSER_HEADER };
-  const body = {
-    model,
-    max_tokens: maxTokens,
-    system,
-    messages: [
-      {
-        role: 'user',
-        content: [
-          { type: 'image', source: { type: 'base64', media_type: mediaType, data: imageBase64 } },
-          { type: 'text', text: user },
-        ],
-      },
-    ],
-  };
-  const res = await fetchJson(url, { method: 'POST', headers, body: JSON.stringify(body) }, timeoutMs);
-  const text = (res.content || [])
-    .filter((b) => b.type === 'text')
-    .map((b) => b.text)
-    .join('\n')
-    .trim();
-  return { text, usage: res.usage || {}, cost: estimateCost(model, res.usage), stop: res.stop_reason || null, model: res.model || model };
-}
-
 function complete(provider, args) {
   if (provider === 'openai') return openaiComplete(args);
   return anthropicComplete(args);
 }
 
-module.exports = { assertSafeKeyTransport, systemBlocks, withMessageBreakpoint, complete, plainComplete, visionComplete, estimateCost, fetchSse, PRICES };
+module.exports = { assertSafeKeyTransport, systemBlocks, withMessageBreakpoint, complete, plainComplete, estimateCost, fetchSse, PRICES };
